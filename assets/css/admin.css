@@ -34,6 +34,13 @@ body {
   height: 100vh;
   overflow-y: auto;
   overflow-x: visible;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
 }
 
 .sidebar-header {
@@ -56,6 +63,17 @@ body {
   z-index: 20;
 }
 
+.admin-logo-link {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.admin-logo-link:hover {
+  opacity: 0.8;
+}
+
 .logo-text {
   font-weight: 700;
   font-size: 18px;
@@ -67,6 +85,26 @@ body {
   padding: 0 20px;
   position: relative;
   z-index: 1;
+}
+
+.sidebar-logout {
+  margin-top: auto;
+  margin-bottom: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.logout-link {
+  color: #ff6b6b !important;
+  font-weight: 600;
+  text-align: center;
+  display: inline-block;
+  min-width: 120px;
+}
+
+.logout-link:hover {
+  background-color: rgba(255, 107, 107, 0.1) !important;
 }
 
 .section-title {
@@ -83,6 +121,10 @@ body {
 
 .nav-list li {
   margin-bottom: 8px;
+}
+
+.nav-list li.sub-item {
+  margin-left: 20px;
 }
 
 .nav-link {
@@ -104,11 +146,75 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Dropdown Styles */
+.dropdown-item {
+  position: relative;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  content: '▼';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-toggle.active::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dropdown-menu {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  margin-top: 5px;
+  margin-left: 20px;
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-menu li {
+  margin: 0;
+}
+
+.dropdown-menu .nav-link {
+  padding: 8px 15px;
+  font-size: 13px;
+  border-radius: 0;
+}
+
+.dropdown-menu .nav-link:first-child {
+  border-radius: 6px 6px 0 0;
+}
+
+.dropdown-menu .nav-link:last-child {
+  border-radius: 0 0 6px 6px;
+}
+
 /* Main Content Styles */
 .main-content {
   flex: 1;
   margin-left: var(--sidebar-width);
   background-color: #f5f5f5;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.sidebar-hidden {
+  margin-left: 0;
 }
 
 .top-header {

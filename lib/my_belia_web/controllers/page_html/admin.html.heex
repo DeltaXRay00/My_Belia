@@ -11,7 +11,9 @@
   <!-- Left Sidebar -->
   <div class="sidebar">
           <div class="sidebar-header">
-        <.admin_logo_size width="160" height="120" />
+        <a href="/laman-utama-pengguna" class="admin-logo-link">
+          <.admin_logo_size width="160" height="120" />
+        </a>
       </div>
     
     <div class="sidebar-section">
@@ -20,10 +22,14 @@
         <li><a href="/admin" class="nav-link active">Dashboard</a></li>
         <li><a href="/admin" class="nav-link">Admin</a></li>
         <li><a href="/admin" class="nav-link">Tetapan</a></li>
-        <li><a href="/admin" class="nav-link">Permohonan</a></li>
-        <li><a href="/admin" class="nav-link">Program</a></li>
-        <li><a href="/admin" class="nav-link">Kursus</a></li>
-        <li><a href="/admin" class="nav-link">Organisasi</a></li>
+        <li class="dropdown-item">
+          <a href="#" class="nav-link dropdown-toggle" data-dropdown="permohonan-utama">Permohonan</a>
+          <ul class="dropdown-menu" id="permohonan-utama">
+            <li><a href="/admin" class="nav-link">Program</a></li>
+            <li><a href="/admin" class="nav-link">Kursus</a></li>
+            <li><a href="/admin" class="nav-link">Organisasi</a></li>
+          </ul>
+        </li>
         <li><a href="/admin" class="nav-link">Galeri</a></li>
       </ul>
     </div>
@@ -31,12 +37,22 @@
     <div class="sidebar-section">
       <h3 class="section-title">SISTEM</h3>
       <ul class="nav-list">
-        <li><a href="/admin" class="nav-link">Log</a></li>
-        <li><a href="/admin" class="nav-link">Program</a></li>
-        <li><a href="/admin" class="nav-link">Kursus</a></li>
-        <li><a href="/admin" class="nav-link">Organisasi</a></li>
+        <li class="dropdown-item">
+          <a href="#" class="nav-link dropdown-toggle" data-dropdown="log-sistem">Log</a>
+          <ul class="dropdown-menu" id="log-sistem">
+            <li><a href="/admin" class="nav-link">Program</a></li>
+            <li><a href="/admin" class="nav-link">Kursus</a></li>
+            <li><a href="/admin" class="nav-link">Organisasi</a></li>
+          </ul>
+        </li>
         <li><a href="/admin" class="nav-link">Direktori</a></li>
         <li><a href="/admin" class="nav-link">Khidmat Pengguna</a></li>
+      </ul>
+    </div>
+    
+    <div class="sidebar-section sidebar-logout">
+      <ul class="nav-list">
+        <li><a href="/log-keluar" class="nav-link logout-link">Log Keluar</a></li>
       </ul>
     </div>
   </div>
@@ -45,7 +61,7 @@
   <div class="main-content">
     <!-- Top Header -->
     <div class="top-header">
-      <div class="menu-icon">
+      <div class="menu-icon" id="menu-toggle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -94,5 +110,39 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  // Add click event listener to each dropdown toggle
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get the dropdown menu ID from data attribute
+      const dropdownId = this.getAttribute('data-dropdown');
+      const dropdownMenu = document.getElementById(dropdownId);
+      
+      // Toggle active class on the toggle button
+      this.classList.toggle('active');
+      
+      // Toggle show class on the dropdown menu
+      dropdownMenu.classList.toggle('show');
+    });
+  });
+
+  // Hamburger menu toggle functionality
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('hidden');
+    mainContent.classList.toggle('sidebar-hidden');
+  });
+});
+</script>
 </body>
 </html> 

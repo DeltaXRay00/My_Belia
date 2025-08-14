@@ -21,7 +21,7 @@ defmodule MyBeliaWeb.PageController do
         conn
         |> put_session(:user_id, user.id)
         |> put_flash(:info, "Log masuk berjaya!")
-        |> redirect(to: "/laman-utama-pengguna")
+        |> redirect(to: if(user.role == "admin", do: "/admin", else: "/laman-utama-pengguna"))
 
       {:error, :not_found} ->
         conn

@@ -24,7 +24,9 @@
 			<a href="/profile" class="profile-icon">
 				<img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" />
 			</a>
-			<a href="/log-keluar" class="logout-link">Log Keluar</a>
+			<%= unless @current_user && @current_user.role == "admin" do %>
+				<a href="/log-keluar" class="logout-link">Log Keluar</a>
+			<% end %>
 		</div>
 	</div>
 </div>
