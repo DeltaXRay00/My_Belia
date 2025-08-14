@@ -73,4 +73,16 @@ defmodule MyBeliaWeb.PageController do
     # so skip the default app layout.
     render(conn, :admin, layout: false)
   end
+
+  def user_profile(conn, _params) do
+    # The user profile page is often custom made,
+    # so skip the default app layout.
+    render(conn, :user_profile, layout: false)
+  end
+
+  def dokumen_sokongan(conn, _params) do
+    # The dokumen sokongan page is often custom made,
+    # so skip the default app layout.
+    render(conn, :dokumen_sokongan, layout: false)
+  end
 end

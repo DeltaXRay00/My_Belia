@@ -13,7 +13,7 @@
 		<nav class="topnav">
 			<span>UTAMA</span>
 			<span>PERMOHONAN</span>
-			<span class="multi-line">PROFIL &amp;<br>MAKLUMAT</span>
+			<a href="/dokumen_sokongan" class="nav-link">PROFIL &amp;<br>MAKLUMAT</a>
 			<span>GALERI</span>
 			<span class="multi-line">HUBUNGI<br>KAMI</span>
 		</nav>
@@ -21,7 +21,7 @@
 			<%= if @current_user && @current_user.role == "admin" do %>
 				<a href="/admin" class="admin-link">Admin</a>
 			<% end %>
-			<a href="/profile" class="profile-icon">
+			<a href="/profil_pengguna" class="profile-icon">
 				<img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" />
 			</a>
 			<%= unless @current_user && @current_user.role == "admin" do %>
