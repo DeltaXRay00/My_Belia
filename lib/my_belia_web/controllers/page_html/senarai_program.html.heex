@@ -37,43 +37,55 @@
 	</div>
 </div>
 
-<section class="hero">
-	<div class="container hero-inner">
-		<img class="hero-logo" src={~p"/images/node-6.png"} alt="MyBelia" />
-		<div class="search">
+<section class="senarai-program-hero">
+	<div class="container">
+		<h2 class="section-title">SENARAI PROGRAM</h2>
+		<div class="search-container">
 			<input type="text" placeholder="Carian..." class="search-input" />
 			<img src={~p"/images/node-9.png"} alt="search" class="search-icon" />
 		</div>
 	</div>
 </section>
 
-<section class="section">
+<section class="senarai-program-section">
 	<div class="container">
-		<div class="news-section">
-			<h2 class="news-section-title">BERITA TERKINI</h2>
-		</div>
-		<div class="news-grid">
-			<div class="news-main"></div>
-			<div class="news-side">
-				<div class="card"></div>
-				<div class="card"></div>
-				<div class="card"></div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<section class="quick-block">
-	<div class="container">
-		<h2 class="section-title">AKSES PANTAS</h2>
-		<p class="section-subtitle">Akses Permohonan dan Maklumat terkini</p>
-		<div class="quick-grid">
-			<div class="tile"></div>
-			<div class="tile"></div>
-			<div class="tile"></div>
-			<div class="tile"></div>
-			<div class="tile"></div>
-			<div class="tile"></div>
+		<div class="program-grid">
+						<!-- Display actual programs from database -->
+			<%= for program <- @programs do %>
+				<div class="program-card">
+					<a href={"/program/#{program.id}"} class="program-card-link">
+						<div class="program-card-content">
+							<div class="program-image">
+								<img src={program.image_data} alt={program.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 12px 12px 0 0;">
+							</div>
+							<div class="program-info">
+								<h3 class="program-title"><%= program.name %></h3>
+								<p class="program-description"><%= String.slice(program.description, 0, 150) %><%= if String.length(program.description) > 150, do: "...", else: "" %></p>
+								<div class="program-dates">
+									<small>Mula: <%= Date.to_string(program.start_date) %></small><br>
+									<small>Tamat: <%= Date.to_string(program.end_date) %></small>
+								</div>
+								<div class="program-actions">
+									<button class="apply-btn">Mohon Sekarang</button>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+			<% end %>
+			
+			<!-- Show placeholder cards if no programs or fewer than 9 programs -->
+			<%= if length(@programs) == 0 do %>
+				<!-- Show 9 placeholder cards when no programs -->
+				<%= for _i <- 1..9 do %>
+					<div class="program-card placeholder"></div>
+				<% end %>
+			<% else %>
+				<!-- Show remaining placeholder cards to fill the grid -->
+				<%= for _i <- 1..(9 - length(@programs)) do %>
+					<div class="program-card placeholder"></div>
+				<% end %>
+			<% end %>
 		</div>
 	</div>
 </section>

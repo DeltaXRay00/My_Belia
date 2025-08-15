@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content={get_csrf_token()}>
+  <title>Admin Permohonan Kursus - MyBelia</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="admin-container">
+  <!-- Left Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <a href="/laman-utama-pengguna" class="admin-logo-link">
+        <.admin_logo_size width="160" height="120" />
+      </a>
+    </div>
+    
+    <div class="sidebar-section">
+      <h3 class="section-title">UTAMA</h3>
+      <ul class="nav-list">
+        <li><a href="/admin" class="nav-link">Dashboard</a></li>
+        <li><a href="/admin" class="nav-link">Admin</a></li>
+        <li><a href="/admin" class="nav-link">Tetapan</a></li>
+        <li class="dropdown-item">
+          <a href="#" class="nav-link dropdown-toggle" data-dropdown="permohonan-utama">Permohonan</a>
+          <ul class="dropdown-menu" id="permohonan-utama">
+            <li><a href="/admin/permohonan_program" class="nav-link">Program</a></li>
+            <li><a href="/admin/permohonan_kursus" class="nav-link active">Kursus</a></li>
+            <li><a href="/admin" class="nav-link">Organisasi</a></li>
+          </ul>
+        </li>
+        <li><a href="/admin" class="nav-link">Galeri</a></li>
+      </ul>
+    </div>
+    
+    <div class="sidebar-section">
+      <h3 class="section-title">SISTEM</h3>
+      <ul class="nav-list">
+        <li class="dropdown-item">
+          <a href="#" class="nav-link dropdown-toggle" data-dropdown="log-sistem">Log</a>
+          <ul class="dropdown-menu" id="log-sistem">
+            <li><a href="/admin" class="nav-link">Program</a></li>
+            <li><a href="/admin" class="nav-link">Kursus</a></li>
+            <li><a href="/admin" class="nav-link">Organisasi</a></li>
+          </ul>
+        </li>
+        <li><a href="/admin" class="nav-link">Direktori</a></li>
+        <li><a href="/admin" class="nav-link">Khidmat Pengguna</a></li>
+      </ul>
+    </div>
+    
+    <!-- Logout Section -->
+    <div class="sidebar-section logout-section">
+      <ul class="nav-list">
+        <li><a href="/log-keluar" class="nav-link logout-link">Log Keluar</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Header -->
+    <div class="top-header">
+      <div class="menu-icon" id="menu-toggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </div>
+      <h1 class="page-title">Permohonan / Kursus</h1>
+      <div class="user-profile">
+        <img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" class="profile-icon" />
+      </div>
+    </div>
+
+    <!-- Course Management Content -->
+    <div class="program-management-content">
+      <!-- Action Button -->
+      <div class="action-section">
+        <button class="new-program-btn" id="new-course-btn">Kursus Baru</button>
+      </div>
+
+      <!-- Modal Form for New Course -->
+      <div class="modal-overlay" id="course-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="modal-close" id="modal-close">&times;</button>
+          </div>
+          
+          <form class="program-form">
+            <!-- Image Upload Section -->
+            <div class="image-upload-section">
+              <label>Gambar Kursus *</label>
+              <div class="image-upload-area" id="image-upload-area">
+                <img id="image-preview" src="" alt="Preview" style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px;">
+                <div id="upload-placeholder">
+                  <div class="upload-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M17 8L12 3L7 8" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 3V15" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="plus-icon">+</div>
+                </div>
+                <input type="file" id="course-image" name="course_image" accept="image/*" style="display: none;">
+              </div>
+              <div class="field-error" id="image-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-fields">
+              <div class="form-group">
+                <label for="course-name">Nama Kursus *</label>
+                <input type="text" id="course-name" name="course_name" class="form-input" placeholder="Masukkan nama kursus" required>
+                <div class="field-error" id="name-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="course-description">Diskripsi *</label>
+                <textarea id="course-description" name="course_description" class="form-textarea" placeholder="Masukkan diskripsi kursus dengan format yang diingini (HTML dibenarkan)" required rows="8"></textarea>
+                <div class="field-error" id="description-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                <small class="form-help">Anda boleh menggunakan HTML untuk format teks seperti <strong>&lt;strong&gt;</strong>, <em>&lt;em&gt;</em>, <u>&lt;u&gt;</u>, <code>&lt;br&gt;</code>, dll.</small>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="course-start-date">Tarikh Mula *</label>
+                  <input type="date" id="course-start-date" name="course_start_date" class="form-input" required>
+                  <div class="field-error" id="start-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="course-end-date">Tarikh Tamat *</label>
+                  <input type="date" id="course-end-date" name="course_end_date" class="form-input" required>
+                  <div class="field-error" id="end-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="course-start-time">Waktu Mula *</label>
+                  <input type="time" id="course-start-time" name="course_start_time" class="form-input" required>
+                  <div class="field-error" id="start-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="course-end-time">Waktu Tamat *</label>
+                  <input type="time" id="course-end-time" name="course_end_time" class="form-input" required>
+                  <div class="field-error" id="end-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <button type="submit" class="create-btn">Cipta</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <h3 class="filter-title">Tapisan</h3>
+        </div>
+        <div class="filter-controls">
+          <div class="search-box">
+            <input type="text" placeholder="Carian..." class="search-input" />
+          </div>
+          <div class="filter-dropdowns">
+            <div class="filter-item">
+              <label class="filter-label">Status</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Daerah</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Tarikh</label>
+              <div class="filter-dropdown"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Grid -->
+      <div class="program-grid">
+        <%= for course <- @courses do %>
+          <div class="program-card">
+            <div class="edit-overlay">
+              <button class="edit-btn" onclick={"editCourse(#{course.id})"}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M18.5 2.50023C18.8978 2.10297 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.10297 21.5 2.50023C21.8978 2.89749 22.1218 3.43705 22.1218 3.99973C22.1218 4.56241 21.8978 5.10197 21.5 5.49923L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="program-card-content">
+              <img src={course.image_data} alt={course.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
+              <div class="program-info">
+                <h3 class="program-title"><%= course.name %></h3>
+                <p class="program-description"><%= course.description %></p>
+                <div class="program-dates">
+                  <span><%= Date.to_string(course.start_date) %> - <%= Date.to_string(course.end_date) %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <%= for _i <- 1..(9 - length(@courses)) do %>
+          <div class="program-card placeholder"></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Course Modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Edit Kursus</h2>
+      <button class="modal-close" id="edit-modal-close">&times;</button>
+    </div>
+    <form class="program-form" id="edit-course-form">
+      <div class="image-upload-section">
+        <label>Gambar Kursus *</label>
+        <div class="image-upload-area" id="edit-image-upload-area">
+          <img id="edit-image-preview" src="" alt="Preview" style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px;">
+          <div id="edit-upload-placeholder">
+            <div class="upload-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17 8L12 3L7 8" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 3V15" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="plus-icon">+</div>
+          </div>
+          <input type="file" id="edit-course-image" name="course_image" accept="image/*" style="display: none;">
+        </div>
+        <div class="field-error" id="edit-image-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+      </div>
+
+      <div class="form-fields">
+        <div class="form-group">
+          <label for="edit-course-name">Nama Kursus *</label>
+          <input type="text" id="edit-course-name" name="course_name" class="form-input" placeholder="Masukkan nama kursus" required>
+          <div class="field-error" id="edit-name-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-course-description">Diskripsi *</label>
+          <textarea id="edit-course-description" name="course_description" class="form-textarea" placeholder="Masukkan diskripsi kursus dengan format yang diingini (HTML dibenarkan)" required rows="8"></textarea>
+          <div class="field-error" id="edit-description-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+          <small class="form-help">Anda boleh menggunakan HTML untuk format teks seperti <strong>&lt;strong&gt;</strong>, <em>&lt;em&gt;</em>, <u>&lt;u&gt;</u>, <code>&lt;br&gt;</code>, dll.</small>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-course-start-date">Tarikh Mula *</label>
+            <input type="date" id="edit-course-start-date" name="course_start_date" class="form-input" required>
+            <div class="field-error" id="edit-start-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-course-end-date">Tarikh Tamat *</label>
+            <input type="date" id="edit-course-end-date" name="course_end_date" class="form-input" required>
+            <div class="field-error" id="edit-end-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-course-start-time">Waktu Mula *</label>
+            <input type="time" id="edit-course-start-time" name="course_start_time" class="form-input" required>
+            <div class="field-error" id="edit-start-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-course-end-time">Waktu Tamat *</label>
+            <input type="time" id="edit-course-end-time" name="course_end_time" class="form-input" required>
+            <div class="field-error" id="edit-end-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="create-btn">Kemas Kini</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  // Add click event listener to each dropdown toggle
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get the dropdown menu ID from data attribute
+      const dropdownId = this.getAttribute('data-dropdown');
+      const dropdownMenu = document.getElementById(dropdownId);
+      
+      // Toggle active class on the toggle button
+      this.classList.toggle('active');
+      
+      // Toggle show class on the dropdown menu
+      dropdownMenu.classList.toggle('show');
+    });
+  });
+
+  // Hamburger menu toggle functionality
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('hidden');
+    mainContent.classList.toggle('sidebar-hidden');
+  });
+
+  // Modal functionality
+  const newCourseBtn = document.getElementById('new-course-btn');
+  const courseModal = document.getElementById('course-modal');
+  const modalClose = document.getElementById('modal-close');
+  const courseForm = document.querySelector('.program-form');
+
+  // Open modal
+  newCourseBtn.addEventListener('click', function() {
+    courseModal.classList.add('show');
+  });
+
+  // Close modal
+  modalClose.addEventListener('click', function() {
+    courseModal.classList.remove('show');
+  });
+
+  // Close modal when clicking outside
+  courseModal.addEventListener('click', function(e) {
+    if (e.target === courseModal) {
+      courseModal.classList.remove('show');
+    }
+  });
+
+  // Handle form submission
+  courseForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate form
+    if (!validateCourseForm()) {
+      return;
+    }
+    
+    // Get form data and convert to base64
+    const formData = new FormData(courseForm);
+    const imageFile = formData.get('course_image');
+    
+    if (imageFile && imageFile.size > 0) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageData = e.target.result;
+        submitCourseToServer(formData, imageData);
+      };
+      reader.readAsDataURL(imageFile);
+    } else {
+      submitCourseToServer(formData, null);
+    }
+  });
+
+  // Edit modal functionality
+  const editModal = document.getElementById('edit-modal');
+  const editModalClose = document.getElementById('edit-modal-close');
+  const editCourseForm = document.getElementById('edit-course-form');
+  let currentEditCourseId = null;
+
+  // Close edit modal
+  editModalClose.addEventListener('click', function() {
+    editModal.classList.remove('show');
+  });
+
+  // Close edit modal when clicking outside
+  editModal.addEventListener('click', function(e) {
+    if (e.target === editModal) {
+      editModal.classList.remove('show');
+    }
+  });
+
+  // Handle edit form submission
+  editCourseForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (!validateEditCourseForm()) {
+      return;
+    }
+    
+    const formData = new FormData(editCourseForm);
+    const imageFile = formData.get('course_image');
+    
+    if (imageFile && imageFile.size > 0) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageData = e.target.result;
+        submitEditToServer(formData, imageData);
+      };
+      reader.readAsDataURL(imageFile);
+    } else {
+      submitEditToServer(formData, null);
+    }
+  });
+
+  // Image upload functionality for create form
+  const imageUploadArea = document.getElementById('image-upload-area');
+  const courseImageInput = document.getElementById('course-image');
+  const imagePreview = document.getElementById('image-preview');
+  const uploadPlaceholder = document.getElementById('upload-placeholder');
+
+  imageUploadArea.addEventListener('click', function() {
+    courseImageInput.click();
+  });
+
+  courseImageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = 'block';
+        uploadPlaceholder.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Image upload functionality for edit form
+  const editImageUploadArea = document.getElementById('edit-image-upload-area');
+  const editCourseImageInput = document.getElementById('edit-course-image');
+  const editImagePreview = document.getElementById('edit-image-preview');
+  const editUploadPlaceholder = document.getElementById('edit-upload-placeholder');
+
+  editImageUploadArea.addEventListener('click', function() {
+    editCourseImageInput.click();
+  });
+
+  editCourseImageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editImagePreview.src = e.target.result;
+        editImagePreview.style.display = 'block';
+        editUploadPlaceholder.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Validation functions
+  function validateCourseForm() {
+    let isValid = true;
+    
+    // Reset all error messages
+    document.querySelectorAll('.field-error').forEach(error => {
+      error.style.display = 'none';
+    });
+    
+    const imageFile = document.getElementById('course-image').files[0];
+    const name = document.getElementById('course-name').value.trim();
+    const description = document.getElementById('course-description').value.trim();
+    const startDate = document.getElementById('course-start-date').value;
+    const endDate = document.getElementById('course-end-date').value;
+    const startTime = document.getElementById('course-start-time').value;
+    const endTime = document.getElementById('course-end-time').value;
+    
+    if (!imageFile) {
+      document.getElementById('image-error').textContent = 'Sila pilih gambar kursus';
+      document.getElementById('image-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!name) {
+      document.getElementById('name-error').textContent = 'Sila masukkan nama kursus';
+      document.getElementById('name-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!description) {
+      document.getElementById('description-error').textContent = 'Sila masukkan diskripsi kursus';
+      document.getElementById('description-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!startDate) {
+      document.getElementById('start-date-error').textContent = 'Sila pilih tarikh mula';
+      document.getElementById('start-date-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!endDate) {
+      document.getElementById('end-date-error').textContent = 'Sila pilih tarikh tamat';
+      document.getElementById('end-date-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!startTime) {
+      document.getElementById('start-time-error').textContent = 'Sila pilih waktu mula';
+      document.getElementById('start-time-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!endTime) {
+      document.getElementById('end-time-error').textContent = 'Sila pilih waktu tamat';
+      document.getElementById('end-time-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    return isValid;
+  }
+
+  function validateEditCourseForm() {
+    let isValid = true;
+    
+    // Reset all error messages
+    document.querySelectorAll('.field-error').forEach(error => {
+      error.style.display = 'none';
+    });
+    
+    const name = document.getElementById('edit-course-name').value.trim();
+    const description = document.getElementById('edit-course-description').value.trim();
+    const startDate = document.getElementById('edit-course-start-date').value;
+    const endDate = document.getElementById('edit-course-end-date').value;
+    const startTime = document.getElementById('edit-course-start-time').value;
+    const endTime = document.getElementById('edit-course-end-time').value;
+    
+    if (!name) {
+      document.getElementById('edit-name-error').textContent = 'Sila masukkan nama kursus';
+      document.getElementById('edit-name-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!description) {
+      document.getElementById('edit-description-error').textContent = 'Sila masukkan diskripsi kursus';
+      document.getElementById('edit-description-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!startDate) {
+      document.getElementById('edit-start-date-error').textContent = 'Sila pilih tarikh mula';
+      document.getElementById('edit-start-date-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!endDate) {
+      document.getElementById('edit-end-date-error').textContent = 'Sila pilih tarikh tamat';
+      document.getElementById('edit-end-date-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!startTime) {
+      document.getElementById('edit-start-time-error').textContent = 'Sila pilih waktu mula';
+      document.getElementById('edit-start-time-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    if (!endTime) {
+      document.getElementById('edit-end-time-error').textContent = 'Sila pilih waktu tamat';
+      document.getElementById('edit-end-time-error').style.display = 'block';
+      isValid = false;
+    }
+    
+    return isValid;
+  }
+
+  // Server submission functions
+  function submitCourseToServer(formData, imageData) {
+    const courseData = {
+      course: {
+        name: formData.get('course_name'),
+        description: formData.get('course_description'),
+        image_data: imageData,
+        start_date: formData.get('course_start_date'),
+        end_date: formData.get('course_end_date'),
+        start_time: formData.get('course_start_time'),
+        end_time: formData.get('course_end_time')
+      }
+    };
+
+    fetch('/admin/courses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify(courseData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Kursus berjaya dicipta!');
+        courseModal.classList.remove('show');
+        courseForm.reset();
+        imagePreview.style.display = 'none';
+        uploadPlaceholder.style.display = 'flex';
+        location.reload(); // Refresh to show new course
+      } else {
+        alert('Ralat: ' + Object.values(data.errors).flat().join(', '));
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Ralat semasa mencipta kursus');
+    });
+  }
+
+  function submitEditToServer(formData, imageData) {
+    const courseData = {
+      course: {
+        name: formData.get('course_name'),
+        description: formData.get('course_description'),
+        start_date: formData.get('course_start_date'),
+        end_date: formData.get('course_end_date'),
+        start_time: formData.get('course_start_time'),
+        end_time: formData.get('course_end_time')
+      }
+    };
+
+    // Only include image_data if a new image was uploaded
+    if (imageData) {
+      courseData.course.image_data = imageData;
+    }
+
+    fetch(`/admin/courses/${currentEditCourseId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify(courseData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Kursus berjaya dikemas kini!');
+        editModal.classList.remove('show');
+        editCourseForm.reset();
+        editImagePreview.style.display = 'none';
+        editUploadPlaceholder.style.display = 'flex';
+        location.reload(); // Refresh to show updated course
+      } else {
+        alert('Ralat: ' + Object.values(data.errors).flat().join(', '));
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Ralat semasa mengemas kini kursus');
+    });
+  }
+
+  // Global function to edit course
+  window.editCourse = function(courseId) {
+    currentEditCourseId = courseId;
+    
+    // Fetch course data
+    fetch(`/admin/courses/${courseId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const course = data.course;
+          
+          // Populate form fields
+          document.getElementById('edit-course-name').value = course.name;
+          document.getElementById('edit-course-description').value = course.description;
+          document.getElementById('edit-course-start-date').value = course.start_date;
+          document.getElementById('edit-course-end-date').value = course.end_date;
+          document.getElementById('edit-course-start-time').value = course.start_time;
+          document.getElementById('edit-course-end-time').value = course.end_time;
+          
+          // Show current image
+          if (course.image_data) {
+            editImagePreview.src = course.image_data;
+            editImagePreview.style.display = 'block';
+            editUploadPlaceholder.style.display = 'none';
+          } else {
+            editImagePreview.style.display = 'none';
+            editUploadPlaceholder.style.display = 'flex';
+          }
+          
+          // Show modal
+          editModal.classList.add('show');
+        } else {
+          alert('Ralat: Kursus tidak dijumpai');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Ralat semasa memuat data kursus');
+      });
+  };
+});
+</script>
+</body>
+</html> 

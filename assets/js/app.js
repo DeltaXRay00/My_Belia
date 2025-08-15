@@ -42,3 +42,46 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+// Dropdown functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const dropdowns = document.querySelectorAll('.dropdown');
+  
+  dropdowns.forEach(dropdown => {
+    const dropdownContent = dropdown.querySelector('.dropdown-content');
+    const dropdownTrigger = dropdown.querySelector('span');
+    
+    // Toggle dropdown on click
+    dropdownTrigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Close all other dropdowns
+      dropdowns.forEach(otherDropdown => {
+        if (otherDropdown !== dropdown) {
+          otherDropdown.classList.remove('active');
+        }
+      });
+      
+      // Toggle current dropdown
+      dropdown.classList.toggle('active');
+    });
+    
+    // Close dropdown when clicking on a link
+    const dropdownLinks = dropdownContent.querySelectorAll('a');
+    dropdownLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        dropdown.classList.remove('active');
+      });
+    });
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.dropdown')) {
+      dropdowns.forEach(dropdown => {
+        dropdown.classList.remove('active');
+      });
+    }
+  });
+});
+

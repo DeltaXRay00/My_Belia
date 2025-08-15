@@ -37,43 +37,56 @@
 	</div>
 </div>
 
-<section class="hero">
-	<div class="container hero-inner">
-		<img class="hero-logo" src={~p"/images/node-6.png"} alt="MyBelia" />
-		<div class="search">
+<section class="senarai-program-hero">
+	<div class="container">
+		<h2 class="section-title">SENARAI KURSUS</h2>
+		<div class="search-container">
 			<input type="text" placeholder="Carian..." class="search-input" />
 			<img src={~p"/images/node-9.png"} alt="search" class="search-icon" />
 		</div>
 	</div>
 </section>
 
-<section class="section">
+<section class="senarai-program-section">
 	<div class="container">
-		<div class="news-section">
-			<h2 class="news-section-title">BERITA TERKINI</h2>
-		</div>
-		<div class="news-grid">
-			<div class="news-main"></div>
-			<div class="news-side">
-				<div class="card"></div>
-				<div class="card"></div>
-				<div class="card"></div>
-			</div>
-		</div>
-	</div>
-</section>
+		<div class="program-grid">
+			<%= for course <- @courses do %>
+				<div class="program-card">
+					<a href={"/course/#{course.id}"} class="program-card-link">
+						<div class="program-card-content">
+							<img src={course.image_data} alt={course.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
+							<div class="program-info">
+								<h3 class="program-title"><%= course.name %></h3>
+								<p class="program-description"><%= course.description %></p>
+								<div class="program-dates">
+									<span><%= Date.to_string(course.start_date) %> - <%= Date.to_string(course.end_date) %></span>
+								</div>
+								<div class="program-actions">
+									<button class="apply-btn">Mohon Sekarang</button>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+			<% end %>
 
-<section class="quick-block">
-	<div class="container">
-		<h2 class="section-title">AKSES PANTAS</h2>
-		<p class="section-subtitle">Akses Permohonan dan Maklumat terkini</p>
-		<div class="quick-grid">
-			<div class="tile"></div>
-			<div class="tile"></div>
-			<div class="tile"></div>
-			<div class="tile"></div>
-			<div class="tile"></div>
-			<div class="tile"></div>
+			<%= for _i <- 1..(9 - length(@courses)) do %>
+				<div class="program-card">
+					<div class="program-card-content">
+						<img src="/images/2175193-1-34.png" alt="Placeholder" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
+						<div class="program-info">
+							<h3 class="program-title">Kursus Akan Datang</h3>
+							<p class="program-description">Kursus baru akan ditambah tidak lama lagi</p>
+							<div class="program-dates">
+								<span>TBA</span>
+							</div>
+							<div class="program-actions">
+								<button class="apply-btn" disabled>Mohon Sekarang</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			<% end %>
 		</div>
 	</div>
 </section>

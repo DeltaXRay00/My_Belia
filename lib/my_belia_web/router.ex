@@ -31,20 +31,74 @@ defmodule MyBeliaWeb.Router do
     get "/daftar", PageController, :register
     post "/daftar", PageController, :register_post
     get "/log-keluar", PageController, :logout
+    get "/laman-utama", PageController, :home
+    get "/home", PageController, :home
   end
 
   scope "/", MyBeliaWeb do
     pipe_through [:browser, :auth]
 
+    # User Dashboard and Main Pages
     get "/laman-utama-pengguna", PageController, :user_home
+    get "/user-home", PageController, :user_home
+    get "/dashboard", PageController, :user_home
+
+    # User Profile
     get "/profil_pengguna", PageController, :user_profile
+    get "/user-profile", PageController, :user_profile
+    get "/profile", PageController, :user_profile
+
+    # Documents and Support
     get "/dokumen_sokongan", PageController, :dokumen_sokongan
+    get "/dokumen-sokongan", PageController, :dokumen_sokongan
+    get "/support-documents", PageController, :dokumen_sokongan
+    get "/documents", PageController, :dokumen_sokongan
+
+    # Program List
+    get "/senarai_program", PageController, :senarai_program
+    get "/senarai-program", PageController, :senarai_program
+    get "/program-list", PageController, :senarai_program
+    get "/programs", PageController, :senarai_program
+
+    # Program Detail
+    get "/program/:id", PageController, :program_detail
+
+    # Course Detail
+    get "/course/:id", PageController, :course_detail
+
+    # Course List
+    get "/senarai_kursus", PageController, :senarai_kursus
+    get "/senarai-kursus", PageController, :senarai_kursus
+    get "/course-list", PageController, :senarai_kursus
+    get "/courses", PageController, :senarai_kursus
   end
 
   scope "/", MyBeliaWeb do
     pipe_through [:browser, :admin_auth]
 
+    # Admin Dashboard
     get "/admin", PageController, :admin
+    get "/admin-dashboard", PageController, :admin
+    get "/admin-panel", PageController, :admin
+    get "/admin-home", PageController, :admin
+
+    # Admin Program Management
+    get "/admin/permohonan_program", PageController, :admin_permohonan_program
+    post "/admin/programs", PageController, :create_program
+    get "/admin/programs/:id", PageController, :get_program
+    put "/admin/programs/:id", PageController, :update_program
+    get "/admin/program", PageController, :admin_permohonan_program
+    get "/admin/programs", PageController, :admin_permohonan_program
+    get "/admin/permohonan-program", PageController, :admin_permohonan_program
+
+    # Admin Course Management
+    get "/admin/permohonan_kursus", PageController, :admin_permohonan_kursus
+    post "/admin/courses", PageController, :create_course
+    get "/admin/courses/:id", PageController, :get_course
+    put "/admin/courses/:id", PageController, :update_course
+    get "/admin/kursus", PageController, :admin_permohonan_kursus
+    get "/admin/courses", PageController, :admin_permohonan_kursus
+    get "/admin/permohonan-kursus", PageController, :admin_permohonan_kursus
   end
 
   # Other scopes may use custom stacks.

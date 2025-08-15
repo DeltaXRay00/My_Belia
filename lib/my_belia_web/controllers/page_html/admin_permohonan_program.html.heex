@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content={get_csrf_token()}>
+  <title>Admin Permohonan Program - MyBelia</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="admin-container">
+  <!-- Left Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <a href="/laman-utama-pengguna" class="admin-logo-link">
+        <.admin_logo_size width="160" height="120" />
+      </a>
+    </div>
+    
+    <div class="sidebar-section">
+      <h3 class="section-title">UTAMA</h3>
+      <ul class="nav-list">
+        <li><a href="/admin" class="nav-link">Dashboard</a></li>
+        <li><a href="/admin" class="nav-link">Admin</a></li>
+        <li><a href="/admin" class="nav-link">Tetapan</a></li>
+        <li class="dropdown-item">
+          <a href="#" class="nav-link dropdown-toggle" data-dropdown="permohonan-utama">Permohonan</a>
+          <ul class="dropdown-menu" id="permohonan-utama">
+            <li><a href="/admin/permohonan_program" class="nav-link active">Program</a></li>
+            <li><a href="/admin/permohonan_kursus" class="nav-link">Kursus</a></li>
+            <li><a href="/admin" class="nav-link">Organisasi</a></li>
+          </ul>
+        </li>
+        <li><a href="/admin" class="nav-link">Galeri</a></li>
+      </ul>
+    </div>
+    
+    <div class="sidebar-section">
+      <h3 class="section-title">SISTEM</h3>
+      <ul class="nav-list">
+        <li class="dropdown-item">
+          <a href="#" class="nav-link dropdown-toggle" data-dropdown="log-sistem">Log</a>
+          <ul class="dropdown-menu" id="log-sistem">
+            <li><a href="/admin" class="nav-link">Program</a></li>
+            <li><a href="/admin" class="nav-link">Kursus</a></li>
+            <li><a href="/admin" class="nav-link">Organisasi</a></li>
+          </ul>
+        </li>
+        <li><a href="/admin" class="nav-link">Direktori</a></li>
+        <li><a href="/admin" class="nav-link">Khidmat Pengguna</a></li>
+      </ul>
+    </div>
+    
+    <!-- Logout Section -->
+    <div class="sidebar-section logout-section">
+      <ul class="nav-list">
+        <li><a href="/log-keluar" class="nav-link logout-link">Log Keluar</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Header -->
+    <div class="top-header">
+      <div class="menu-icon" id="menu-toggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </div>
+      <h1 class="page-title">Permohonan / Program</h1>
+      <div class="user-profile">
+        <img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" class="profile-icon" />
+      </div>
+    </div>
+
+    <!-- Program Management Content -->
+    <div class="program-management-content">
+      <!-- Action Button -->
+      <div class="action-section">
+        <button class="new-program-btn" id="new-program-btn">Program Baru</button>
+      </div>
+
+      <!-- Modal Form for New Program -->
+      <div class="modal-overlay" id="program-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="modal-close" id="modal-close">&times;</button>
+          </div>
+          
+          <form class="program-form">
+            <!-- Image Upload Section -->
+            <div class="image-upload-section">
+              <div class="image-upload-area" id="image-upload-area">
+                <div class="upload-icon" id="upload-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21,15 16,10 5,21"></polyline>
+                  </svg>
+                  <div class="plus-icon">+</div>
+                </div>
+                <img id="preview-image" class="preview-image" style="display: none; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 8px;">
+                <input type="file" id="image-input" name="program_image" accept="image/*" style="display: none;">
+              </div>
+              <div class="upload-error" id="image-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 8px; text-align: center;"></div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-fields">
+              <div class="form-group">
+                <label for="program-name">Nama Program *</label>
+                <input type="text" id="program-name" name="program_name" class="form-input" placeholder="Masukkan nama program" required>
+                <div class="field-error" id="name-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="program-description">Diskripsi *</label>
+                <textarea id="program-description" name="program_description" class="form-textarea" placeholder="Masukkan diskripsi program dengan format yang diingini (HTML dibenarkan)" required rows="8"></textarea>
+                <div class="field-error" id="description-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                <small class="form-help">Anda boleh menggunakan HTML untuk format teks seperti <strong>&lt;strong&gt;</strong>, <em>&lt;em&gt;</em>, <u>&lt;u&gt;</u>, <code>&lt;br&gt;</code>, dll.</small>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start-date">Tarikh Mula Permohonan *</label>
+                  <input type="date" id="start-date" name="start_date" class="form-input" required>
+                  <div class="field-error" id="start-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="end-date">Tarikh Tutup Permohonan *</label>
+                  <input type="date" id="end-date" name="end_date" class="form-input" required>
+                  <div class="field-error" id="end-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start-time">Waktu Mula Permohonan *</label>
+                  <input type="time" id="start-time" name="start_time" class="form-input" required>
+                  <div class="field-error" id="start-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="end-time">Waktu Tutup Penerimaan *</label>
+                  <input type="time" id="end-time" name="end_time" class="form-input" required>
+                  <div class="field-error" id="end-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <div class="field-error" id="general-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-bottom: 12px; text-align: center;"></div>
+              <button type="submit" class="create-btn">Cipta</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Edit Modal Form for Existing Program -->
+      <div class="modal-overlay" id="edit-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="modal-close" id="edit-modal-close">&times;</button>
+          </div>
+          
+          <form class="program-form" id="edit-form">
+            <input type="hidden" id="edit-program-id" name="program_id">
+            
+            <!-- Image Upload Section -->
+            <div class="image-upload-section">
+              <div class="image-upload-area" id="edit-image-upload-area">
+                <div class="upload-icon" id="edit-upload-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21,15 16,10 5,21"></polyline>
+                  </svg>
+                  <div class="plus-icon">+</div>
+                </div>
+                <img id="edit-preview-image" class="preview-image" style="display: none; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 8px;">
+                <input type="file" id="edit-image-input" name="program_image" accept="image/*" style="display: none;">
+              </div>
+              <div class="upload-error" id="edit-image-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 8px; text-align: center;"></div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-fields">
+              <div class="form-group">
+                <label for="edit-program-name">Nama Program *</label>
+                <input type="text" id="edit-program-name" name="program_name" class="form-input" placeholder="Masukkan nama program" required>
+                <div class="field-error" id="edit-name-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-program-description">Diskripsi *</label>
+                <textarea id="edit-program-description" name="program_description" class="form-textarea" placeholder="Masukkan diskripsi program dengan format yang diingini (HTML dibenarkan)" required rows="8"></textarea>
+                <div class="field-error" id="edit-description-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                <small class="form-help">Anda boleh menggunakan HTML untuk format teks seperti <strong>&lt;strong&gt;</strong>, <em>&lt;em&gt;</em>, <u>&lt;u&gt;</u>, <code>&lt;br&gt;</code>, dll.</small>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="edit-start-date">Tarikh Mula Permohonan *</label>
+                  <input type="date" id="edit-start-date" name="start_date" class="form-input" required>
+                  <div class="field-error" id="edit-start-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="edit-end-date">Tarikh Tutup Permohonan *</label>
+                  <input type="date" id="edit-end-date" name="end_date" class="form-input" required>
+                  <div class="field-error" id="edit-end-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="edit-start-time">Waktu Mula Permohonan *</label>
+                  <input type="time" id="edit-start-time" name="start_time" class="form-input" required>
+                  <div class="field-error" id="edit-start-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="edit-end-time">Waktu Tutup Penerimaan *</label>
+                  <input type="time" id="edit-end-time" name="end_time" class="form-input" required>
+                  <div class="field-error" id="edit-end-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <div class="field-error" id="edit-general-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-bottom: 12px; text-align: center;"></div>
+              <button type="submit" class="create-btn">Kemaskini</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <h3 class="filter-title">Tapisan</h3>
+        </div>
+        <div class="filter-controls">
+          <div class="search-box">
+            <input type="text" placeholder="Carian..." class="search-input" />
+          </div>
+          <div class="filter-dropdowns">
+            <div class="filter-item">
+              <label class="filter-label">Status</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Daerah</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Tarikh</label>
+              <div class="filter-dropdown"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Program Grid -->
+      <div class="program-grid">
+        <!-- Display existing programs -->
+        <%= for program <- @programs do %>
+          <div class="program-card" data-program-id={program.id}>
+            <div class="program-card-content">
+              <div class="program-image">
+                <img src={program.image_data} alt={program.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
+                <div class="edit-overlay">
+                  <button class="edit-btn" onclick={"editProgram(#{program.id})"}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="program-info">
+                <h3 class="program-title"><%= program.name %></h3>
+                <p class="program-description"><%= String.slice(program.description, 0, 100) %><%= if String.length(program.description) > 100, do: "...", else: "" %></p>
+                <div class="program-dates">
+                  <small>Mula: <%= Date.to_string(program.start_date) %></small><br>
+                  <small>Tamat: <%= Date.to_string(program.end_date) %></small>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        
+        <!-- Placeholder cards for remaining slots -->
+        <%= for _i <- 1..(9 - length(@programs)) do %>
+          <div class="program-card placeholder"></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  // Add click event listener to each dropdown toggle
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get the dropdown menu ID from data attribute
+      const dropdownId = this.getAttribute('data-dropdown');
+      const dropdownMenu = document.getElementById(dropdownId);
+      
+      // Toggle active class on the toggle button
+      this.classList.toggle('active');
+      
+      // Toggle show class on the dropdown menu
+      dropdownMenu.classList.toggle('show');
+    });
+  });
+
+  // Hamburger menu toggle functionality
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('hidden');
+    mainContent.classList.toggle('sidebar-hidden');
+  });
+
+  // Modal functionality
+  const newProgramBtn = document.getElementById('new-program-btn');
+  const programModal = document.getElementById('program-modal');
+  const modalClose = document.getElementById('modal-close');
+  const programForm = document.querySelector('.program-form');
+
+  // Image upload functionality
+  const imageUploadArea = document.getElementById('image-upload-area');
+  const imageInput = document.getElementById('image-input');
+  const previewImage = document.getElementById('preview-image');
+  const uploadIcon = document.getElementById('upload-icon');
+  const imageError = document.getElementById('image-error');
+
+  // Open modal
+  newProgramBtn.addEventListener('click', function() {
+    programModal.classList.add('show');
+    resetForm();
+  });
+
+  // Close modal
+  modalClose.addEventListener('click', function() {
+    programModal.classList.remove('show');
+    resetForm();
+  });
+
+  // Close modal when clicking outside
+  programModal.addEventListener('click', function(e) {
+    if (e.target === programModal) {
+      programModal.classList.remove('show');
+      resetForm();
+    }
+  });
+
+  // Image upload click handler
+  imageUploadArea.addEventListener('click', function() {
+    imageInput.click();
+  });
+
+  // Image file selection handler
+  imageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        showImageError('Sila pilih fail imej sahaja.');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showImageError('Saiz fail terlalu besar. Maksimum 5MB.');
+        return;
+      }
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        previewImage.style.display = 'block';
+        uploadIcon.style.display = 'none';
+        hideImageError();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Form validation and submission
+  programForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Clear previous errors
+    clearAllErrors();
+    
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+    
+    // Get form data
+    const formData = new FormData(programForm);
+    const programData = Object.fromEntries(formData);
+    
+    // Send data to server
+    submitProgramToServer(programData);
+  });
+
+  // Validation functions
+  function validateForm() {
+    let isValid = true;
+    
+    // Check image
+    if (!imageInput.files[0]) {
+      showImageError('Sila muat naik imej program.');
+      isValid = false;
+    }
+    
+    // Check program name
+    const programName = document.getElementById('program-name').value.trim();
+    if (!programName) {
+      showFieldError('name-error', 'Sila masukkan nama program.');
+      isValid = false;
+    }
+    
+    // Check description
+    const description = document.getElementById('program-description').value.trim();
+    if (!description) {
+      showFieldError('description-error', 'Sila masukkan diskripsi program.');
+      isValid = false;
+    }
+    
+    // Check dates
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    if (!startDate) {
+      showFieldError('start-date-error', 'Sila pilih tarikh mula permohonan.');
+      isValid = false;
+    }
+    if (!endDate) {
+      showFieldError('end-date-error', 'Sila pilih tarikh tutup permohonan.');
+      isValid = false;
+    }
+    if (startDate && endDate && startDate >= endDate) {
+      showFieldError('end-date-error', 'Tarikh tutup mesti selepas tarikh mula.');
+      isValid = false;
+    }
+    
+    // Check times
+    const startTime = document.getElementById('start-time').value;
+    const endTime = document.getElementById('end-time').value;
+    if (!startTime) {
+      showFieldError('start-time-error', 'Sila pilih waktu mula permohonan.');
+      isValid = false;
+    }
+    if (!endTime) {
+      showFieldError('end-time-error', 'Sila pilih waktu tutup penerimaan.');
+      isValid = false;
+    }
+    
+    return isValid;
+  }
+
+  function showImageError(message) {
+    imageError.textContent = message;
+    imageError.style.display = 'block';
+  }
+
+  function hideImageError() {
+    imageError.style.display = 'none';
+  }
+
+  function showFieldError(fieldId, message) {
+    const errorElement = document.getElementById(fieldId);
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+
+  function clearAllErrors() {
+    // Clear image error
+    hideImageError();
+    
+    // Clear field errors
+    const errorElements = document.querySelectorAll('.field-error');
+    errorElements.forEach(element => {
+      element.style.display = 'none';
+    });
+  }
+
+  function resetForm() {
+    programForm.reset();
+    previewImage.style.display = 'none';
+    uploadIcon.style.display = 'block';
+    clearAllErrors();
+  }
+
+  async function submitProgramToServer(programData) {
+    try {
+      // Show loading state
+      const submitBtn = document.querySelector('.create-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Mencipta...';
+      submitBtn.disabled = true;
+      
+      // Prepare data for server
+      const serverData = {
+        program: {
+          name: programData.program_name,
+          description: programData.program_description,
+          image_data: previewImage.src,
+          start_date: programData.start_date,
+          end_date: programData.end_date,
+          start_time: programData.start_time,
+          end_time: programData.end_time
+        }
+      };
+      
+      // Send to server
+      const response = await fetch('/admin/programs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        body: JSON.stringify(serverData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Success - reload page to show new program
+        window.location.reload();
+      } else {
+        // Show server errors
+        showServerErrors(result.errors);
+      }
+    } catch (error) {
+      console.error('Error submitting program:', error);
+      showFieldError('general-error', 'Ralat dalam menghantar data. Sila cuba lagi.');
+    } finally {
+      // Reset button state
+      const submitBtn = document.querySelector('.create-btn');
+      submitBtn.textContent = 'Cipta';
+      submitBtn.disabled = false;
+    }
+  }
+
+  function showServerErrors(errors) {
+    // Display server-side validation errors
+    Object.keys(errors).forEach(field => {
+      const errorMessages = errors[field];
+      if (Array.isArray(errorMessages)) {
+        const errorMessage = errorMessages[0];
+        switch (field) {
+          case 'name':
+            showFieldError('name-error', errorMessage);
+            break;
+          case 'description':
+            showFieldError('description-error', errorMessage);
+            break;
+          case 'image_data':
+            showImageError(errorMessage);
+            break;
+          case 'start_date':
+            showFieldError('start-date-error', errorMessage);
+            break;
+          case 'end_date':
+            showFieldError('end-date-error', errorMessage);
+            break;
+          case 'start_time':
+            showFieldError('start-time-error', errorMessage);
+            break;
+          case 'end_time':
+            showFieldError('end-time-error', errorMessage);
+            break;
+          default:
+            showFieldError('general-error', errorMessage);
+        }
+      }
+    });
+  }
+
+  // Edit functionality
+  const editModal = document.getElementById('edit-modal');
+  const editModalClose = document.getElementById('edit-modal-close');
+  const editForm = document.getElementById('edit-form');
+  const editImageUploadArea = document.getElementById('edit-image-upload-area');
+  const editImageInput = document.getElementById('edit-image-input');
+  const editPreviewImage = document.getElementById('edit-preview-image');
+  const editUploadIcon = document.getElementById('edit-upload-icon');
+  const editImageError = document.getElementById('edit-image-error');
+
+  // Edit modal close handlers
+  editModalClose.addEventListener('click', function() {
+    editModal.classList.remove('show');
+    resetEditForm();
+  });
+
+  editModal.addEventListener('click', function(e) {
+    if (e.target === editModal) {
+      editModal.classList.remove('show');
+      resetEditForm();
+    }
+  });
+
+  // Edit image upload handlers
+  editImageUploadArea.addEventListener('click', function() {
+    editImageInput.click();
+  });
+
+  editImageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        showEditImageError('Sila pilih fail imej sahaja.');
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        showEditImageError('Saiz fail terlalu besar. Maksimum 5MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editPreviewImage.src = e.target.result;
+        editPreviewImage.style.display = 'block';
+        editUploadIcon.style.display = 'none';
+        hideEditImageError();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Edit form submission
+  editForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    clearAllEditErrors();
+    
+    if (!validateEditForm()) {
+      return;
+    }
+    
+    const formData = new FormData(editForm);
+    const programData = Object.fromEntries(formData);
+    const programId = document.getElementById('edit-program-id').value;
+    
+    submitEditToServer(programData, programId);
+  });
+
+  // Global edit function
+  window.editProgram = async function(programId) {
+    try {
+      // Fetch program data
+      const response = await fetch(`/admin/programs/${programId}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        const program = result.program;
+        
+        // Populate edit form
+        document.getElementById('edit-program-id').value = program.id;
+        document.getElementById('edit-program-name').value = program.name;
+        document.getElementById('edit-program-description').value = program.description;
+        document.getElementById('edit-start-date').value = program.start_date;
+        document.getElementById('edit-end-date').value = program.end_date;
+        document.getElementById('edit-start-time').value = program.start_time;
+        document.getElementById('edit-end-time').value = program.end_time;
+        
+        // Set image preview
+        editPreviewImage.src = program.image_data;
+        editPreviewImage.style.display = 'block';
+        editUploadIcon.style.display = 'none';
+        
+        // Show edit modal
+        editModal.classList.add('show');
+      } else {
+        alert('Ralat dalam memuat data program.');
+      }
+    } catch (error) {
+      console.error('Error fetching program:', error);
+      alert('Ralat dalam memuat data program.');
+    }
+  };
+
+  async function submitEditToServer(programData, programId) {
+    try {
+      const submitBtn = editForm.querySelector('.create-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Mengemaskini...';
+      submitBtn.disabled = true;
+      
+      const serverData = {
+        program: {
+          name: programData.program_name,
+          description: programData.program_description,
+          image_data: editPreviewImage.src,
+          start_date: programData.start_date,
+          end_date: programData.end_date,
+          start_time: programData.start_time,
+          end_time: programData.end_time
+        }
+      };
+      
+      const response = await fetch(`/admin/programs/${programId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        body: JSON.stringify(serverData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        window.location.reload();
+      } else {
+        showEditServerErrors(result.errors);
+      }
+    } catch (error) {
+      console.error('Error updating program:', error);
+      showEditFieldError('edit-general-error', 'Ralat dalam mengemaskini data. Sila cuba lagi.');
+    } finally {
+      const submitBtn = editForm.querySelector('.create-btn');
+      submitBtn.textContent = 'Kemaskini';
+      submitBtn.disabled = false;
+    }
+  }
+
+  function validateEditForm() {
+    let isValid = true;
+    
+    const programName = document.getElementById('edit-program-name').value.trim();
+    if (!programName) {
+      showEditFieldError('edit-name-error', 'Sila masukkan nama program.');
+      isValid = false;
+    }
+    
+    const description = document.getElementById('edit-program-description').value.trim();
+    if (!description) {
+      showEditFieldError('edit-description-error', 'Sila masukkan diskripsi program.');
+      isValid = false;
+    }
+    
+    const startDate = document.getElementById('edit-start-date').value;
+    const endDate = document.getElementById('edit-end-date').value;
+    if (!startDate) {
+      showEditFieldError('edit-start-date-error', 'Sila pilih tarikh mula permohonan.');
+      isValid = false;
+    }
+    if (!endDate) {
+      showEditFieldError('edit-end-date-error', 'Sila pilih tarikh tutup permohonan.');
+      isValid = false;
+    }
+    if (startDate && endDate && startDate >= endDate) {
+      showEditFieldError('edit-end-date-error', 'Tarikh tutup mesti selepas tarikh mula.');
+      isValid = false;
+    }
+    
+    const startTime = document.getElementById('edit-start-time').value;
+    const endTime = document.getElementById('edit-end-time').value;
+    if (!startTime) {
+      showEditFieldError('edit-start-time-error', 'Sila pilih waktu mula permohonan.');
+      isValid = false;
+    }
+    if (!endTime) {
+      showEditFieldError('edit-end-time-error', 'Sila pilih waktu tutup penerimaan.');
+      isValid = false;
+    }
+    
+    return isValid;
+  }
+
+  function showEditImageError(message) {
+    editImageError.textContent = message;
+    editImageError.style.display = 'block';
+  }
+
+  function hideEditImageError() {
+    editImageError.style.display = 'none';
+  }
+
+  function showEditFieldError(fieldId, message) {
+    const errorElement = document.getElementById(fieldId);
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+
+  function clearAllEditErrors() {
+    hideEditImageError();
+    
+    const errorElements = document.querySelectorAll('#edit-modal .field-error');
+    errorElements.forEach(element => {
+      element.style.display = 'none';
+    });
+  }
+
+  function resetEditForm() {
+    editForm.reset();
+    editPreviewImage.style.display = 'none';
+    editUploadIcon.style.display = 'block';
+    clearAllEditErrors();
+  }
+
+  function showEditServerErrors(errors) {
+    Object.keys(errors).forEach(field => {
+      const errorMessages = errors[field];
+      if (Array.isArray(errorMessages)) {
+        const errorMessage = errorMessages[0];
+        switch (field) {
+          case 'name':
+            showEditFieldError('edit-name-error', errorMessage);
+            break;
+          case 'description':
+            showEditFieldError('edit-description-error', errorMessage);
+            break;
+          case 'image_data':
+            showEditImageError(errorMessage);
+            break;
+          case 'start_date':
+            showEditFieldError('edit-start-date-error', errorMessage);
+            break;
+          case 'end_date':
+            showEditFieldError('edit-end-date-error', errorMessage);
+            break;
+          case 'start_time':
+            showEditFieldError('edit-start-time-error', errorMessage);
+            break;
+          case 'end_time':
+            showEditFieldError('edit-end-time-error', errorMessage);
+            break;
+          default:
+            showEditFieldError('edit-general-error', errorMessage);
+        }
+      }
+    });
+  }
+});
+</script>
+</body>
+</html> 
