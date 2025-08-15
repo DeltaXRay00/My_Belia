@@ -1,0 +1,162 @@
+<.logo_size width="180" height="120" />
+<.hero_overlay opacity="0.0" />
+<.hero_logo_contrast contrast="2.0" />
+<.hero_logo_size width="600" height="auto" />
+<.social_icon_size ellipse_size="40" image_size="35" />
+<.agency_logo_size width="130" height="130" />
+
+<div class="topbar">
+	<div class="container topbar-inner">
+		<div class="brand-left">
+			<img src={~p"/images/node-4.png"} alt="KBSS" />
+		</div>
+		<nav class="topnav">
+			<a href="/laman-utama-pengguna" class="nav-link">UTAMA</a>
+			<span>PERMOHONAN</span>
+			<span class="multi-line">PROFIL &amp;<br>MAKLUMAT</span>
+			<span>GALERI</span>
+			<span class="multi-line">HUBUNGI<br>KAMI</span>
+		</nav>
+		<div class="topnav-right">
+			<%= if @current_user && @current_user.role == "admin" do %>
+				<a href="/admin" class="admin-link">Admin</a>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<!-- Main Content Area -->
+<div class="profile-container">
+  <!-- Left Sidebar -->
+  <div class="profile-sidebar">
+    <div class="sidebar-header">
+      <img src={~p"/images/node-18.png"} alt="MyBelia" class="sidebar-logo" />
+    </div>
+    
+    <div class="sidebar-section">
+      <h3 class="section-title">Profil Pengguna</h3>
+      <ul class="nav-list">
+        <li><a href="/profil_pengguna" class="nav-link">Profil Pengguna</a></li>
+        <li><a href="/dokumen_sokongan" class="nav-link active">Muat Naik Fail</a></li>
+        <li><a href="/permohonan" class="nav-link">Permohonan</a></li>
+        <li><a href="/log" class="nav-link">Log</a></li>
+      </ul>
+    </div>
+    
+    <!-- Logout Section -->
+    <div class="sidebar-section logout-section">
+      <ul class="nav-list">
+        <li><a href="/log-keluar" class="nav-link logout-link">Log Keluar</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Right Main Content -->
+  <div class="profile-main">
+    <!-- Page Title -->
+    <div class="page-title-section">
+      <h1 class="page-title">DOKUMEN SOKONGAN</h1>
+    </div>
+
+    <!-- Document Upload Form -->
+    <div class="document-form-container">
+      <div class="document-list">
+        <!-- Document Item 1 -->
+        <div class="document-item">
+          <span class="document-label">Salinan Kad Pengenalan</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+
+        <!-- Document Item 2 -->
+        <div class="document-item">
+          <span class="document-label">Salinan Surat Beranak</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+
+        <!-- Document Item 3 -->
+        <div class="document-item">
+          <span class="document-label">Salinan Kad Pengenalan Bapa</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+
+        <!-- Document Item 4 -->
+        <div class="document-item">
+          <span class="document-label">Salinan Kad Pengenalan Ibu</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+
+        <!-- Document Item 5 -->
+        <div class="document-item">
+          <span class="document-label">Resume / CV</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+
+        <!-- Document Item 6 -->
+        <div class="document-item">
+          <span class="document-label">Surat Iringan</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+
+        <!-- Document Item 7 -->
+        <div class="document-item">
+          <span class="document-label">Surat Iringan Sokongan</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+
+        <!-- Document Item 8 -->
+        <div class="document-item">
+          <span class="document-label">Sijil-sijil Pendidikan</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+
+        <!-- Document Item 9 -->
+        <div class="document-item">
+          <span class="document-label">Sijil-sijil Aktiviti Luar</span>
+          <button class="upload-button">Muat Naik</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer positioned outside main container -->
+<div class="profile-footer-wrapper">
+  <footer class="footer">
+	<div class="container footer-inner">
+		<div class="footer-top">
+			<div class="footer-left">
+				<img src={~p"/images/kbs-logo-100x100-1-1-15.png"} alt="KBS" class="footer-logo" />
+				<div class="footer-contact">
+					<div class="contact-title">KEMENTERIAN BELIA DAN SUKAN SABAH</div>
+					<div class="contact-details">
+						<div>Aras 10, Blok B, Wisma Muis,</div>
+						<div>Karung Berkunci No.2007, 88999, Kota Kinabalu</div>
+						<div>No Telefon: 088 287 556</div>
+						<div>Faks: 088 240 533</div>
+						<div>E-mel: kbs@sabah.gov.my</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-social">
+				<div class="social-icon-container">
+					<img src={~p"/images/ellipse-1-17.svg"} alt="Facebook" class="social-ellipse" />
+					<img src={~p"/images/2175193-1-18.png"} alt="Facebook Icon" class="social-image" />
+				</div>
+				<div class="social-icon-container">
+					<img src={~p"/images/ellipse-2-19.svg"} alt="Instagram" class="social-ellipse" />
+					<img src={~p"/images/download-1-20.png"} alt="Instagram Icon" class="social-image" />
+				</div>
+			</div>
+		</div>
+		<div class="footer-divider"></div>
+		<div class="footer-bottom">
+			<div class="footer-note">Agensi di bawah Kementerian Belia dan Sukan Sabah</div>
+			<div class="footer-agencies">
+				<img src={~p"/images/msn-logo-2-1-22.png"} alt="Sukan Negeri Sabah" class="agency-logo" />
+				<img src={~p"/images/images-1-1-24.png"} alt="Lembaga Sukan Sabah" class="agency-logo" />
+				<img src={~p"/images/node-23.png"} alt="MBS Belia Sabah" class="agency-logo" />
+			</div>
+		</div>
+	</div>
+  </footer>
+</div> 

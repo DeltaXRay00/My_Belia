@@ -37,6 +37,8 @@ defmodule MyBeliaWeb.Router do
     pipe_through [:browser, :auth]
 
     get "/laman-utama-pengguna", PageController, :user_home
+    get "/profil_pengguna", PageController, :user_profile
+    get "/dokumen_sokongan", PageController, :dokumen_sokongan
   end
 
   scope "/", MyBeliaWeb do
