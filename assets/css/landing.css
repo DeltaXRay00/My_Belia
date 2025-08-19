@@ -354,7 +354,7 @@ body {
 
 /* Akses Pantas */
 .quick-block {
-  background: var(--gray-100);
+  background-color: #f5f7fa;
   padding: 40px 0 60px 0;
 }
 
@@ -424,7 +424,8 @@ body {
 .contact-title {
   font-size: 14px;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+  color: #ffffff;
 }
 
 .contact-details {

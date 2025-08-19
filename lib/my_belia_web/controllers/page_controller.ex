@@ -169,6 +169,24 @@ defmodule MyBeliaWeb.PageController do
     render(conn, :admin_permohonan_kursus, layout: false, courses: courses)
   end
 
+  def admin_permohonan_geran(conn, _params) do
+    # The admin permohonan geran page is often custom made,
+    # so skip the default app layout.
+    render(conn, :admin_permohonan_geran, layout: false)
+  end
+
+  def admin_permohonan_geran_lulus(conn, _params) do
+    render(conn, :admin_permohonan_geran_lulus, layout: false)
+  end
+
+  def admin_permohonan_geran_tolak(conn, _params) do
+    render(conn, :admin_permohonan_geran_tolak, layout: false)
+  end
+
+  def admin_permohonan_geran_tidak_lengkap(conn, _params) do
+    render(conn, :admin_permohonan_geran_tidak_lengkap, layout: false)
+  end
+
   def create_course(conn, %{"course" => course_params}) do
     case MyBelia.Courses.create_course(course_params) do
       {:ok, course} ->
@@ -266,6 +284,30 @@ defmodule MyBeliaWeb.PageController do
     # so skip the default app layout.
     courses = MyBelia.Courses.list_courses()
     render(conn, :senarai_kursus, layout: false, courses: courses)
+  end
+
+  def permohonan_geran(conn, _params) do
+    # The permohonan geran page is often custom made,
+    # so skip the default app layout.
+    render(conn, :permohonan_geran, layout: false)
+  end
+
+  def skim_geran(conn, _params) do
+    # The skim geran page is often custom made,
+    # so skip the default app layout.
+    render(conn, :skim_geran, layout: false)
+  end
+
+  def dokumen_sokongan_geran(conn, _params) do
+    # The dokumen sokongan geran page is often custom made,
+    # so skip the default app layout.
+    render(conn, :dokumen_sokongan_geran, layout: false)
+  end
+
+  def pengesahan_permohonan(conn, _params) do
+    # The pengesahan permohonan page is often custom made,
+    # so skip the default app layout.
+    render(conn, :pengesahan_permohonan, layout: false)
   end
 
   def program_detail(conn, %{"id" => id}) do

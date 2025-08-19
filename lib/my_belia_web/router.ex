@@ -71,6 +71,26 @@ defmodule MyBeliaWeb.Router do
     get "/senarai-kursus", PageController, :senarai_kursus
     get "/course-list", PageController, :senarai_kursus
     get "/courses", PageController, :senarai_kursus
+
+    # Grant Application
+    get "/permohonan_geran", PageController, :permohonan_geran
+    get "/permohonan-geran", PageController, :permohonan_geran
+    get "/grant-application", PageController, :permohonan_geran
+
+    # Grant Scheme Step
+    get "/skim_geran", PageController, :skim_geran
+    get "/skim-geran", PageController, :skim_geran
+    get "/grant-scheme", PageController, :skim_geran
+
+                 # Support Documents Step
+             get "/dokumen_sokongan_geran", PageController, :dokumen_sokongan_geran
+             get "/dokumen-sokongan-geran", PageController, :dokumen_sokongan_geran
+             get "/support-documents", PageController, :dokumen_sokongan_geran
+
+             # Application Confirmation Step
+             get "/pengesahan_permohonan", PageController, :pengesahan_permohonan
+             get "/pengesahan-permohonan", PageController, :pengesahan_permohonan
+             get "/application-confirmation", PageController, :pengesahan_permohonan
   end
 
   scope "/", MyBeliaWeb do
@@ -99,6 +119,16 @@ defmodule MyBeliaWeb.Router do
     get "/admin/kursus", PageController, :admin_permohonan_kursus
     get "/admin/courses", PageController, :admin_permohonan_kursus
     get "/admin/permohonan-kursus", PageController, :admin_permohonan_kursus
+
+                 # Admin Grant Management
+             get "/admin/permohonan_geran", PageController, :admin_permohonan_geran
+             get "/admin/permohonan-geran", PageController, :admin_permohonan_geran
+             get "/admin/geran", PageController, :admin_permohonan_geran
+
+             # Admin Grant Status Pages
+             get "/admin/permohonan_geran/lulus", PageController, :admin_permohonan_geran_lulus
+             get "/admin/permohonan_geran/tolak", PageController, :admin_permohonan_geran_tolak
+             get "/admin/permohonan_geran/tidak_lengkap", PageController, :admin_permohonan_geran_tidak_lengkap
   end
 
   # Other scopes may use custom stacks.

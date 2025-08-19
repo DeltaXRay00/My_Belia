@@ -1,0 +1,139 @@
+<.logo_size width="180" height="120" />
+<.hero_overlay opacity="0.0" />
+<.hero_logo_contrast contrast="2.0" />
+<.hero_logo_size width="600" height="auto" />
+<.social_icon_size ellipse_size="40" image_size="35" />
+<.agency_logo_size width="130" height="130" />
+
+<div class="topbar">
+	<div class="container topbar-inner">
+		<div class="brand-left">
+			<img src={~p"/images/node-4.png"} alt="KBSS" />
+		</div>
+		<nav class="topnav">
+			<a href="/laman-utama-pengguna" class="nav-link">UTAMA</a>
+			<div class="dropdown">
+				<span>PERMOHONAN</span>
+				<div class="dropdown-content">
+					<a href="/senarai_program">Program</a>
+					<a href="/senarai_kursus">Kursus</a>
+					<a href="/permohonan_geran">Geran</a>
+				</div>
+			</div>
+			<span class="multi-line">PROFIL &amp;<br>MAKLUMAT</span>
+			<span>GALERI</span>
+			<span class="multi-line">HUBUNGI<br>KAMI</span>
+		</nav>
+		<div class="topnav-right">
+			<%= if @current_user && @current_user.role == "admin" do %>
+				<a href="/admin" class="admin-link">Admin</a>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<!-- Main Content Area -->
+<div class="grant-container">
+  <!-- Page Title -->
+  <div class="page-title-section">
+    <h1 class="page-title">PERMOHONAN GERAN</h1>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation" translate="no">
+    <div class="tab" onclick="window.location.href='/permohonan_geran'">
+      <span class="tab-text" translate="no">Profil</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/skim_geran'">
+      <span class="tab-text" translate="no">Skim&#10;Geran</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/dokumen_sokongan_geran'">
+      <span class="tab-text" translate="no">Dokumen&#10;Sokongan</span>
+    </div>
+    <div class="tab active" onclick="window.location.href='/pengesahan_permohonan'">
+      <span class="tab-text" translate="no">Pengesahan&#10;Permohonan</span>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <div class="form-container" translate="no">
+    <div class="form-section">
+      <h3 class="form-section-title">Pengesahan Permohonan:</h3>
+      
+      <!-- Confirmation Message -->
+      <div class="confirmation-message">
+        <p>Saya dengan ini mengesahkan bahawa semua maklumat dan dokumen yang dikemukakan dalam permohonan ini adalah benar, tepat, dan lengkap mengikut pengetahuan saya. Saya faham bahawa sebarang maklumat palsu atau mengelirukan boleh menyebabkan permohonan ini ditolak atau pembatalan geran sekiranya telah diluluskan.</p>
+      </div>
+
+      <!-- Agreement Checkbox -->
+      <div class="agreement-section">
+        <div class="checkbox-container">
+          <input type="checkbox" id="agreement" class="agreement-checkbox" required>
+          <label for="agreement" class="agreement-label">Setuju</label>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="button-container">
+        <button class="back-button" onclick="window.location.href='/dokumen_sokongan_geran'">Kembali</button>
+        <button class="submit-button" onclick="submitApplication()">Hantar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+	<div class="container footer-inner">
+		<div class="footer-top">
+			<div class="footer-left">
+				<img src={~p"/images/kbs-logo-100x100-1-1-15.png"} alt="KBS" class="footer-logo" />
+				<div class="footer-contact">
+					<div class="contact-title">KEMENTERIAN BELIA DAN SUKAN SABAH</div>
+					<div class="contact-details">
+						<div>Aras 10, Blok B, Wisma Muis,</div>
+						<div>Karung Berkunci No.2007, 88999, Kota Kinabalu</div>
+						<div>No Telefon: 088 287 556</div>
+						<div>Faks: 088 240 533</div>
+						<div>E-mel: kbs@sabah.gov.my</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-social">
+				<div class="social-icon-container">
+					<img src={~p"/images/ellipse-1-17.svg"} alt="Facebook" class="social-ellipse" />
+					<img src={~p"/images/2175193-1-18.png"} alt="Facebook Icon" class="social-image" />
+				</div>
+				<div class="social-icon-container">
+					<img src={~p"/images/ellipse-2-19.svg"} alt="Instagram" class="social-ellipse" />
+					<img src={~p"/images/download-1-20.png"} alt="Instagram Icon" class="social-image" />
+				</div>
+			</div>
+		</div>
+		<div class="footer-divider"></div>
+		<div class="footer-bottom">
+			<div class="footer-note">Agensi di bawah Kementerian Belia dan Sukan Sabah</div>
+			<div class="footer-agencies">
+				<img src={~p"/images/msn-logo-2-1-22.png"} alt="Sukan Negeri Sabah" class="agency-logo" />
+				<img src={~p"/images/images-1-1-24.png"} alt="Lembaga Sukan Sabah" class="agency-logo" />
+				<img src={~p"/images/node-23.png"} alt="MBS Belia Sabah" class="agency-logo" />
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script>
+function submitApplication() {
+  const agreementCheckbox = document.getElementById('agreement');
+  
+  if (!agreementCheckbox.checked) {
+    alert('Sila tandakan kotak "Setuju" untuk meneruskan.');
+    return;
+  }
+  
+  // Here you would typically submit the form data to the server
+  alert('Permohonan anda telah berjaya dihantar!');
+  // Redirect to success page or home page
+  window.location.href = '/laman-utama-pengguna';
+}
+</script> 

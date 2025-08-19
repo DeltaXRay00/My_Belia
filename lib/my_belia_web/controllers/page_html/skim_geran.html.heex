@@ -1,0 +1,248 @@
+<.logo_size width="180" height="120" />
+<.hero_overlay opacity="0.0" />
+<.hero_logo_contrast contrast="2.0" />
+<.hero_logo_size width="600" height="auto" />
+<.social_icon_size ellipse_size="40" image_size="35" />
+<.agency_logo_size width="130" height="130" />
+
+<div class="topbar">
+	<div class="container topbar-inner">
+		<div class="brand-left">
+			<img src={~p"/images/node-4.png"} alt="KBSS" />
+		</div>
+		<nav class="topnav">
+			<a href="/laman-utama-pengguna" class="nav-link">UTAMA</a>
+			<div class="dropdown">
+				<span>PERMOHONAN</span>
+				<div class="dropdown-content">
+					<a href="/senarai_program">Program</a>
+					<a href="/senarai_kursus">Kursus</a>
+					<a href="/permohonan_geran">Geran</a>
+				</div>
+			</div>
+			<span class="multi-line">PROFIL &amp;<br>MAKLUMAT</span>
+			<span>GALERI</span>
+			<span class="multi-line">HUBUNGI<br>KAMI</span>
+		</nav>
+		<div class="topnav-right">
+			<%= if @current_user && @current_user.role == "admin" do %>
+				<a href="/admin" class="admin-link">Admin</a>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<!-- Main Content Area -->
+<div class="grant-container">
+  <!-- Page Title -->
+  <div class="page-title-section">
+    <h1 class="page-title">PERMOHONAN GERAN</h1>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation" translate="no">
+    <div class="tab" onclick="window.location.href='/permohonan_geran'">
+      <span class="tab-text" translate="no">Profil</span>
+    </div>
+    <div class="tab active" onclick="window.location.href='/skim_geran'">
+      <span class="tab-text" translate="no">Skim&#10;Geran</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/dokumen_sokongan_geran'">
+      <span class="tab-text" translate="no">Dokumen&#10;Sokongan</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/pengesahan_permohonan'">
+      <span class="tab-text" translate="no">Pengesahan&#10;Permohonan</span>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <div class="form-container">
+    <div class="form-section">
+      <h3 class="form-instruction">Sila lengkapkan maklumat berikut:</h3>
+      
+      <!-- Grant Scheme Information -->
+      <div class="form-section-title">Maklumat Skim Geran</div>
+      
+      <div class="form-group">
+        <label class="form-label required">Skim Geran yang Ditawarkan <span class="required-mark">*</span></label>
+        <select class="form-input" required>
+          <option value="">Pilih skim geran</option>
+          <option value="geran_belia">Geran Belia</option>
+          <option value="geran_usahawan">Geran Usahawan Belia</option>
+          <option value="geran_teknologi">Geran Teknologi Belia</option>
+          <option value="geran_sukan">Geran Sukan Belia</option>
+          <option value="geran_pendidikan">Geran Pendidikan Belia</option>
+          <option value="geran_kesihatan">Geran Kesihatan Belia</option>
+          <option value="geran_alam_sekitar">Geran Alam Sekitar Belia</option>
+          <option value="geran_budaya">Geran Budaya dan Seni Belia</option>
+          <option value="geran_sosial">Geran Khidmat Sosial Belia</option>
+          <option value="lain">Lain-lain</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Jumlah Geran yang Dimohon (RM) <span class="required-mark">*</span></label>
+        <input type="number" class="form-input" placeholder="Contoh: 5000" min="100" max="50000" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Tempoh Projek <span class="required-mark">*</span></label>
+        <select class="form-input" required>
+          <option value="">Pilih tempoh projek</option>
+          <option value="1-3_bulan">1-3 Bulan</option>
+          <option value="3-6_bulan">3-6 Bulan</option>
+          <option value="6-12_bulan">6-12 Bulan</option>
+          <option value="12_bulan_ke_atas">12 Bulan ke Atas</option>
+        </select>
+      </div>
+
+      <!-- Project Details -->
+      <div class="project-details-section">
+        <div class="form-section-title">Butiran Projek</div>
+        
+        <div class="form-group">
+          <label class="form-label required">Nama Projek <span class="required-mark">*</span></label>
+          <input type="text" class="form-input" placeholder="Masukkan nama projek" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Objektif Projek <span class="required-mark">*</span></label>
+          <textarea class="form-input" rows="4" placeholder="Nyatakan objektif utama projek ini" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Kumpulan Sasaran <span class="required-mark">*</span></label>
+          <textarea class="form-input" rows="3" placeholder="Siapa kumpulan sasaran projek ini?" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Lokasi Projek <span class="required-mark">*</span></label>
+          <input type="text" class="form-input" placeholder="Masukkan lokasi pelaksanaan projek" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Tarikh Mula Projek <span class="required-mark">*</span></label>
+          <input type="date" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Tarikh Tamat Projek <span class="required-mark">*</span></label>
+          <input type="date" class="form-input" required>
+        </div>
+      </div>
+
+      <!-- Budget Breakdown -->
+      <div class="budget-section">
+        <div class="form-section-title">Pecahan Belanjawan</div>
+        
+        <div class="budget-grid">
+          <div class="form-group">
+            <label class="form-label required">Kos Peralatan <span class="required-mark">*</span></label>
+            <input type="number" class="form-input" placeholder="RM" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label required">Kos Bahan <span class="required-mark">*</span></label>
+            <input type="number" class="form-input" placeholder="RM" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Kos Pengangkutan</label>
+            <input type="number" class="form-input" placeholder="RM" min="0">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Kos Pentadbiran</label>
+            <input type="number" class="form-input" placeholder="RM" min="0">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Kos Lain-lain</label>
+            <input type="number" class="form-input" placeholder="RM" min="0">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label required">Jumlah Keseluruhan <span class="required-mark">*</span></label>
+            <input type="number" class="form-input total-budget" placeholder="RM" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Proposal -->
+      <div class="proposal-section">
+        <div class="form-section-title">Kertas Kerja / Proposal</div>
+        
+        <div class="form-group">
+          <label class="form-label required">Muat Naik Kertas Kerja <span class="required-mark">*</span></label>
+          <div class="file-upload-container">
+            <input type="file" class="file-input" accept=".pdf" required>
+            <div class="file-upload-area">
+              <img src={~p"/images/images-2-43.png"} alt="Upload Icon" class="upload-icon" />
+              <p class="upload-text">Klik untuk memuat naik fail atau seret fail ke sini</p>
+              <p class="upload-hint">Format yang diterima: PDF (Maksimum 10MB)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Lampiran Tambahan (jika ada)</label>
+          <div class="file-upload-container">
+            <input type="file" class="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple>
+            <div class="file-upload-area secondary">
+              <img src={~p"/images/images-2-43.png"} alt="Upload Icon" class="upload-icon" />
+              <p class="upload-text">Muat naik lampiran tambahan</p>
+              <p class="upload-hint">Format: PDF, JPG, PNG (Maksimum 5MB setiap fail)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Navigation Buttons -->
+      <div class="button-container">
+        <button class="back-button" onclick="window.location.href='/permohonan_geran'">Kembali</button>
+        <button class="next-button" onclick="window.location.href='/dokumen_sokongan_geran'">Seterusnya</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+	<div class="container footer-inner">
+		<div class="footer-top">
+			<div class="footer-left">
+				<img src={~p"/images/kbs-logo-100x100-1-1-15.png"} alt="KBS" class="footer-logo" />
+				<div class="footer-contact">
+					<div class="contact-title">KEMENTERIAN BELIA DAN SUKAN SABAH</div>
+					<div class="contact-details">
+						<div>Aras 10, Blok B, Wisma Muis,</div>
+						<div>Karung Berkunci No.2007, 88999, Kota Kinabalu</div>
+						<div>No Telefon: 088 287 556</div>
+						<div>Faks: 088 240 533</div>
+						<div>E-mel: kbs@sabah.gov.my</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-social">
+				<div class="social-icon-container">
+					<img src={~p"/images/ellipse-1-17.svg"} alt="Facebook" class="social-ellipse" />
+					<img src={~p"/images/2175193-1-18.png"} alt="Facebook Icon" class="social-image" />
+				</div>
+				<div class="social-icon-container">
+					<img src={~p"/images/ellipse-2-19.svg"} alt="Instagram" class="social-ellipse" />
+					<img src={~p"/images/download-1-20.png"} alt="Instagram Icon" class="social-image" />
+				</div>
+			</div>
+		</div>
+		<div class="footer-divider"></div>
+		<div class="footer-bottom">
+			<div class="footer-note">Agensi di bawah Kementerian Belia dan Sukan Sabah</div>
+			<div class="footer-agencies">
+				<img src={~p"/images/msn-logo-2-1-22.png"} alt="Sukan Negeri Sabah" class="agency-logo" />
+				<img src={~p"/images/images-1-1-24.png"} alt="Lembaga Sukan Sabah" class="agency-logo" />
+				<img src={~p"/images/node-23.png"} alt="MBS Belia Sabah" class="agency-logo" />
+			</div>
+		</div>
+	</div>
+</footer> 

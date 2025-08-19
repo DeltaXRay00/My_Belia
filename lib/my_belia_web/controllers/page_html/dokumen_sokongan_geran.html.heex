@@ -1,0 +1,238 @@
+<.logo_size width="180" height="120" />
+<.hero_overlay opacity="0.0" />
+<.hero_logo_contrast contrast="2.0" />
+<.hero_logo_size width="600" height="auto" />
+<.social_icon_size ellipse_size="40" image_size="35" />
+<.agency_logo_size width="130" height="130" />
+
+<div class="topbar">
+	<div class="container topbar-inner">
+		<div class="brand-left">
+			<img src={~p"/images/node-4.png"} alt="KBSS" />
+		</div>
+		<nav class="topnav">
+			<a href="/laman-utama-pengguna" class="nav-link">UTAMA</a>
+			<div class="dropdown">
+				<span>PERMOHONAN</span>
+				<div class="dropdown-content">
+					<a href="/senarai_program">Program</a>
+					<a href="/senarai_kursus">Kursus</a>
+					<a href="/permohonan_geran">Geran</a>
+				</div>
+			</div>
+			<span class="multi-line">PROFIL &amp;<br>MAKLUMAT</span>
+			<span>GALERI</span>
+			<span class="multi-line">HUBUNGI<br>KAMI</span>
+		</nav>
+		<div class="topnav-right">
+			<%= if @current_user && @current_user.role == "admin" do %>
+				<a href="/admin" class="admin-link">Admin</a>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<!-- Main Content Area -->
+<div class="grant-container">
+  <!-- Page Title -->
+  <div class="page-title-section">
+    <h1 class="page-title">PERMOHONAN GERAN</h1>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation" translate="no">
+    <div class="tab" onclick="window.location.href='/permohonan_geran'">
+      <span class="tab-text" translate="no">Profil</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/skim_geran'">
+      <span class="tab-text" translate="no">Skim&#10;Geran</span>
+    </div>
+    <div class="tab active" onclick="window.location.href='/dokumen_sokongan_geran'">
+      <span class="tab-text" translate="no">Dokumen&#10;Sokongan</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/pengesahan_permohonan'">
+      <span class="tab-text" translate="no">Pengesahan&#10;Permohonan</span>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <div class="form-container" translate="no">
+    <div class="form-section">
+      <h3 class="form-instruction" translate="no">Sila Muat Naik Dokumen Sokongan Anda:</h3>
+      
+      <!-- Required Documents Section -->
+      <div class="form-section-title">Dokumen Wajib</div>
+      
+      <!-- Document Item 1 -->
+      <div class="document-item">
+        <div class="document-info">
+          <span class="document-label required">Surat Sokongan <span class="required-mark">*</span></span>
+          <span class="document-hint">Surat sokongan dari pihak berwajib atau agensi berkaitan</span>
+        </div>
+                 <div class="upload-button-container">
+           <input type="file" class="file-input" accept=".pdf" required>
+           <button class="upload-button">
+             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
+           </button>
+         </div>
+      </div>
+
+      <!-- Document Item 2 -->
+      <div class="document-item">
+        <div class="document-info">
+          <span class="document-label required">Profil Organisasi <span class="required-mark">*</span></span>
+          <span class="document-hint">Dokumen profil lengkap organisasi pemohon</span>
+        </div>
+                 <div class="upload-button-container">
+           <input type="file" class="file-input" accept=".pdf" required>
+           <button class="upload-button">
+             <img src={~p"/images/upload-document-2-43.png"} alt="Upload" class="upload-icon" />
+           </button>
+         </div>
+      </div>
+
+      <!-- Document Item 4 -->
+      <div class="document-item">
+        <div class="document-info">
+          <span class="document-label required">Surat Kebenaran Penggunaan Fasiliti / Lokasi <span class="required-mark">*</span></span>
+          <span class="document-hint">Surat kebenaran untuk menggunakan fasiliti atau lokasi projek</span>
+        </div>
+                 <div class="upload-button-container">
+           <input type="file" class="file-input" accept=".pdf" required>
+           <button class="upload-button">
+             <img src={~p"/images/upload-document-4-51.png"} alt="Upload" class="upload-icon" />
+           </button>
+         </div>
+      </div>
+
+      <!-- Document Item 5 -->
+      <div class="document-item">
+        <div class="document-info">
+          <span class="document-label required">Rancangan Atur Cara Program <span class="required-mark">*</span></span>
+          <span class="document-hint">Jadual dan atur cara program yang akan dilaksanakan</span>
+        </div>
+                 <div class="upload-button-container">
+           <input type="file" class="file-input" accept=".pdf" required>
+           <button class="upload-button">
+             <img src={~p"/images/upload-document-5-55.png"} alt="Upload" class="upload-icon" />
+           </button>
+         </div>
+      </div>
+
+      <!-- Document Item 6 -->
+      <div class="document-item">
+        <div class="document-info">
+          <span class="document-label required">Lesen Organisasi <span class="required-mark">*</span></span>
+          <span class="document-hint">Lesen pendaftaran organisasi yang sah</span>
+        </div>
+                 <div class="upload-button-container">
+           <input type="file" class="file-input" accept=".pdf" required>
+           <button class="upload-button">
+             <img src={~p"/images/upload-document-6-59.png"} alt="Upload" class="upload-icon" />
+           </button>
+         </div>
+      </div>
+
+      <!-- Additional Documents Section -->
+      <div class="form-section-title">Dokumen Tambahan (Jika Ada)</div>
+      
+      <!-- Additional Document Item 1 -->
+      <div class="document-item">
+        <div class="document-info">
+          <span class="document-label">Sijil-sijil Pengiktirafan</span>
+          <span class="document-hint">Sijil pengiktirafan atau anugerah yang diterima</span>
+        </div>
+                 <div class="upload-button-container">
+           <input type="file" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
+           <button class="upload-button">
+             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
+           </button>
+         </div>
+      </div>
+
+      <!-- Additional Document Item 3 -->
+      <div class="document-item">
+        <div class="document-info">
+          <span class="document-label">Surat Rujukan</span>
+          <span class="document-hint">Surat rujukan dari pihak ketiga</span>
+        </div>
+                 <div class="upload-button-container">
+           <input type="file" class="file-input" accept=".pdf">
+           <button class="upload-button">
+             <img src={~p"/images/upload-document-3-47.png"} alt="Upload" class="upload-icon" />
+           </button>
+         </div>
+      </div>
+
+      <!-- Document Upload Guidelines -->
+      <div class="guidelines-section">
+        <div class="form-section-title">Garis Panduan Muat Naik</div>
+        
+        <div class="guidelines-content">
+          <div class="guideline-item">
+            <span class="guideline-icon">📄</span>
+            <span class="guideline-text">Format yang diterima: PDF, JPG, PNG</span>
+          </div>
+          <div class="guideline-item">
+            <span class="guideline-icon">📏</span>
+            <span class="guideline-text">Saiz maksimum fail: 10MB setiap fail</span>
+          </div>
+          <div class="guideline-item">
+            <span class="guideline-icon">🔒</span>
+            <span class="guideline-text">Semua dokumen akan dirahsiakan dan hanya digunakan untuk tujuan penilaian</span>
+          </div>
+          <div class="guideline-item">
+            <span class="guideline-icon">✅</span>
+            <span class="guideline-text">Pastikan semua dokumen wajib dimuat naik sebelum meneruskan</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="button-container">
+        <button class="back-button" onclick="window.location.href='/skim_geran'">Kembali</button>
+        <button class="next-button" onclick="window.location.href='/pengesahan_permohonan'">Seterusnya</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+	<div class="container footer-inner">
+		<div class="footer-top">
+			<div class="footer-left">
+				<img src={~p"/images/kbs-logo-100x100-1-1-15.png"} alt="KBS" class="footer-logo" />
+				<div class="footer-contact">
+					<div class="contact-title">KEMENTERIAN BELIA DAN SUKAN SABAH</div>
+					<div class="contact-details">
+						<div>Aras 10, Blok B, Wisma Muis,</div>
+						<div>Karung Berkunci No.2007, 88999, Kota Kinabalu</div>
+						<div>No Telefon: 088 287 556</div>
+						<div>Faks: 088 240 533</div>
+						<div>E-mel: kbs@sabah.gov.my</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-social">
+				<div class="social-icon-container">
+					<img src={~p"/images/ellipse-1-17.svg"} alt="Facebook" class="social-ellipse" />
+					<img src={~p"/images/2175193-1-18.png"} alt="Facebook Icon" class="social-image" />
+				</div>
+				<div class="social-icon-container">
+					<img src={~p"/images/ellipse-2-19.svg"} alt="Instagram" class="social-ellipse" />
+					<img src={~p"/images/download-1-20.png"} alt="Instagram Icon" class="social-image" />
+				</div>
+			</div>
+		</div>
+		<div class="footer-divider"></div>
+		<div class="footer-bottom">
+			<div class="footer-note">Agensi di bawah Kementerian Belia dan Sukan Sabah</div>
+			<div class="footer-agencies">
+				<img src={~p"/images/msn-logo-2-1-22.png"} alt="Sukan Negeri Sabah" class="agency-logo" />
+				<img src={~p"/images/images-1-1-24.png"} alt="Lembaga Sukan Sabah" class="agency-logo" />
+				<img src={~p"/images/node-23.png"} alt="MBS Belia Sabah" class="agency-logo" />
+			</div>
+		</div>
+	</div>
+</footer> 
