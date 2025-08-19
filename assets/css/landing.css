@@ -501,10 +501,23 @@ body {
 }
 
 .senarai-program-hero .section-title {
-  font-size: 48px;
-  font-weight: 700;
-  color: var(--text-black);
+  font-size: 64px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
   margin-bottom: 32px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Force override for SENARAI KURSUS title */
+.senarai-program-hero h2.section-title {
+  font-size: 64px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
 }
 
 .search-container {

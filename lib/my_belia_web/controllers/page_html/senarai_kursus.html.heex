@@ -58,7 +58,7 @@
 							<img src={course.image_data} alt={course.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
 							<div class="program-info">
 								<h3 class="program-title"><%= course.name %></h3>
-								<p class="program-description"><%= course.description %></p>
+								<p class="program-description"><%= String.slice(course.description, 0, 100) %><%= if String.length(course.description) > 100, do: "...", else: "" %></p>
 								<div class="program-dates">
 									<span><%= Date.to_string(course.start_date) %> - <%= Date.to_string(course.end_date) %></span>
 								</div>
