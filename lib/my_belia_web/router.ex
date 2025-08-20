@@ -129,6 +129,18 @@ defmodule MyBeliaWeb.Router do
              get "/admin/permohonan_geran/lulus", PageController, :admin_permohonan_geran_lulus
              get "/admin/permohonan_geran/tolak", PageController, :admin_permohonan_geran_tolak
              get "/admin/permohonan_geran/tidak_lengkap", PageController, :admin_permohonan_geran_tidak_lengkap
+
+               # Admin Pemohon Page
+  get "/pemohon", PageController, :pemohon
+  get "/pemohon/lulus", PageController, :pemohon_lulus
+  get "/pemohon/tolak", PageController, :pemohon_tolak
+  get "/pemohon/tidak_lengkap", PageController, :pemohon_tidak_lengkap
+
+  # Admin Kursus Pemohon Page
+  get "/kursus_pemohon", PageController, :kursus_pemohon
+  get "/kursus_pemohon/lulus", PageController, :kursus_pemohon_lulus
+  get "/kursus_pemohon/tolak", PageController, :kursus_pemohon_tolak
+  get "/kursus_pemohon/tidak_lengkap", PageController, :kursus_pemohon_tidak_lengkap
   end
 
   # Other scopes may use custom stacks.

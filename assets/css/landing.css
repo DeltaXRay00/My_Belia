@@ -324,6 +324,7 @@ body {
 }
 
 .news-section-title {
+  text-align: center;
   font-size: 32px;
   font-weight: 700;
   color: var(--text-dark);

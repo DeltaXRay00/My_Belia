@@ -501,6 +501,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .program-card:hover {
@@ -894,6 +895,9 @@ body {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
+}
+
+.action-buttons.centered {
   justify-content: center;
 }
 
@@ -1027,7 +1031,7 @@ body {
 
 .data-table th {
   padding: 1rem;
-  text-align: left;
+  text-align: center !important;
   font-family: var(--font-family-inter);
   font-weight: 700;
   font-size: 14px;
@@ -1042,11 +1046,15 @@ body {
   color: #000000;
   border-bottom: 1px solid #f1f5f9;
   vertical-align: middle;
+  text-align: center !important;
 }
 
 .data-table td:last-child {
   padding: 0.75rem 1rem;
-  text-align: left;
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .data-table tbody tr:hover {
@@ -1082,6 +1090,40 @@ body {
   align-items: center;
   justify-content: flex-start;
   padding: 0.25rem 0;
+}
+
+.action-icons.centered {
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Force center alignment for action icons in table */
+.data-table .action-icons.centered {
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* Center all table headers */
+.data-table th {
+  text-align: center !important;
+}
+
+/* Center the table header for Tindakan column */
+.data-table th:last-child {
+  text-align: center !important;
+}
+
+/* Ensure the action icons container is properly centered */
+.data-table td:last-child .action-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .action-icon {

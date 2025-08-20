@@ -277,12 +277,12 @@
       <div class="program-grid">
         <!-- Display existing programs -->
         <%= for program <- @programs do %>
-          <div class="program-card" data-program-id={program.id}>
+          <div class="program-card" data-program-id={program.id} onclick={"window.location.href='/pemohon'"}>
             <div class="program-card-content">
               <div class="program-image">
                 <img src={program.image_data} alt={program.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
                 <div class="edit-overlay">
-                  <button class="edit-btn" onclick={"editProgram(#{program.id})"}>
+                  <button class="edit-btn" onclick={"event.stopPropagation(); editProgram(#{program.id})"}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                       <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>

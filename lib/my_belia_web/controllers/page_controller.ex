@@ -187,6 +187,54 @@ defmodule MyBeliaWeb.PageController do
     render(conn, :admin_permohonan_geran_tidak_lengkap, layout: false)
   end
 
+  def pemohon(conn, _params) do
+    # The pemohon page is often custom made,
+    # so skip the default app layout.
+    render(conn, :pemohon, layout: false)
+  end
+
+  def pemohon_lulus(conn, _params) do
+    # The pemohon lulus page is often custom made,
+    # so skip the default app layout.
+    render(conn, :pemohon_lulus, layout: false)
+  end
+
+  def pemohon_tolak(conn, _params) do
+    # The pemohon tolak page is often custom made,
+    # so skip the default app layout.
+    render(conn, :pemohon_tolak, layout: false)
+  end
+
+  def pemohon_tidak_lengkap(conn, _params) do
+    # The pemohon tidak lengkap page is often custom made,
+    # so skip the default app layout.
+    render(conn, :pemohon_tidak_lengkap, layout: false)
+  end
+
+  def kursus_pemohon(conn, _params) do
+    # The kursus pemohon page is often custom made,
+    # so skip the default app layout.
+    render(conn, :kursus_pemohon, layout: false)
+  end
+
+  def kursus_pemohon_lulus(conn, _params) do
+    # The kursus pemohon lulus page is often custom made,
+    # so skip the default app layout.
+    render(conn, :kursus_pemohon_lulus, layout: false)
+  end
+
+  def kursus_pemohon_tolak(conn, _params) do
+    # The kursus pemohon tolak page is often custom made,
+    # so skip the default app layout.
+    render(conn, :kursus_pemohon_tolak, layout: false)
+  end
+
+  def kursus_pemohon_tidak_lengkap(conn, _params) do
+    # The kursus pemohon tidak lengkap page is often custom made,
+    # so skip the default app layout.
+    render(conn, :kursus_pemohon_tidak_lengkap, layout: false)
+  end
+
   def create_course(conn, %{"course" => course_params}) do
     case MyBelia.Courses.create_course(course_params) do
       {:ok, course} ->
