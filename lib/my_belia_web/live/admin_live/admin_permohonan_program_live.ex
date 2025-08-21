@@ -3,7 +3,7 @@ defmodule MyBeliaWeb.AdminLive.AdminPermohonanProgramLive do
 
   def mount(_params, _session, socket) do
     programs = MyBelia.Programs.list_programs()
-    {:ok, assign(socket, programs: programs)}
+    {:ok, assign(socket, programs: programs, page_title: "Admin Permohonan Program"), layout: false}
   end
 
   def render(assigns) do

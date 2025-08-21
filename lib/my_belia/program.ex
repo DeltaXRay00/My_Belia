@@ -2,6 +2,8 @@ defmodule MyBelia.Program do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :name, :description, :image_data, :start_date, :end_date, :start_time, :end_time, :inserted_at, :updated_at]}
+
   schema "programs" do
     field :name, :string
     field :description, :string

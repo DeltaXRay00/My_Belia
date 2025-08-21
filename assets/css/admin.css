@@ -431,14 +431,16 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px;
-  border-radius: 4px;
+  padding: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #666;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   flex-shrink: 0;
+  min-width: 36px;
+  min-height: 36px;
 }
 
 .search-button:hover {
@@ -516,17 +518,20 @@ body {
   background-color: #1408ff;
   color: var(--text-white);
   border: none;
-  border-radius: 20px;
-  padding: 12px 24px;
+  border-radius: 8px;
+  padding: 8px 16px;
   font-family: var(--font-family-inter);
-  font-weight: 700;
-  font-size: 22px;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(20, 8, 255, 0.2);
 }
 
 .new-program-btn:hover {
   background-color: #0f06cc;
+  box-shadow: 0 3px 6px rgba(20, 8, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .program-grid {
@@ -605,6 +610,73 @@ body {
 .program-dates small {
   display: block;
   margin-bottom: 2px;
+}
+
+/* Program Action Icons */
+.program-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.program-card:hover .program-actions {
+  opacity: 1;
+}
+
+.program-card {
+  position: relative;
+}
+
+.action-icon {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.action-icon.edit-btn {
+  color: #3b82f6;
+}
+
+.action-icon.edit-btn:hover {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.action-icon.status-btn {
+  color: #f59e0b;
+}
+
+.action-icon.status-btn:hover {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.action-icon.delete-btn {
+  color: #ef4444;
+}
+
+.action-icon.delete-btn:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
 }
 
 /* Edit Button Styles */
@@ -857,16 +929,19 @@ body {
   background-color: #4A90E2;
   color: white;
   border: none;
-  padding: 12px 40px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
 }
 
 .create-btn:hover {
   background-color: #357ABD;
+  box-shadow: 0 3px 6px rgba(74, 144, 226, 0.3);
+  transform: translateY(-1px);
 }
 
 /* Modal Responsive adjustments */
@@ -946,41 +1021,91 @@ body {
 }
 
 .action-btn {
-  padding: 0.75rem 1.5rem;
+  padding: 8px 16px;
   border: none;
-  border-radius: 50px;
+  border-radius: 6px;
   font-family: var(--font-family-inter);
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .new-grant-btn {
   background-color: #000000;
   color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .new-grant-btn:hover {
   background-color: #1a1a1a;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.back-btn {
+  background-color: #6b7280;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(107, 114, 128, 0.2);
+}
+
+.back-btn:hover {
+  background-color: #4b5563;
+  box-shadow: 0 3px 6px rgba(107, 114, 128, 0.3);
+  transform: translateY(-1px);
 }
 
 .update-btn {
   background-color: #0051ff;
   color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 81, 255, 0.2);
 }
 
 .update-btn:hover {
   background-color: #0040cc;
+  box-shadow: 0 3px 6px rgba(0, 81, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .status-btn {
   background-color: #ff0808;
   color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(255, 8, 8, 0.2);
 }
 
 .status-btn:hover {
   background-color: #cc0000;
+  box-shadow: 0 3px 6px rgba(255, 8, 8, 0.3);
+  transform: translateY(-1px);
 }
 
 .filter-section {

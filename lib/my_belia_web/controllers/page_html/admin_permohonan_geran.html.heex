@@ -103,13 +103,13 @@
                       </svg>
                     </button>
                     <div class="more-options-dropdown">
-                      <div class="option-item" onclick="changeStatus('lulus', 'Persatuan Belia Kota Kinabalu')">
+                      <div class="option-item" onclick="changeStatus('lulus', 'Persatuan Belia Kota Kinabalu', event)">
                         <span>Lulus</span>
                       </div>
-                      <div class="option-item" onclick="changeStatus('tolak', 'Persatuan Belia Kota Kinabalu')">
+                      <div class="option-item" onclick="changeStatus('tolak', 'Persatuan Belia Kota Kinabalu', event)">
                         <span>Tolak</span>
                       </div>
-                      <div class="option-item" onclick="changeStatus('tidak_lengkap', 'Persatuan Belia Kota Kinabalu')">
+                      <div class="option-item" onclick="changeStatus('tidak_lengkap', 'Persatuan Belia Kota Kinabalu', event)">
                         <span>Tidak Lengkap</span>
                       </div>
                     </div>
@@ -150,13 +150,13 @@
                       </svg>
                     </button>
                     <div class="more-options-dropdown">
-                      <div class="option-item" onclick="changeStatus('lulus', 'Kelab Usahawan Muda Sandakan')">
+                      <div class="option-item" onclick="changeStatus('lulus', 'Kelab Usahawan Muda Sandakan', event)">
                         <span>Lulus</span>
                       </div>
-                      <div class="option-item" onclick="changeStatus('tolak', 'Kelab Usahawan Muda Sandakan')">
+                      <div class="option-item" onclick="changeStatus('tolak', 'Kelab Usahawan Muda Sandakan', event)">
                         <span>Tolak</span>
                       </div>
-                      <div class="option-item" onclick="changeStatus('tidak_lengkap', 'Kelab Usahawan Muda Sandakan')">
+                      <div class="option-item" onclick="changeStatus('tidak_lengkap', 'Kelab Usahawan Muda Sandakan', event)">
                         <span>Tidak Lengkap</span>
                       </div>
                     </div>
@@ -196,13 +196,13 @@
                       </svg>
                     </button>
                     <div class="more-options-dropdown">
-                      <div class="option-item" onclick="changeStatus('lulus', 'Persatuan Teknologi Belia Tawau')">
+                      <div class="option-item" onclick="changeStatus('lulus', 'Persatuan Teknologi Belia Tawau', event)">
                         <span>Lulus</span>
                       </div>
-                      <div class="option-item" onclick="changeStatus('tolak', 'Persatuan Teknologi Belia Tawau')">
+                      <div class="option-item" onclick="changeStatus('tolak', 'Persatuan Teknologi Belia Tawau', event)">
                         <span>Tolak</span>
                       </div>
-                      <div class="option-item" onclick="changeStatus('tidak_lengkap', 'Persatuan Teknologi Belia Tawau')">
+                      <div class="option-item" onclick="changeStatus('tidak_lengkap', 'Persatuan Teknologi Belia Tawau', event)">
                         <span>Tidak Lengkap</span>
                       </div>
                     </div>
@@ -322,35 +322,100 @@ function toggleMoreOptions(button) {
   
   // Toggle current dropdown
   const dropdown = button.nextElementSibling;
-  dropdown.classList.toggle('show');
+  if (dropdown) {
+    dropdown.classList.toggle('show');
+  }
 }
 
-function changeStatus(status, organizationName) {
+function changeStatus(status, organizationName, event) {
   // Prevent event bubbling
-  event.stopPropagation();
+  if (event) {
+    event.stopPropagation();
+  }
   
   // Close the dropdown
-  const dropdown = event.target.closest('.more-options-dropdown');
-  dropdown.classList.remove('show');
+  const dropdown = event ? event.target.closest('.more-options-dropdown') : null;
+  if (dropdown) {
+    dropdown.classList.remove('show');
+  }
   
   // Show confirmation message
   const statusText = status === 'lulus' ? 'Lulus' : status === 'tolak' ? 'Tolak' : 'Tidak Lengkap';
   const confirmed = confirm(`Adakah anda pasti mahu menukar status "${organizationName}" kepada "${statusText}"?`);
   
   if (confirmed) {
-    // Navigate to the appropriate page based on status
-    switch(status) {
-      case 'lulus':
-        window.location.href = '/admin/permohonan_geran/lulus';
+    // Find the table row containing this organization
+    const tableRows = document.querySelectorAll('.data-table tbody tr');
+    let targetRow = null;
+    
+    for (let row of tableRows) {
+      const orgCell = row.querySelector('td:nth-child(2)'); // Organization column
+      if (orgCell && orgCell.textContent.trim() === organizationName) {
+        targetRow = row;
         break;
-      case 'tolak':
-        window.location.href = '/admin/permohonan_geran/tolak';
-        break;
-      case 'tidak_lengkap':
-        window.location.href = '/admin/permohonan_geran/tidak_lengkap';
-        break;
+      }
+    }
+    
+    if (targetRow) {
+      // Get the organization data from the row
+      const rowData = {
+        no: targetRow.querySelector('td:nth-child(1)').textContent,
+        organization: targetRow.querySelector('td:nth-child(2)').textContent,
+        grantScheme: targetRow.querySelector('td:nth-child(3)').textContent,
+        district: targetRow.querySelector('td:nth-child(4)').textContent,
+        status: status
+      };
+      
+      // Store the moved organization data
+      storeMovedOrganization(rowData);
+      
+      // Remove the row from the current table
+      targetRow.remove();
+      
+      // Update the total count
+      updateTotalCount();
+      
+      // Show success message
+      alert(`Status "${organizationName}" telah berjaya ditukar kepada "${statusText}"`);
+      
+      // Navigate to the appropriate page based on status
+      switch(status) {
+        case 'lulus':
+          window.location.href = '/admin/permohonan_geran/lulus';
+          break;
+        case 'tolak':
+          window.location.href = '/admin/permohonan_geran/tolak';
+          break;
+        case 'tidak_lengkap':
+          window.location.href = '/admin/permohonan_geran/tidak_lengkap';
+          break;
+      }
     }
   }
+}
+
+function updateTotalCount() {
+  const tableRows = document.querySelectorAll('.data-table tbody tr');
+  const totalCount = tableRows.length;
+  const totalElement = document.querySelector('.total-applicants');
+  if (totalElement) {
+    totalElement.textContent = `Jumlah Pemohon: ${totalCount}`;
+  }
+}
+
+function storeMovedOrganization(organizationData) {
+  // Get existing moved organizations or initialize empty array
+  let movedOrganizations = JSON.parse(localStorage.getItem('movedOrganizations') || '[]');
+  
+  // Add the new organization
+  movedOrganizations.push(organizationData);
+  
+  // Store back to localStorage
+  localStorage.setItem('movedOrganizations', JSON.stringify(movedOrganizations));
+  
+  // Debug: Log the stored data
+  console.log('Stored organization:', organizationData);
+  console.log('All moved organizations:', movedOrganizations);
 }
 
 // Close dropdown when clicking outside

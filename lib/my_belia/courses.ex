@@ -113,4 +113,11 @@ defmodule MyBelia.Courses do
   end
 
   def search_courses(_), do: []
+
+  @doc """
+  Deletes all courses from the database.
+  """
+  def delete_all_courses do
+    Repo.delete_all(Course)
+  end
 end

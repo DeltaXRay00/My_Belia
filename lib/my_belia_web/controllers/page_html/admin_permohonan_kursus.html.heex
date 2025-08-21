@@ -8,6 +8,46 @@
   <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
   <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  <style>
+    /* WYSIWYG Editor Styles */
+    .ql-editor {
+      min-height: 150px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    .ql-toolbar {
+      border-top: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      border-radius: 8px 8px 0 0;
+      background-color: #f8f9fa;
+    }
+    
+    .ql-container {
+      border-bottom: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      border-radius: 0 0 8px 8px;
+      background-color: white;
+    }
+    
+    .ql-editor.ql-blank::before {
+      color: #6b7280;
+      font-style: italic;
+    }
+    
+    /* Form field spacing */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    /* WYSIWYG container spacing */
+    #quill-editor-container-course {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
 <.admin_layout current_page="permohonan_kursus" page_title="Permohonan / Kursus">
@@ -136,18 +176,10 @@
       <!-- Course Grid -->
       <div class="program-grid">
         <%= for course <- @courses do %>
-          <div class="program-card" data-course-id={course.id} onclick={"window.location.href='/kursus_pemohon'"}>
-            <div class="program-card-content">
+          <div class="program-card" data-course-id={course.id}>
+            <div class="program-card-content" onclick={"window.location.href='/kursus_pemohon'"}>
               <div class="program-image">
                 <img src={course.image_data} alt={course.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
-                <div class="edit-overlay">
-                  <button class="edit-btn" onclick={"event.stopPropagation(); editCourse(#{course.id})"}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                  </button>
-                </div>
               </div>
               <div class="program-info">
                 <h3 class="program-title"><%= course.name %></h3>
@@ -157,6 +189,28 @@
                 </div>
               </div>
             </div>
+            <!-- Action Icons -->
+            <div class="program-actions">
+              <button class="action-icon edit-btn" title="Edit Course" data-course-id={course.id} onclick="event.stopPropagation(); console.log('Edit button clicked for course:', this.dataset.courseId); editCourse(this.dataset.courseId)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="action-icon status-btn" title="Status Course" data-course-id={course.id} onclick="event.stopPropagation(); console.log('Status button clicked for course:', this.dataset.courseId); changeCourseStatus(this.dataset.courseId)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6"></path>
+                  <path d="M19.78 4.22l-4.24 4.24m-8.48 8.48l-4.24 4.24"></path>
+                </svg>
+              </button>
+              <button class="action-icon delete-btn" title="Delete Course" data-course-id={course.id} onclick="event.stopPropagation(); console.log('Delete button clicked for course:', this.dataset.courseId); deleteCourse(this.dataset.courseId)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3,6 5,6 21,6"></polyline>
+                  <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                </svg>
+              </button>
+            </div>
           </div>
         <% end %>
 
@@ -164,89 +218,114 @@
           <div class="program-card placeholder"></div>
         <% end %>
       </div>
+
+      <!-- Edit Course Modal -->
+      <div class="modal-overlay" id="edit-course-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Edit Kursus</h3>
+            <button class="modal-close" id="edit-course-modal-close">&times;</button>
+          </div>
+          
+          <form class="program-form" id="edit-course-form">
+            <input type="hidden" id="edit-course-id" name="course_id">
+            
+            <!-- Image Upload Section -->
+            <div class="image-upload-section">
+              <div class="image-upload-area" id="edit-course-image-upload-area">
+                <div class="upload-icon" id="edit-course-upload-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21,15 16,10 5,21"></polyline>
+                  </svg>
+                  <div class="plus-icon">+</div>
+                </div>
+                <img id="edit-course-preview-image" class="preview-image" style="display: none; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 8px;">
+                <input type="file" id="edit-course-image-input" name="course_image" accept="image/*" style="display: none;">
+              </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-fields">
+              <div class="form-group">
+                <label for="edit-course-name">Nama Kursus *</label>
+                <input type="text" id="edit-course-name" name="course_name" class="form-input" placeholder="Masukkan nama kursus" required>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-course-description">Diskripsi *</label>
+                <textarea id="edit-course-description" name="course_description" class="form-textarea wysiwyg-textarea" placeholder="Masukkan diskripsi kursus dengan format yang diingini..." required rows="8"></textarea>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks. 
+                  Format yang disokong: <strong>Bold</strong>, <em>Italic</em>, <u>Underline</u>, 
+                  Senarai, Penjajaran, Warna, dan Pautan.
+                </small>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="edit-course-start-date">Tarikh Mula Permohonan *</label>
+                  <input type="date" id="edit-course-start-date" name="start_date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label for="edit-course-end-date">Tarikh Tutup Permohonan *</label>
+                  <input type="date" id="edit-course-end-date" name="end_date" class="form-input" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="edit-course-start-time">Waktu Mula Permohonan *</label>
+                  <input type="time" id="edit-course-start-time" name="start_time" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label for="edit-course-end-time">Waktu Tutup Penerimaan *</label>
+                  <input type="time" id="edit-course-end-time" name="end_time" class="form-input" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <button type="submit" class="update-btn">Kemas Kini</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Status Change Modal -->
+      <div class="modal-overlay" id="status-course-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Tukar Status Kursus</h3>
+            <button class="modal-close" id="status-course-modal-close">&times;</button>
+          </div>
+          
+          <form class="status-form" id="status-course-form">
+            <input type="hidden" id="status-course-id" name="course_id">
+            
+            <div class="form-group">
+              <label for="course-status">Status Kursus</label>
+              <select id="course-status" name="status" class="form-input" required>
+                <option value="">Pilih status...</option>
+                <option value="pending">Menunggu</option>
+                <option value="in_progress">Sedang Berjalan</option>
+                <option value="completed">Selesai</option>
+              </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <button type="submit" class="status-btn">Tukar Status</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 </.admin_layout>
 
-<!-- Edit Course Modal -->
-<div class="modal-overlay" id="edit-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Edit Kursus</h2>
-      <button class="modal-close" id="edit-modal-close">&times;</button>
-    </div>
-    <form class="program-form" id="edit-course-form">
-      <div class="image-upload-section">
-        <label>Gambar Kursus *</label>
-        <div class="image-upload-area" id="edit-image-upload-area">
-          <img id="edit-image-preview" src="" alt="Preview" style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px;">
-          <div id="edit-upload-placeholder">
-            <div class="upload-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M17 8L12 3L7 8" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 3V15" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div class="plus-icon">+</div>
-          </div>
-          <input type="file" id="edit-course-image" name="course_image" accept="image/*" style="display: none;">
-        </div>
-        <div class="field-error" id="edit-image-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
-      </div>
 
-      <div class="form-fields">
-        <div class="form-group">
-          <label for="edit-course-name">Nama Kursus *</label>
-          <input type="text" id="edit-course-name" name="course_name" class="form-input" placeholder="Masukkan nama kursus" required>
-          <div class="field-error" id="edit-name-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
-        </div>
-
-        <div class="form-group">
-          <label for="edit-course-description">Diskripsi *</label>
-          <textarea id="edit-course-description" name="course_description" class="form-textarea wysiwyg-textarea" placeholder="Masukkan diskripsi kursus dengan format yang diingini..." required rows="8"></textarea>
-          <div class="field-error" id="edit-description-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
-          <small class="form-help">
-            <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks. 
-            Format yang disokong: <strong>Bold</strong>, <em>Italic</em>, <u>Underline</u>, 
-            Senarai, Penjajaran, Warna, dan Pautan.
-          </small>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-course-start-date">Tarikh Mula *</label>
-            <input type="date" id="edit-course-start-date" name="course_start_date" class="form-input" required>
-            <div class="field-error" id="edit-start-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="edit-course-end-date">Tarikh Tamat *</label>
-            <input type="date" id="edit-course-end-date" name="course_end_date" class="form-input" required>
-            <div class="field-error" id="edit-end-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-course-start-time">Waktu Mula *</label>
-            <input type="time" id="edit-course-start-time" name="course_start_time" class="form-input" required>
-            <div class="field-error" id="edit-start-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="edit-course-end-time">Waktu Tamat *</label>
-            <input type="time" id="edit-course-end-time" name="course_end_time" class="form-input" required>
-            <div class="field-error" id="edit-end-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="create-btn">Kemas Kini</button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -304,8 +383,157 @@ document.addEventListener('DOMContentLoaded', function() {
   courseModal.addEventListener('click', function(e) {
     if (e.target === courseModal) {
       courseModal.classList.remove('show');
+      resetCourseForm();
     }
   });
+
+  // Close modal
+  modalClose.addEventListener('click', function() {
+    courseModal.classList.remove('show');
+    resetCourseForm();
+  });
+
+  // Edit course modal functionality
+  const editCourseModal = document.getElementById('edit-course-modal');
+  const editCourseModalClose = document.getElementById('edit-course-modal-close');
+  const editCourseForm = document.getElementById('edit-course-form');
+  const editCourseImageUploadArea = document.getElementById('edit-course-image-upload-area');
+  const editCourseImageInput = document.getElementById('edit-course-image-input');
+  const editCoursePreviewImage = document.getElementById('edit-course-preview-image');
+  const editCourseUploadIcon = document.getElementById('edit-course-upload-icon');
+
+  // Status course modal functionality
+  const statusCourseModal = document.getElementById('status-course-modal');
+  const statusCourseModalClose = document.getElementById('status-course-modal-close');
+  const statusCourseForm = document.getElementById('status-course-form');
+
+  // Edit course modal close handlers
+  editCourseModalClose.addEventListener('click', function() {
+    editCourseModal.classList.remove('show');
+    resetEditCourseForm();
+  });
+
+  editCourseModal.addEventListener('click', function(e) {
+    if (e.target === editCourseModal) {
+      editCourseModal.classList.remove('show');
+      resetEditCourseForm();
+    }
+  });
+
+  // Edit course image upload handlers
+  editCourseImageUploadArea.addEventListener('click', function() {
+    editCourseImageInput.click();
+  });
+
+  editCourseImageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Sila pilih fail imej sahaja.');
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Saiz fail terlalu besar. Maksimum 5MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editCoursePreviewImage.src = e.target.result;
+        editCoursePreviewImage.style.display = 'block';
+        editCourseUploadIcon.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Edit course form submission
+  editCourseForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Ensure WYSIWYG content is captured before submission
+    const editDescriptionField = document.getElementById('edit-course-description');
+    if (editDescriptionField && editDescriptionField.quillInstance) {
+      editDescriptionField.value = editDescriptionField.quillInstance.root.innerHTML;
+    }
+    
+    const formData = new FormData(editCourseForm);
+    const courseData = Object.fromEntries(formData);
+    const courseId = document.getElementById('edit-course-id').value;
+    
+    submitEditCourseToServer(courseData, courseId);
+  });
+
+  // Status course modal close handlers
+  statusCourseModalClose.addEventListener('click', function() {
+    statusCourseModal.classList.remove('show');
+    statusCourseForm.reset();
+  });
+
+  statusCourseModal.addEventListener('click', function(e) {
+    if (e.target === statusCourseModal) {
+      statusCourseModal.classList.remove('show');
+      statusCourseForm.reset();
+    }
+  });
+
+  // Status course form submission
+  statusCourseForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(statusCourseForm);
+    const statusData = Object.fromEntries(formData);
+    const courseId = document.getElementById('status-course-id').value;
+    
+    submitCourseStatusToServer(statusData, courseId);
+  });
+
+  // Reset course form function
+  function resetCourseForm() {
+    courseForm.reset();
+    
+    // Reset image preview
+    const imagePreview = document.getElementById('image-preview');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    if (imagePreview) imagePreview.style.display = 'none';
+    if (uploadPlaceholder) uploadPlaceholder.style.display = 'flex';
+    
+    // Clear all error messages
+    document.querySelectorAll('.field-error').forEach(error => {
+      error.style.display = 'none';
+    });
+    
+    // Clean up WYSIWYG editors
+    const descriptionField = document.getElementById('course-description');
+    if (descriptionField && descriptionField.quillInstance) {
+      try {
+        descriptionField.quillInstance.destroy();
+      } catch (e) {
+        console.log('Error destroying Quill instance in resetCourseForm:', e);
+      }
+      descriptionField.quillInstance = null;
+    }
+    
+    // Remove all Quill editor containers if they exist
+    const editorContainers = document.querySelectorAll('#quill-editor-container-course');
+    editorContainers.forEach(container => {
+      container.remove();
+    });
+    
+    // Also remove any orphaned Quill toolbars
+    const orphanedToolbars = document.querySelectorAll('.ql-toolbar');
+    orphanedToolbars.forEach(toolbar => {
+      if (!toolbar.parentNode || !toolbar.parentNode.querySelector('.ql-editor')) {
+        toolbar.remove();
+      }
+    });
+    
+    // Show the original textarea again
+    if (descriptionField) {
+      descriptionField.style.display = 'block';
+    }
+  }
 
   // Handle form submission
   courseForm.addEventListener('submit', function(e) {
@@ -314,7 +542,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ensure WYSIWYG content is captured before submission
     const descriptionField = document.getElementById('course-description');
     if (descriptionField && descriptionField.quillInstance) {
-      descriptionField.value = descriptionField.quillInstance.root.innerHTML;
+      // Get the HTML content from Quill editor
+      const htmlContent = descriptionField.quillInstance.root.innerHTML;
+      // Set it as the value of the textarea
+      descriptionField.value = htmlContent;
+      console.log('WYSIWYG content captured for course:', htmlContent);
     }
     
     // Validate form
@@ -338,52 +570,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Edit modal functionality
-  const editModal = document.getElementById('edit-modal');
-  const editModalClose = document.getElementById('edit-modal-close');
-  const editCourseForm = document.getElementById('edit-course-form');
-  let currentEditCourseId = null;
 
-  // Close edit modal
-  editModalClose.addEventListener('click', function() {
-    editModal.classList.remove('show');
-  });
-
-  // Close edit modal when clicking outside
-  editModal.addEventListener('click', function(e) {
-    if (e.target === editModal) {
-      editModal.classList.remove('show');
-    }
-  });
-
-  // Handle edit form submission
-  editCourseForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Ensure WYSIWYG content is captured before submission
-    const editDescriptionField = document.getElementById('edit-course-description');
-    if (editDescriptionField && editDescriptionField.quillInstance) {
-      editDescriptionField.value = editDescriptionField.quillInstance.root.innerHTML;
-    }
-    
-    if (!validateEditCourseForm()) {
-      return;
-    }
-    
-    const formData = new FormData(editCourseForm);
-    const imageFile = formData.get('course_image');
-    
-    if (imageFile && imageFile.size > 0) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const imageData = e.target.result;
-        submitEditToServer(formData, imageData);
-      };
-      reader.readAsDataURL(imageFile);
-    } else {
-      submitEditToServer(formData, null);
-    }
-  });
 
   // Image upload functionality for create form
   const imageUploadArea = document.getElementById('image-upload-area');
@@ -408,28 +595,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Image upload functionality for edit form
-  const editImageUploadArea = document.getElementById('edit-image-upload-area');
-  const editCourseImageInput = document.getElementById('edit-course-image');
-  const editImagePreview = document.getElementById('edit-image-preview');
-  const editUploadPlaceholder = document.getElementById('edit-upload-placeholder');
 
-  editImageUploadArea.addEventListener('click', function() {
-    editCourseImageInput.click();
-  });
-
-  editCourseImageInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        editImagePreview.src = e.target.result;
-        editImagePreview.style.display = 'block';
-        editUploadPlaceholder.style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    }
-  });
 
   // Validation functions
   function validateCourseForm() {
@@ -574,11 +740,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (data.success) {
         alert('Kursus berjaya dicipta!');
         courseModal.classList.remove('show');
-        courseForm.reset();
-        imagePreview.style.display = 'none';
-        uploadPlaceholder.style.display = 'flex';
-        // Optionally refresh the course list without full page reload
-        // For now, we'll just close the modal
+        resetCourseForm();
+        
+        // Add the new course to the grid dynamically
+        addCourseToGrid(data.course);
       } else {
         alert('Ralat: ' + Object.values(data.errors).flat().join(', '));
       }
@@ -589,99 +754,558 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function submitEditToServer(formData, imageData) {
-    const courseData = {
-      course: {
-        name: formData.get('course_name'),
-        description: formData.get('course_description'),
-        start_date: formData.get('course_start_date'),
-        end_date: formData.get('course_end_date'),
-        start_time: formData.get('course_start_time'),
-        end_time: formData.get('course_end_time')
+
+
+  // Initialize WYSIWYG editors
+  function initializeWysiwygEditors() {
+    // Initialize main form WYSIWYG editor
+    const descriptionField = document.getElementById('course-description');
+    if (descriptionField) {
+      // Clean up any existing editor first
+      if (descriptionField.quillInstance) {
+        try {
+          descriptionField.quillInstance.destroy();
+        } catch (e) {
+          console.log('Error destroying existing Quill instance:', e);
+        }
+        descriptionField.quillInstance = null;
       }
-    };
-
-    // Only include image_data if a new image was uploaded
-    if (imageData) {
-      courseData.course.image_data = imageData;
+      
+      // Remove any existing editor containers (check for multiple)
+      const existingContainers = document.querySelectorAll('#quill-editor-container-course');
+      existingContainers.forEach(container => {
+        container.remove();
+      });
+      
+      // Also remove any Quill toolbars that might be left behind
+      const existingToolbars = document.querySelectorAll('.ql-toolbar');
+      existingToolbars.forEach(toolbar => {
+        if (toolbar.parentNode && toolbar.parentNode.id === 'quill-editor-container-course') {
+          toolbar.remove();
+        }
+      });
+      
+      // Show the original textarea first
+      descriptionField.style.display = 'block';
+      
+      // Create a container for the Quill editor
+      const editorContainer = document.createElement('div');
+      editorContainer.id = 'quill-editor-container-course';
+      editorContainer.style.height = '200px';
+      editorContainer.style.marginBottom = '10px';
+      
+      // Insert the container before the textarea
+      descriptionField.parentNode.insertBefore(editorContainer, descriptionField);
+      
+      // Hide the original textarea
+      descriptionField.style.display = 'none';
+      
+      // Initialize Quill editor
+      const quill = new Quill(editorContainer, {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'align': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            ['link'],
+            ['clean']
+          ]
+        },
+        placeholder: 'Masukkan diskripsi kursus dengan format yang diingini...'
+      });
+      
+      // Store the Quill instance on the textarea for easy access
+      descriptionField.quillInstance = quill;
+      
+      // Sync content from Quill to textarea on change
+      quill.on('text-change', function() {
+        descriptionField.value = quill.root.innerHTML;
+      });
+      
+      console.log('WYSIWYG editor initialized for course description');
     }
+  }
 
-    fetch(`/admin/courses/${currentEditCourseId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      },
-      body: JSON.stringify(courseData)
+  // Set WYSIWYG content
+  function setWysiwygContent(fieldId, content) {
+    const field = document.getElementById(fieldId);
+    if (field && field.quillInstance) {
+      // Clear the editor first
+      field.quillInstance.setText('');
+      // Then set the HTML content
+      field.quillInstance.root.innerHTML = content || '';
+      console.log('Setting WYSIWYG content for', fieldId, ':', content);
+    } else {
+      console.error('WYSIWYG editor not found or not initialized for', fieldId);
+    }
+  }
+
+  // Add new course to grid dynamically
+  function addCourseToGrid(course) {
+    const courseGrid = document.querySelector('.program-grid'); // Note: using same class as program grid
+    const placeholderCards = courseGrid.querySelectorAll('.program-card.placeholder');
+    
+    if (placeholderCards.length > 0) {
+      // Remove the first placeholder card
+      const firstPlaceholder = placeholderCards[0];
+      firstPlaceholder.remove();
+      
+      // Create new course card
+      const newCourseCard = document.createElement('div');
+      newCourseCard.className = 'program-card';
+      newCourseCard.setAttribute('data-course-id', course.id);
+      
+      // Create the card content
+      const cardContent = document.createElement('div');
+      cardContent.className = 'program-card-content';
+      cardContent.onclick = function() {
+        window.location.href = '/kursus_pemohon';
+      };
+      
+      // Create image section
+      const imageSection = document.createElement('div');
+      imageSection.className = 'program-image';
+      const image = document.createElement('img');
+      image.src = course.image_data;
+      image.alt = course.name;
+      image.style.cssText = 'width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;';
+      imageSection.appendChild(image);
+      
+      // Create info section
+      const infoSection = document.createElement('div');
+      infoSection.className = 'program-info';
+      
+      const title = document.createElement('h3');
+      title.className = 'program-title';
+      title.textContent = course.name;
+      
+      const description = document.createElement('p');
+      description.className = 'program-description';
+      // Strip HTML tags for display
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = course.description;
+      const textContent = tempDiv.textContent || tempDiv.innerText || '';
+      description.textContent = textContent.length > 100 ? textContent.substring(0, 100) + '...' : textContent;
+      
+      const dates = document.createElement('div');
+      dates.className = 'program-dates';
+      dates.innerHTML = `<span>${course.start_date} - ${course.end_date}</span>`;
+      
+      infoSection.appendChild(title);
+      infoSection.appendChild(description);
+      infoSection.appendChild(dates);
+      
+      cardContent.appendChild(imageSection);
+      cardContent.appendChild(infoSection);
+      newCourseCard.appendChild(cardContent);
+      
+      // Create action icons
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'program-actions';
+      
+      // Edit button
+      const editBtn = document.createElement('button');
+      editBtn.className = 'action-icon edit-btn';
+      editBtn.title = 'Edit Course';
+      editBtn.setAttribute('data-course-id', course.id);
+      editBtn.onclick = function(e) {
+        e.stopPropagation();
+        editCourse(this.dataset.courseId);
+      };
+      editBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>`;
+      
+      // Status button
+      const statusBtn = document.createElement('button');
+      statusBtn.className = 'action-icon status-btn';
+      statusBtn.title = 'Status Course';
+      statusBtn.setAttribute('data-course-id', course.id);
+      statusBtn.onclick = function(e) {
+        e.stopPropagation();
+        changeCourseStatus(this.dataset.courseId);
+      };
+      statusBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 1v6m0 6v6"></path>
+        <path d="M19.78 4.22l-4.24 4.24m-8.48 8.48l-4.24 4.24"></path>
+      </svg>`;
+      
+      // Delete button
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'action-icon delete-btn';
+      deleteBtn.title = 'Delete Course';
+      deleteBtn.setAttribute('data-course-id', course.id);
+      deleteBtn.onclick = function(e) {
+        e.stopPropagation();
+        deleteCourse(this.dataset.courseId);
+      };
+      deleteBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3,6 5,6 21,6"></polyline>
+        <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+      </svg>`;
+      
+      actionsDiv.appendChild(editBtn);
+      actionsDiv.appendChild(statusBtn);
+      actionsDiv.appendChild(deleteBtn);
+      newCourseCard.appendChild(actionsDiv);
+      
+      // Insert the new card at the beginning of the grid
+      courseGrid.insertBefore(newCourseCard, courseGrid.firstChild);
+      
+      console.log('New course added to grid:', course.name);
+    } else {
+      console.log('No placeholder cards available');
+    }
+  }
+
+  // Action button functions
+  function editCourse(courseId) {
+    console.log('Edit course:', courseId);
+    // TODO: Implement edit functionality
+    alert('Edit course functionality will be implemented');
+  }
+
+  function changeCourseStatus(courseId) {
+    console.log('Change course status:', courseId);
+    // TODO: Implement status change functionality
+    alert('Change course status functionality will be implemented');
+  }
+
+  function deleteCourse(courseId) {
+    console.log('Delete course:', courseId);
+    if (confirm('Are you sure you want to delete this course?')) {
+      // TODO: Implement delete functionality
+      alert('Delete course functionality will be implemented');
+    }
+  }
+});
+
+// Make functions globally accessible
+window.editCourse = function(courseId) {
+  console.log('Global editCourse called with:', courseId);
+  fetchCourseData(courseId);
+};
+
+window.changeCourseStatus = function(courseId) {
+  console.log('Global changeCourseStatus called with:', courseId);
+  showCourseStatusModal(courseId);
+};
+
+window.deleteCourse = function(courseId) {
+  console.log('Global deleteCourse called with:', courseId);
+  if (confirm('Adakah anda pasti mahu memadamkan kursus ini?')) {
+    deleteCourseFromServer(courseId);
+  }
+};
+
+// Fetch course data for editing
+function fetchCourseData(courseId) {
+  fetch(`/admin/courses/${courseId}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
     })
-    .then(response => response.json())
     .then(data => {
       if (data.success) {
-        alert('Kursus berjaya dikemas kini!');
-        editModal.classList.remove('show');
-        editCourseForm.reset();
-        editImagePreview.style.display = 'none';
-        editUploadPlaceholder.style.display = 'flex';
-        // Optionally refresh the course list without full page reload
-        // For now, we'll just close the modal
+        populateEditCourseForm(data.course);
+        showEditCourseModal();
       } else {
-        alert('Ralat: ' + Object.values(data.errors).flat().join(', '));
+        alert('Ralat: Tidak dapat memuatkan data kursus');
       }
     })
     .catch(error => {
-      console.error('Error:', error);
-      alert('Ralat semasa mengemas kini kursus');
+      console.error('Error fetching course:', error);
+      if (error.name === 'AbortError') {
+        console.log('Request was aborted - this is normal');
+        return;
+      }
+      alert('Ralat: Tidak dapat memuatkan data kursus');
     });
-  }
+}
 
-  // Global function to edit course
-  window.editCourse = function(courseId) {
-    currentEditCourseId = courseId;
+// Populate edit course form with course data
+function populateEditCourseForm(course) {
+  document.getElementById('edit-course-name').value = course.name;
+  document.getElementById('edit-course-description').value = course.description;
+  document.getElementById('edit-course-start-date').value = course.start_date;
+  document.getElementById('edit-course-end-date').value = course.end_date;
+  document.getElementById('edit-course-start-time').value = course.start_time;
+  document.getElementById('edit-course-end-time').value = course.end_time;
+  document.getElementById('edit-course-id').value = course.id;
+  
+  // Set image preview if exists
+  if (course.image_data) {
+    document.getElementById('edit-course-preview-image').src = course.image_data;
+    document.getElementById('edit-course-preview-image').style.display = 'block';
+    document.getElementById('edit-course-upload-icon').style.display = 'none';
+  }
+  
+  // Initialize WYSIWYG editor for edit form
+  setTimeout(() => {
+    // Clean up any existing editor first
+    cleanupEditCourseForm();
+    initializeEditCourseWysiwygEditor();
+    if (course.description) {
+      setWysiwygContent('edit-course-description', course.description);
+    }
+  }, 100);
+}
+
+// Show edit course modal
+function showEditCourseModal() {
+  document.getElementById('edit-course-modal').classList.add('show');
+}
+
+// Show course status change modal
+function showCourseStatusModal(courseId) {
+  const statusModal = document.getElementById('status-course-modal');
+  document.getElementById('status-course-id').value = courseId;
+  statusModal.classList.add('show');
+}
+
+// Delete course from server
+function deleteCourseFromServer(courseId) {
+  fetch(`/admin/courses/${courseId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      alert('Kursus berjaya dipadamkan!');
+      // Remove the card from the grid
+      const courseCard = document.querySelector(`[data-course-id="${courseId}"]`);
+      if (courseCard) {
+        courseCard.remove();
+      }
+    } else {
+      alert('Ralat: ' + (data.error || 'Tidak dapat memadamkan kursus'));
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting course:', error);
+    if (error.name === 'AbortError') {
+      console.log('Delete request was aborted - this is normal');
+      return;
+    }
+    alert('Ralat: Tidak dapat memadamkan kursus');
+  });
+}
+
+// Initialize WYSIWYG editor for edit course form
+function initializeEditCourseWysiwygEditor() {
+  const descriptionField = document.getElementById('edit-course-description');
+  if (descriptionField) {
+    // Show the original textarea first
+    descriptionField.style.display = 'block';
     
-    // Fetch course data
-    fetch(`/admin/courses/${courseId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          const course = data.course;
-          
-          // Populate form fields
-          document.getElementById('edit-course-name').value = course.name;
-          document.getElementById('edit-course-description').value = course.description;
-          document.getElementById('edit-course-start-date').value = course.start_date;
-          document.getElementById('edit-course-end-date').value = course.end_date;
-          document.getElementById('edit-course-start-time').value = course.start_time;
-          document.getElementById('edit-course-end-time').value = course.end_time;
-          
-          // Show current image
-          if (course.image_data) {
-            editImagePreview.src = course.image_data;
-            editImagePreview.style.display = 'block';
-            editUploadPlaceholder.style.display = 'none';
-          } else {
-            editImagePreview.style.display = 'none';
-            editUploadPlaceholder.style.display = 'flex';
-          }
-          
-          // Show modal
-          editModal.classList.add('show');
-          
-          // Initialize WYSIWYG editor after modal is shown
-          setTimeout(() => {
-            initializeWysiwygEditors();
-            // Set the content in the WYSIWYG editor
-            setWysiwygContent('edit-course-description', course.description);
-          }, 200);
-        } else {
-          alert('Ralat: Kursus tidak dijumpai');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Ralat semasa memuat data kursus');
-      });
+    // Create a container for the Quill editor
+    const editorContainer = document.createElement('div');
+    editorContainer.id = 'edit-course-quill-editor-container';
+    editorContainer.style.height = '200px';
+    editorContainer.style.marginBottom = '10px';
+    
+    // Insert the container before the textarea
+    descriptionField.parentNode.insertBefore(editorContainer, descriptionField);
+    
+    // Hide the original textarea
+    descriptionField.style.display = 'none';
+    
+    // Initialize Quill editor
+    const quill = new Quill(editorContainer, {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          [{ 'align': [] }],
+          [{ 'color': [] }, { 'background': [] }],
+          ['link'],
+          ['clean']
+        ]
+      },
+      placeholder: 'Masukkan diskripsi kursus dengan format yang diingini...'
+    });
+    
+    // Store the Quill instance on the textarea for easy access
+    descriptionField.quillInstance = quill;
+    
+    // Sync content from Quill to textarea on change
+    quill.on('text-change', function() {
+      descriptionField.value = quill.root.innerHTML;
+    });
+    
+    console.log('WYSIWYG editor initialized for edit course description');
+  }
+}
+
+// Clean up edit course form WYSIWYG
+function cleanupEditCourseForm() {
+  const descriptionField = document.getElementById('edit-course-description');
+  if (descriptionField && descriptionField.quillInstance) {
+    try {
+      descriptionField.quillInstance.destroy();
+    } catch (e) {
+      console.log('Error destroying edit course Quill instance:', e);
+    }
+    descriptionField.quillInstance = null;
+  }
+  
+  // Remove all edit course Quill editor containers if they exist
+  const editorContainers = document.querySelectorAll('#edit-course-quill-editor-container');
+  editorContainers.forEach(container => {
+    container.remove();
+  });
+  
+  // Also remove any orphaned Quill toolbars
+  const orphanedToolbars = document.querySelectorAll('.ql-toolbar');
+  orphanedToolbars.forEach(toolbar => {
+    if (!toolbar.parentNode || !toolbar.parentNode.querySelector('.ql-editor')) {
+      toolbar.remove();
+    }
+  });
+  
+  // Remove any remaining Quill containers that might be left
+  const allQuillContainers = document.querySelectorAll('.ql-container');
+  allQuillContainers.forEach(container => {
+    if (container.parentNode && container.parentNode.id === 'edit-course-quill-editor-container') {
+      container.remove();
+    }
+  });
+  
+  // Show the original textarea again
+  if (descriptionField) {
+    descriptionField.style.display = 'block';
+  }
+  
+  console.log('Edit course form WYSIWYG cleanup completed');
+}
+
+// Reset edit course form
+function resetEditCourseForm() {
+  editCourseForm.reset();
+  
+  // Reset image preview
+  editCoursePreviewImage.style.display = 'none';
+  editCourseUploadIcon.style.display = 'block';
+  
+  // Clean up WYSIWYG editor
+  cleanupEditCourseForm();
+  
+  console.log('Edit course form reset completed');
+}
+
+// Submit edit course to server
+function submitEditCourseToServer(courseData, courseId) {
+  // Ensure WYSIWYG content is captured before submission
+  const editDescriptionField = document.getElementById('edit-course-description');
+  if (editDescriptionField && editDescriptionField.quillInstance) {
+    editDescriptionField.value = editDescriptionField.quillInstance.root.innerHTML;
+  }
+  
+  const serverData = {
+    course: {
+      name: courseData.course_name,
+      description: courseData.course_description,
+      start_date: courseData.start_date,
+      end_date: courseData.end_date,
+      start_time: courseData.start_time,
+      end_time: courseData.end_time
+    }
   };
-});
+
+  fetch(`/admin/courses/${courseId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    },
+    body: JSON.stringify(serverData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      alert('Kursus berjaya dikemas kini!');
+      document.getElementById('edit-course-modal').classList.remove('show');
+      // Clean up edit form WYSIWYG
+      cleanupEditCourseForm();
+      // Optionally refresh the page or update the card
+      location.reload();
+    } else {
+      alert('Ralat: ' + (data.error || 'Tidak dapat mengemas kini kursus'));
+    }
+  })
+  .catch(error => {
+    console.error('Error updating course:', error);
+    if (error.name === 'AbortError') {
+      console.log('Edit request was aborted - this is normal');
+      return;
+    }
+    alert('Ralat: Tidak dapat mengemas kini kursus');
+  });
+}
+
+// Submit course status to server
+function submitCourseStatusToServer(statusData, courseId) {
+  const serverData = {
+    course: {
+      status: statusData.status
+    }
+  };
+
+  fetch(`/admin/courses/${courseId}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    },
+    body: JSON.stringify(serverData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      alert('Status kursus berjaya ditukar!');
+      document.getElementById('status-course-modal').classList.remove('show');
+      document.getElementById('status-course-form').reset();
+      // Optionally refresh the page or update the card
+      location.reload();
+    } else {
+      alert('Ralat: ' + (data.error || 'Tidak dapat menukar status kursus'));
+    }
+  })
+  .catch(error => {
+    console.error('Error updating course status:', error);
+    if (error.name === 'AbortError') {
+      console.log('Status request was aborted - this is normal');
+      return;
+    }
+    alert('Ralat: Tidak dapat menukar status kursus');
+  });
+}
 </script>
 </body>
 </html> 

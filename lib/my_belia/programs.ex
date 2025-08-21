@@ -63,4 +63,11 @@ defmodule MyBelia.Programs do
   end
 
   def search_programs(_), do: []
+
+  @doc """
+  Deletes all programs from the database.
+  """
+  def delete_all_programs do
+    Repo.delete_all(Program)
+  end
 end
