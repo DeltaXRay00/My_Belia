@@ -33,6 +33,11 @@ defmodule MyBeliaWeb.Router do
     get "/log-keluar", PageController, :logout
     get "/laman-utama", PageController, :home
     get "/home", PageController, :home
+
+    # LiveView Routes (Public Pages)
+    live "/live", PageLive.HomeLive
+    live "/live/home", PageLive.HomeLive
+    live "/live/laman-utama", PageLive.HomeLive
   end
 
   scope "/", MyBeliaWeb do
@@ -99,6 +104,50 @@ defmodule MyBeliaWeb.Router do
              get "/pengesahan_permohonan", PageController, :pengesahan_permohonan
              get "/pengesahan-permohonan", PageController, :pengesahan_permohonan
              get "/application-confirmation", PageController, :pengesahan_permohonan
+
+    # LiveView Routes (User Pages) - These work alongside existing server-side routes
+    live "/live/laman-utama-pengguna", UserLive.UserHomeLive
+    live "/live/user-home", UserLive.UserHomeLive
+    live "/live/dashboard", UserLive.UserHomeLive
+
+    live "/live/profil_pengguna", UserLive.UserProfileLive
+    live "/live/user-profile", UserLive.UserProfileLive
+    live "/live/profile", UserLive.UserProfileLive
+
+    live "/live/senarai_program", UserLive.SenaraiProgramLive
+    live "/live/senarai-program", UserLive.SenaraiProgramLive
+    live "/live/program-list", UserLive.SenaraiProgramLive
+    live "/live/programs", UserLive.SenaraiProgramLive
+
+    live "/live/senarai_kursus", UserLive.SenaraiKursusLive
+    live "/live/senarai-kursus", UserLive.SenaraiKursusLive
+    live "/live/course-list", UserLive.SenaraiKursusLive
+    live "/live/courses", UserLive.SenaraiKursusLive
+
+    live "/live/permohonan_geran", UserLive.PermohonanGeranLive
+    live "/live/permohonan-geran", UserLive.PermohonanGeranLive
+    live "/live/grant-application", UserLive.PermohonanGeranLive
+
+    live "/live/skim_geran", UserLive.SkimGeranLive
+    live "/live/skim-geran", UserLive.SkimGeranLive
+    live "/live/grant-scheme", UserLive.SkimGeranLive
+
+    live "/live/dokumen_sokongan_geran", UserLive.DokumenSokonganGeranLive
+    live "/live/dokumen-sokongan-geran", UserLive.DokumenSokonganGeranLive
+
+    live "/live/pengesahan_permohonan", UserLive.PengesahanPermohonanLive
+    live "/live/pengesahan-permohonan", UserLive.PengesahanPermohonanLive
+    live "/live/application-confirmation", UserLive.PengesahanPermohonanLive
+
+    live "/live/dokumen_sokongan", UserLive.DokumenSokonganLive
+    live "/live/dokumen-sokongan", UserLive.DokumenSokonganLive
+    live "/live/support-documents", UserLive.DokumenSokonganLive
+    live "/live/documents", UserLive.DokumenSokonganLive
+
+    # LiveView Search Routes
+    live "/live/search", UserLive.SearchLive
+    live "/live/search-programs", UserLive.SearchProgramsLive
+    live "/live/search-courses", UserLive.SearchCoursesLive
   end
 
   scope "/", MyBeliaWeb do
@@ -149,6 +198,30 @@ defmodule MyBeliaWeb.Router do
   get "/kursus_pemohon/lulus", PageController, :kursus_pemohon_lulus
   get "/kursus_pemohon/tolak", PageController, :kursus_pemohon_tolak
   get "/kursus_pemohon/tidak_lengkap", PageController, :kursus_pemohon_tidak_lengkap
+
+    # LiveView Routes (Admin Pages) - These work alongside existing server-side routes
+    live "/live/admin", AdminLive.AdminLive
+    live "/live/admin-dashboard", AdminLive.AdminLive
+    live "/live/admin-panel", AdminLive.AdminLive
+    live "/live/admin-home", AdminLive.AdminLive
+
+    live "/live/admin/permohonan_program", AdminLive.AdminPermohonanProgramLive
+    live "/live/admin/program", AdminLive.AdminPermohonanProgramLive
+    live "/live/admin/programs", AdminLive.AdminPermohonanProgramLive
+    live "/live/admin/permohonan-program", AdminLive.AdminPermohonanProgramLive
+
+    live "/live/admin/permohonan_kursus", AdminLive.AdminPermohonanKursusLive
+    live "/live/admin/kursus", AdminLive.AdminPermohonanKursusLive
+    live "/live/admin/courses", AdminLive.AdminPermohonanKursusLive
+    live "/live/admin/permohonan-kursus", AdminLive.AdminPermohonanKursusLive
+
+    live "/live/admin/permohonan_geran", AdminLive.AdminPermohonanGeranLive
+    live "/live/admin/permohonan-geran", AdminLive.AdminPermohonanGeranLive
+    live "/live/admin/geran", AdminLive.AdminPermohonanGeranLive
+
+    live "/live/admin/permohonan_geran/lulus", AdminLive.AdminPermohonanGeranLulusLive
+    live "/live/admin/permohonan_geran/tolak", AdminLive.AdminPermohonanGeranTolakLive
+    live "/live/admin/permohonan_geran/tidak_lengkap", AdminLive.AdminPermohonanGeranTidakLengkapLive
   end
 
   # Other scopes may use custom stacks.

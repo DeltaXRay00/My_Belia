@@ -100,4 +100,17 @@ defmodule MyBelia.Courses do
   def change_course(%Course{} = course, attrs \\ %{}) do
     Course.changeset(course, attrs)
   end
+
+  @doc """
+  Search courses by name or description.
+  """
+  def search_courses(query) when is_binary(query) and byte_size(query) > 0 do
+    search_term = "%#{query}%"
+
+    Course
+    |> where([c], ilike(c.name, ^search_term) or ilike(c.description, ^search_term))
+    |> Repo.all()
+  end
+
+  def search_courses(_), do: []
 end

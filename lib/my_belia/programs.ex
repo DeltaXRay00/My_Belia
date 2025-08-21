@@ -50,4 +50,17 @@ defmodule MyBelia.Programs do
   def change_program(%Program{} = program, attrs \\ %{}) do
     Program.changeset(program, attrs)
   end
+
+  @doc """
+  Search programs by name or description.
+  """
+  def search_programs(query) when is_binary(query) and byte_size(query) > 0 do
+    search_term = "%#{query}%"
+
+    Program
+    |> where([p], ilike(p.name, ^search_term) or ilike(p.description, ^search_term))
+    |> Repo.all()
+  end
+
+  def search_programs(_), do: []
 end
