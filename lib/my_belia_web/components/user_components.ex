@@ -1,6 +1,12 @@
 defmodule MyBeliaWeb.UserComponents do
   use Phoenix.Component
 
+  # Routes generation with the ~p sigil
+  use Phoenix.VerifiedRoutes,
+    endpoint: MyBeliaWeb.Endpoint,
+    router: MyBeliaWeb.Router,
+    statics: MyBeliaWeb.static_paths()
+
   def user_topbar(assigns, opts \\ []) do
     brand_logo_width = Keyword.get(opts, :brand_logo_width, "auto")
     brand_logo_height = Keyword.get(opts, :brand_logo_height, "auto")
@@ -18,7 +24,7 @@ defmodule MyBeliaWeb.UserComponents do
     <div class="topbar">
       <div class="container topbar-inner">
         <div class="brand-left">
-          <img src="/images/node-4.png" alt="KBSS" style={"width: #{@brand_logo_width}; height: #{@brand_logo_height};"} />
+          <img src={~p"/images/node-4.png"} alt="KBSS" style={"width: #{@brand_logo_width}; height: #{@brand_logo_height};"} />
         </div>
         <nav class="topnav">
           <a href="/laman-utama-pengguna" class="nav-link">UTAMA</a>
@@ -39,7 +45,7 @@ defmodule MyBeliaWeb.UserComponents do
             <a href="/admin" class="admin-link">Admin</a>
           <% end %>
           <a href="/profil_pengguna" class="profile-icon">
-            <img src="/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg" alt="Profile" style={"width: #{@profile_image_width}; height: #{@profile_image_height};"} />
+            <img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" style={"width: #{@profile_image_width}; height: #{@profile_image_height};"} />
           </a>
           <%= unless @current_user && @current_user.role == "admin" do %>
             <a href="/log-keluar" class="logout-link">Log Keluar</a>
@@ -76,7 +82,7 @@ defmodule MyBeliaWeb.UserComponents do
       <div class="container footer-inner">
         <div class="footer-top">
           <div class="footer-left">
-            <img src="/images/kbs-logo-100x100-1-1-15.png" alt="KBS" class="footer-logo" style={"width: #{@footer_logo_width}; height: #{@footer_logo_height};"} />
+            <img src={~p"/images/kbs-logo-100x100-1-1-15.png"} alt="KBS" class="footer-logo" style={"width: #{@footer_logo_width}; height: #{@footer_logo_height};"} />
             <div class="footer-contact">
               <div class="contact-title">KEMENTERIAN BELIA DAN SUKAN SABAH</div>
               <div class="contact-details">
@@ -90,12 +96,12 @@ defmodule MyBeliaWeb.UserComponents do
           </div>
           <div class="footer-social">
             <div class="social-icon-container">
-              <img src="/images/ellipse-1-17.svg" alt="Facebook" class="social-ellipse" style={"width: #{@social_ellipse_width}; height: #{@social_ellipse_height};"} />
-              <img src="/images/2175193-1-18.png" alt="Facebook Icon" class="social-image" style={"width: #{@social_image_width}; height: #{@social_image_height};"} />
+              <img src={~p"/images/ellipse-1-17.svg"} alt="Facebook" class="social-ellipse" style={"width: #{@social_ellipse_width}; height: #{@social_ellipse_height};"} />
+              <img src={~p"/images/2175193-1-18.png"} alt="Facebook Icon" class="social-image" style={"width: #{@social_image_width}; height: #{@social_image_height};"} />
             </div>
             <div class="social-icon-container">
-              <img src="/images/ellipse-2-19.svg" alt="Instagram" class="social-ellipse" style={"width: #{@social_ellipse_width}; height: #{@social_ellipse_height};"} />
-              <img src="/images/download-1-20.png" alt="Instagram Icon" class="social-image" style={"width: #{@social_image_width}; height: #{@social_image_height};"} />
+              <img src={~p"/images/ellipse-2-19.svg"} alt="Instagram" class="social-ellipse" style={"width: #{@social_ellipse_width}; height: #{@social_ellipse_height};"} />
+              <img src={~p"/images/download-1-20.png"} alt="Instagram Icon" class="social-image" style={"width: #{@social_image_width}; height: #{@social_image_height};"} />
             </div>
           </div>
         </div>
@@ -103,9 +109,9 @@ defmodule MyBeliaWeb.UserComponents do
         <div class="footer-bottom">
           <div class="footer-note">Agensi di bawah Kementerian Belia dan Sukan Sabah</div>
           <div class="footer-agencies">
-            <img src="/images/msn-logo-2-1-22.png" alt="Sukan Negeri Sabah" class="agency-logo" style={"width: #{@agency_logo_width}; height: #{@agency_logo_height};"} />
-            <img src="/images/images-1-1-24.png" alt="Lembaga Sukan Sabah" class="agency-logo" style={"width: #{@agency_logo_width}; height: #{@agency_logo_height};"} />
-            <img src="/images/node-23.png" alt="MBS Belia Sabah" class="agency-logo" style={"width: #{@agency_logo_width}; height: #{@agency_logo_height};"} />
+            <img src={~p"/images/msn-logo-2-1-22.png"} alt="Sukan Negeri Sabah" class="agency-logo" style={"width: #{@agency_logo_width}; height: #{@agency_logo_height};"} />
+            <img src={~p"/images/images-1-1-24.png"} alt="Lembaga Sukan Sabah" class="agency-logo" style={"width: #{@agency_logo_width}; height: #{@agency_logo_height};"} />
+            <img src={~p"/images/node-23.png"} alt="MBS Belia Sabah" class="agency-logo" style={"width: #{@agency_logo_width}; height: #{@agency_logo_height};"} />
           </div>
         </div>
       </div>
@@ -126,7 +132,7 @@ defmodule MyBeliaWeb.UserComponents do
     <div class="topbar">
       <div class="container topbar-inner">
         <div class="brand-left">
-          <img src="/images/node-4.png" alt="KBSS" style={"width: #{@brand_logo_width}; height: #{@brand_logo_height};"} />
+          <img src={~p"/images/node-4.png"} alt="KBSS" style={"width: #{@brand_logo_width}; height: #{@brand_logo_height};"} />
         </div>
         <nav class="topnav">
           <a href="/" class="nav-link">UTAMA</a>

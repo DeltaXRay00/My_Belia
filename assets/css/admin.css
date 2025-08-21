@@ -41,6 +41,8 @@ body {
 
 .sidebar.hidden {
   transform: translateX(-100%);
+  width: 0;
+  overflow: hidden;
 }
 
 .sidebar-header {

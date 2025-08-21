@@ -845,7 +845,7 @@ defmodule MyBeliaWeb.CoreComponents do
 
   def admin_logo_size(assigns) do
     ~H"""
-    <img src="/images/node-18.png" alt="MyBelia Logo" class="admin-logo" />
+    <img src={~p"/images/node-17.png"} alt="MyBelia Logo" class="admin-logo" />
     <style>
       .admin-logo {
         width: <%= @width %>px !important;

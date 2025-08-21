@@ -3,8 +3,11 @@ defmodule MyBelia.Guardian do
 
   alias MyBelia.Accounts
 
-  def subject_for_token(user, _claims) do
-    {:ok, to_string(user.id)}
+  def subject_for_token(user, _claims) when is_map(user) do
+    case user do
+      %{id: id} -> {:ok, to_string(id)}
+      _ -> {:error, :reason_for_error}
+    end
   end
 
   def subject_for_token(_, _) do

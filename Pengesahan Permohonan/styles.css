@@ -305,7 +305,7 @@ img {
   outline: none;
 }
 
-.2175193-1-29 {
+.img-2175193-1-29 {
   flex-grow: 0;
   flex-shrink: 1;
   flex-basis: auto;
@@ -418,6 +418,6 @@ img {
 }
   flex-grow: 0;
   flex-shrink: 1;
-  width: NaN%;
+  width: 100%;
   box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.5);
 }
