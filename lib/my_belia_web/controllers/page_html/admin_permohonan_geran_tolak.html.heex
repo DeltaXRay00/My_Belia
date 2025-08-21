@@ -7,73 +7,7 @@
   <link rel="stylesheet" href={~p"/assets/admin.css"}>
 </head>
 <body>
-<div class="admin-container">
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <a href="/laman-utama-pengguna" class="admin-logo-link">
-        <img src={~p"/images/node-18.png"} alt="Logo" class="logo">
-      </a>
-    </div>
-    
-    <div class="sidebar-section">
-      <h3 class="section-title">UTAMA</h3>
-      <ul class="nav-list">
-        <li><a href="/admin" class="nav-link">Dashboard</a></li>
-        <li><a href="/admin" class="nav-link">Admin</a></li>
-        <li><a href="/admin" class="nav-link">Tetapan</a></li>
-        <li class="dropdown-item">
-          <a href="#" class="nav-link dropdown-toggle" data-dropdown="permohonan-utama">Permohonan</a>
-          <ul class="dropdown-menu" id="permohonan-utama">
-            <li><a href="/admin/permohonan_program" class="nav-link">Program</a></li>
-            <li><a href="/admin/permohonan_kursus" class="nav-link">Kursus</a></li>
-            <li><a href="/admin/permohonan_geran" class="nav-link active">Geran</a></li>
-          </ul>
-        </li>
-        <li><a href="/admin" class="nav-link">Galeri</a></li>
-      </ul>
-    </div>
-    
-    <div class="sidebar-section">
-      <h3 class="section-title">SISTEM</h3>
-      <ul class="nav-list">
-        <li class="dropdown-item">
-          <a href="#" class="nav-link dropdown-toggle" data-dropdown="log-sistem">Log</a>
-          <ul class="dropdown-menu" id="log-sistem">
-            <li><a href="/admin" class="nav-link">Program</a></li>
-            <li><a href="/admin" class="nav-link">Kursus</a></li>
-            <li><a href="/admin" class="nav-link">Geran</a></li>
-          </ul>
-        </li>
-        <li><a href="/admin" class="nav-link">Direktori</a></li>
-        <li><a href="/admin" class="nav-link">Khidmat Pengguna</a></li>
-      </ul>
-    </div>
-    
-    <!-- Logout Section -->
-    <div class="sidebar-section logout-section">
-      <ul class="nav-list">
-        <li><a href="/log-keluar" class="nav-link logout-link">Log Keluar</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Top Header -->
-    <div class="top-header">
-      <div class="menu-icon" id="menu-toggle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </div>
-      <h1 class="page-title">Permohonan Geran - Tolak</h1>
-      <div class="user-profile">
-        <img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" class="profile-icon" />
-      </div>
-    </div>
+<.admin_layout current_page="permohonan_geran" page_title="Permohonan Geran - Tolak">
 
     <!-- Grant Application Management Content -->
     <div class="grant-management-content">
@@ -173,8 +107,7 @@
         <span class="total-applicants">Jumlah Pemohon: 1</span>
       </div>
     </div>
-  </div>
-</div>
+</.admin_layout>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

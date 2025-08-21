@@ -48,6 +48,15 @@ defmodule MyBeliaWeb.Router do
     get "/user-profile", PageController, :user_profile
     get "/profile", PageController, :user_profile
 
+    # Example User Page (for demonstration)
+    get "/example-user-page", PageController, :example_user_page
+    get "/image-size-example", PageController, :image_size_example
+
+    # Search functionality
+    get "/search", PageController, :search
+    get "/search-programs", PageController, :search_programs
+    get "/search-courses", PageController, :search_courses
+
     # Documents and Support
     get "/dokumen_sokongan", PageController, :dokumen_sokongan
     get "/dokumen-sokongan", PageController, :dokumen_sokongan
@@ -85,7 +94,6 @@ defmodule MyBeliaWeb.Router do
                  # Support Documents Step
              get "/dokumen_sokongan_geran", PageController, :dokumen_sokongan_geran
              get "/dokumen-sokongan-geran", PageController, :dokumen_sokongan_geran
-             get "/support-documents", PageController, :dokumen_sokongan_geran
 
              # Application Confirmation Step
              get "/pengesahan_permohonan", PageController, :pengesahan_permohonan

@@ -314,6 +314,32 @@ defmodule MyBeliaWeb.PageController do
     render(conn, :user_profile, layout: false)
   end
 
+  def example_user_page(conn, _params) do
+    # Example page demonstrating reusable components
+    render(conn, :example_user_page, layout: false)
+  end
+
+  def image_size_example(conn, _params) do
+    # Example page demonstrating image size adjustments
+    render(conn, :image_size_example, layout: false)
+  end
+
+  def search(conn, %{"q" => query}) do
+    # General search functionality
+    # This would search across programs, courses, and grants
+    render(conn, :search_results, query: query, layout: false)
+  end
+
+  def search_programs(conn, %{"q" => query}) do
+    # Search programs specifically
+    render(conn, :search_programs, query: query, layout: false)
+  end
+
+  def search_courses(conn, %{"q" => query}) do
+    # Search courses specifically
+    render(conn, :search_courses, query: query, layout: false)
+  end
+
   def dokumen_sokongan(conn, _params) do
     # The dokumen sokongan page is often custom made,
     # so skip the default app layout.

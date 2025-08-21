@@ -1,0 +1,106 @@
+<%= public_topbar(assigns) %>
+
+<section class="search-results-hero">
+  <div class="container">
+    <h2 class="section-title">Hasil Carian</h2>
+    <p class="search-query">Carian untuk: "<%= @query %>"</p>
+  </div>
+</section>
+
+<section class="search-results-section">
+  <div class="container">
+    <div class="search-results-content">
+      <div class="search-results-info">
+        <p>Fungsi carian sedang dalam pembangunan. Sila gunakan menu navigasi untuk mencari program, kursus, atau geran yang anda ingini.</p>
+      </div>
+      
+      <div class="search-suggestions">
+        <h3>Cadangan Pencarian:</h3>
+        <div class="suggestion-links">
+          <a href="/senarai_program" class="suggestion-link">Lihat Semua Program</a>
+          <a href="/senarai_kursus" class="suggestion-link">Lihat Semua Kursus</a>
+          <a href="/permohonan_geran" class="suggestion-link">Lihat Skim Geran</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%= user_footer(assigns) %>
+
+<style>
+.search-results-hero {
+  padding: 60px 0 40px 0;
+  background: var(--white);
+  text-align: center;
+}
+
+.search-results-hero .section-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 16px;
+}
+
+.search-query {
+  font-size: 18px;
+  color: #666;
+  font-weight: 500;
+}
+
+.search-results-section {
+  padding: 40px 0;
+  background: #f5f7fa;
+}
+
+.search-results-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.search-results-info {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 32px;
+}
+
+.search-results-info p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.search-suggestions h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 24px;
+}
+
+.suggestion-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.suggestion-link {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #1408ff;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.suggestion-link:hover {
+  background: #0f06cc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(20, 8, 255, 0.3);
+}
+</style> 

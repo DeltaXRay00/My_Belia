@@ -1,0 +1,28 @@
+<%= user_topbar(assigns) %>
+
+<!-- Main Content Area -->
+<section class="example-content">
+  <div class="container">
+    <h1>Example User Page</h1>
+    <p>This is an example page showing how easy it is to create new user pages with reusable components.</p>
+    
+    <div class="content-section">
+      <h2>Benefits of Using Components</h2>
+      <ul>
+        <li>No need to duplicate topbar and footer code</li>
+        <li>Consistent design across all user pages</li>
+        <li>Easy maintenance - update once, applies everywhere</li>
+        <li>Cleaner, more organized code</li>
+      </ul>
+    </div>
+    
+    <div class="content-section">
+      <h2>How to Use</h2>
+      <p>Just add these two lines to any new user page:</p>
+      <pre><code>&lt;%= user_topbar(assigns) %&gt;
+&lt;%= user_footer(assigns) %&gt;</code></pre>
+    </div>
+  </div>
+</section>
+
+<%= user_footer(assigns) %> 

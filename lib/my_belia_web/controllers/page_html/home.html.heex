@@ -1,36 +1,17 @@
-<.logo_size width="180" height="120" />
-<.hero_overlay opacity="0.0" />
-<.hero_logo_contrast contrast="2.0" />
-<.hero_logo_size width="600" height="auto" />
-<.social_icon_size ellipse_size="40" image_size="35" />
-<.agency_logo_size width="130" height="130" />
-
-<div class="topbar">
-	<div class="container topbar-inner">
-		<div class="brand-left">
-			<img src={~p"/images/node-4.png"} alt="KBSS" />
-		</div>
-		<nav class="topnav">
-			<a href="/" class="nav-link">UTAMA</a>
-			<span class="multi-line">PROFIL &amp;<br>MAKLUMAT</span>
-			<span>GALERI</span>
-			<span class="multi-line">HUBUNGI<br>KAMI</span>
-		</nav>
-		<div class="topnav-right">
-			<a href="/log-masuk" class="login-link">LOG MASUK</a>
-			<div class="nav-divider"></div>
-			<a href="/daftar" class="login-link">DAFTAR</a>
-		</div>
-	</div>
-</div>
+<%= public_topbar(assigns) %>
 
 <section class="hero">
 	<div class="container hero-inner">
 		<img class="hero-logo" src={~p"/images/node-6.png"} alt="MyBelia" />
-		<div class="search">
-			<input type="text" placeholder="Carian..." class="search-input" />
-			<img src={~p"/images/node-9.png"} alt="search" class="search-icon" />
-		</div>
+		<form class="search" action="/search" method="GET">
+			<input type="text" name="q" placeholder="Carian program, kursus, atau geran..." class="search-input" required />
+			<button type="submit" class="search-button" aria-label="Cari">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="11" cy="11" r="8"></circle>
+					<path d="m21 21-4.35-4.35"></path>
+				</svg>
+			</button>
+		</form>
 	</div>
 </section>
 
@@ -65,41 +46,4 @@
         </div>
 </section>
 
-<footer class="footer">
-	<div class="container footer-inner">
-		<div class="footer-top">
-			<div class="footer-left">
-				<img src={~p"/images/kbs-logo-100x100-1-1-15.png"} alt="KBS" class="footer-logo" />
-				<div class="footer-contact">
-					<div class="contact-title">KEMENTERIAN BELIA DAN SUKAN SABAH</div>
-					<div class="contact-details">
-						<div>Aras 10, Blok B, Wisma Muis,</div>
-						<div>Karung Berkunci No.2007, 88999, Kota Kinabalu</div>
-						<div>No Telefon: 088 287 556</div>
-						<div>Faks: 088 240 533</div>
-						<div>E-mel: kbs@sabah.gov.my</div>
-          </div>
-          </div>
-          </div>
-			<div class="footer-social">
-				<div class="social-icon-container">
-					<img src={~p"/images/ellipse-1-17.svg"} alt="Facebook" class="social-ellipse" />
-					<img src={~p"/images/2175193-1-18.png"} alt="Facebook Icon" class="social-image" />
-          </div>
-				<div class="social-icon-container">
-					<img src={~p"/images/ellipse-2-19.svg"} alt="Instagram" class="social-ellipse" />
-					<img src={~p"/images/download-1-20.png"} alt="Instagram Icon" class="social-image" />
-          </div>
-        </div>
-      </div>
-		<div class="footer-divider"></div>
-		<div class="footer-bottom">
-			<div class="footer-note">Agensi di bawah Kementerian Belia dan Sukan Sabah</div>
-			<div class="footer-agencies">
-				<img src={~p"/images/msn-logo-2-1-22.png"} alt="Sukan Negeri Sabah" class="agency-logo" />
-				<img src={~p"/images/images-1-1-24.png"} alt="Lembaga Sukan Sabah" class="agency-logo" />
-				<img src={~p"/images/node-23.png"} alt="MBS Belia Sabah" class="agency-logo" />
-    </div>
-  </div>
-</div>
-</footer>
+<%= user_footer(assigns) %>
