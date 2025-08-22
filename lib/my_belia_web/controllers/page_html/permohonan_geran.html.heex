@@ -1,0 +1,209 @@
+<%= user_topbar(assigns) %>
+
+<!-- Main Content Area -->
+<div class="grant-container">
+  <!-- Page Title -->
+  <div class="page-title-section">
+    <h1 class="page-title">PERMOHONAN GERAN</h1>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation" translate="no">
+    <div class="tab active" onclick="window.location.href='/permohonan_geran'">
+      <span class="tab-text" translate="no">Profil</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/skim_geran'">
+      <span class="tab-text" translate="no">Skim&#10;Geran</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/dokumen_sokongan_geran'">
+      <span class="tab-text" translate="no">Dokumen&#10;Sokongan</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/pengesahan_permohonan'">
+      <span class="tab-text" translate="no">Pengesahan&#10;Permohonan</span>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <div class="form-container">
+    <div class="form-section">
+      <h3 class="form-instruction">Sila lengkapkan maklumat berikut:</h3>
+      
+      <!-- Organization Information -->
+      <div class="form-section-title">Maklumat Organisasi</div>
+      
+      <div class="form-group">
+        <label class="form-label required">Nama Organisasi <span class="required-mark">*</span></label>
+        <input type="text" class="form-input" placeholder="Masukkan nama organisasi" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Jenis Organisasi <span class="required-mark">*</span></label>
+        <select class="form-input" required>
+          <option value="">Pilih jenis organisasi</option>
+          <option value="persatuan">Persatuan</option>
+          <option value="pertubuhan">Pertubuhan</option>
+          <option value="syarikat">Syarikat Berhad</option>
+          <option value="yayasan">Yayasan</option>
+          <option value="koperasi">Koperasi</option>
+          <option value="lain">Lain-lain</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Nombor Pendaftaran Organisasi <span class="required-mark">*</span></label>
+        <input type="text" class="form-input" placeholder="Contoh: ROS/2019/123456" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Tarikh Penubuhan <span class="required-mark">*</span></label>
+        <input type="date" class="form-input" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Alamat Surat-menyurat <span class="required-mark">*</span></label>
+        <textarea class="form-input" rows="3" placeholder="Masukkan alamat lengkap surat-menyurat" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Poskod <span class="required-mark">*</span></label>
+        <input type="text" class="form-input" placeholder="Contoh: 88999" maxlength="5" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Daerah <span class="required-mark">*</span></label>
+        <select class="form-input" required>
+          <option value="">Pilih daerah</option>
+          <option value="kota_kinabalu">Kota Kinabalu</option>
+          <option value="penampang">Penampang</option>
+          <option value="tuaran">Tuaran</option>
+          <option value="ranau">Ranau</option>
+          <option value="kundasang">Kundasang</option>
+          <option value="sandakan">Sandakan</option>
+          <option value="tawau">Tawau</option>
+          <option value="lahad_datu">Lahad Datu</option>
+          <option value="semporna">Semporna</option>
+          <option value="kunak">Kunak</option>
+          <option value="keningau">Keningau</option>
+          <option value="tambunan">Tambunan</option>
+          <option value="nabawan">Nabawan</option>
+          <option value="beaufort">Beaufort</option>
+          <option value="sipitang">Sipitang</option>
+          <option value="tenom">Tenom</option>
+          <option value="kuala_penyu">Kuala Penyu</option>
+          <option value="weston">Weston</option>
+          <option value="kudat">Kudat</option>
+          <option value="pitas">Pitas</option>
+          <option value="beluran">Beluran</option>
+          <option value="telupid">Telupid</option>
+          <option value="tongod">Tongod</option>
+          <option value="kinabatangan">Kinabatangan</option>
+        </select>
+      </div>
+
+      <!-- Contact Information Section -->
+      <div class="contact-section">
+        <div class="form-section-title">Maklumat untuk Dihubungi</div>
+        
+        <div class="contact-grid">
+          <div class="form-group">
+            <label class="form-label">Telefon Pejabat</label>
+            <input type="tel" class="form-input contact-input" placeholder="Contoh: 088-123456" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Telefon Bimbit</label>
+            <input type="tel" class="form-input contact-input" placeholder="Contoh: 012-3456789">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label required">E-mel <span class="required-mark">*</span></label>
+            <input type="email" class="form-input contact-input" placeholder="Contoh: info@organisasi.com" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Organization Details -->
+      <div class="org-details-section">
+        <div class="form-section-title">Butiran Organisasi</div>
+        
+        <div class="form-group">
+          <label class="form-label required">Bidang Aktiviti Utama <span class="required-mark">*</span></label>
+          <select class="form-input" required>
+            <option value="">Pilih bidang aktiviti</option>
+            <option value="belia">Belia</option>
+            <option value="sukan">Sukan</option>
+            <option value="pendidikan">Pendidikan</option>
+            <option value="kesihatan">Kesihatan</option>
+            <option value="ekonomi">Ekonomi</option>
+            <option value="sosial">Sosial</option>
+            <option value="budaya">Budaya</option>
+            <option value="alam_sekitar">Alam Sekitar</option>
+            <option value="teknologi">Teknologi</option>
+            <option value="lain">Lain-lain</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Jumlah Ahli <span class="required-mark">*</span></label>
+          <input type="number" class="form-input" placeholder="Masukkan jumlah ahli" min="1" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Jumlah Ahli Belia (18-40 tahun) <span class="required-mark">*</span></label>
+          <input type="number" class="form-input" placeholder="Masukkan jumlah ahli belia" min="0" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Laman Web (jika ada)</label>
+          <input type="url" class="form-input" placeholder="Contoh: https://www.organisasi.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Media Sosial (jika ada)</label>
+          <input type="text" class="form-input" placeholder="Contoh: Facebook, Instagram, Twitter">
+        </div>
+      </div>
+
+      <!-- Bank Account Information -->
+      <div class="bank-section">
+        <div class="form-section-title">Maklumat Akaun Bank</div>
+        
+        <div class="form-group">
+          <label class="form-label required">Nama Bank <span class="required-mark">*</span></label>
+          <select class="form-input" required>
+            <option value="">Pilih bank</option>
+            <option value="maybank">Maybank</option>
+            <option value="cimb">CIMB Bank</option>
+            <option value="public">Public Bank</option>
+            <option value="rhb">RHB Bank</option>
+            <option value="hong_leong">Hong Leong Bank</option>
+            <option value="ambank">AmBank</option>
+            <option value="alliance">Alliance Bank</option>
+            <option value="affin">Affin Bank</option>
+            <option value="bank_rakyat">Bank Rakyat</option>
+            <option value="bank_islam">Bank Islam</option>
+            <option value="lain">Lain-lain</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Nombor Akaun <span class="required-mark">*</span></label>
+          <input type="text" class="form-input" placeholder="Masukkan nombor akaun bank" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Nama Pemegang Akaun <span class="required-mark">*</span></label>
+          <input type="text" class="form-input" placeholder="Nama seperti dalam kad pengenalan" required>
+        </div>
+      </div>
+
+
+      <!-- Next Button -->
+      <div class="button-container">
+        <button class="next-button" onclick="window.location.href='/skim_geran'">Seterusnya</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= user_footer(assigns) %> 

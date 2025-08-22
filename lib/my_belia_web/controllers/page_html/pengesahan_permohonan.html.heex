@@ -1,0 +1,69 @@
+<%= user_topbar(assigns) %>
+
+<!-- Main Content Area -->
+<div class="grant-container">
+  <!-- Page Title -->
+  <div class="page-title-section">
+    <h1 class="page-title">PERMOHONAN GERAN</h1>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation" translate="no">
+    <div class="tab" onclick="window.location.href='/permohonan_geran'">
+      <span class="tab-text" translate="no">Profil</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/skim_geran'">
+      <span class="tab-text" translate="no">Skim&#10;Geran</span>
+    </div>
+    <div class="tab" onclick="window.location.href='/dokumen_sokongan_geran'">
+      <span class="tab-text" translate="no">Dokumen&#10;Sokongan</span>
+    </div>
+    <div class="tab active" onclick="window.location.href='/pengesahan_permohonan'">
+      <span class="tab-text" translate="no">Pengesahan&#10;Permohonan</span>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <div class="form-container" translate="no">
+    <div class="form-section">
+      <h3 class="form-section-title">Pengesahan Permohonan:</h3>
+      
+      <!-- Confirmation Message -->
+      <div class="confirmation-message">
+        <p>Saya dengan ini mengesahkan bahawa semua maklumat dan dokumen yang dikemukakan dalam permohonan ini adalah benar, tepat, dan lengkap mengikut pengetahuan saya. Saya faham bahawa sebarang maklumat palsu atau mengelirukan boleh menyebabkan permohonan ini ditolak atau pembatalan geran sekiranya telah diluluskan.</p>
+      </div>
+
+      <!-- Agreement Checkbox -->
+      <div class="agreement-section">
+        <div class="checkbox-container">
+          <input type="checkbox" id="agreement" class="agreement-checkbox" required>
+          <label for="agreement" class="agreement-label">Setuju</label>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="button-container">
+        <button class="back-button" onclick="window.location.href='/dokumen_sokongan_geran'">Kembali</button>
+        <button class="submit-button" onclick="submitApplication()">Hantar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= user_footer(assigns) %>
+
+<script>
+function submitApplication() {
+  const agreementCheckbox = document.getElementById('agreement');
+  
+  if (!agreementCheckbox.checked) {
+    alert('Sila tandakan kotak "Setuju" untuk meneruskan.');
+    return;
+  }
+  
+  // Here you would typically submit the form data to the server
+  alert('Permohonan anda telah berjaya dihantar!');
+  // Redirect to success page or home page
+  window.location.href = '/laman-utama-pengguna';
+}
+</script> 

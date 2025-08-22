@@ -6,5 +6,7 @@ defmodule MyBeliaWeb.PageHTML do
   """
   use MyBeliaWeb, :html
 
+  import MyBeliaWeb.UserComponents
+
   embed_templates "page_html/*"
 end

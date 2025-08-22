@@ -1,0 +1,55 @@
+<%= user_topbar(assigns) %>
+
+<section class="program-detail-hero">
+	<div class="container">
+		<div class="breadcrumb">
+			<a href="/senarai_program" class="breadcrumb-link">← Kembali ke Senarai Program</a>
+		</div>
+	</div>
+</section>
+
+<section class="program-detail-section">
+	<div class="container">
+		<div class="program-detail-card">
+			<div class="program-detail-header">
+				<div class="program-detail-image">
+					<img src={@program.image_data} alt={@program.name} />
+				</div>
+			</div>
+			<div class="program-detail-content">
+				<h1 class="program-detail-title"><%= @program.name %></h1>
+				<div class="program-detail-description">
+					<div class="description-content">
+						<%= raw(@program.description) %>
+					</div>
+				</div>
+				<div class="program-detail-info">
+					<div class="info-grid">
+						<div class="info-item">
+							<div class="info-label">Tarikh Mula Permohonan</div>
+							<div class="info-value"><%= Date.to_string(@program.start_date) %></div>
+						</div>
+						<div class="info-item">
+							<div class="info-label">Tarikh Tutup Permohonan</div>
+							<div class="info-value"><%= Date.to_string(@program.end_date) %></div>
+						</div>
+						<div class="info-item">
+							<div class="info-label">Waktu Mula Permohonan</div>
+							<div class="info-value"><%= Time.to_string(@program.start_time) %></div>
+						</div>
+						<div class="info-item">
+							<div class="info-label">Waktu Tutup Penerimaan</div>
+							<div class="info-value"><%= Time.to_string(@program.end_time) %></div>
+						</div>
+					</div>
+				</div>
+				<div class="program-detail-actions">
+					<button class="apply-now-btn">Mohon Sekarang</button>
+					<a href="/senarai_program" class="back-to-list-btn">Kembali ke Senarai</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<%= user_footer(assigns) %> 

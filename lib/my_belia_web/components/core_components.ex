@@ -19,6 +19,14 @@ defmodule MyBeliaWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
 
+  # Routes generation with the ~p sigil
+  use Phoenix.VerifiedRoutes,
+    endpoint: MyBeliaWeb.Endpoint,
+    router: MyBeliaWeb.Router,
+    statics: MyBeliaWeb.static_paths()
+
+
+
   @doc """
   Renders a modal.
 
@@ -837,7 +845,7 @@ defmodule MyBeliaWeb.CoreComponents do
 
   def admin_logo_size(assigns) do
     ~H"""
-    <img src="/images/node-18.png" alt="MyBelia Logo" class="admin-logo" />
+    <img src={~p"/images/node-17.png"} alt="MyBelia Logo" class="admin-logo" />
     <style>
       .admin-logo {
         width: <%= @width %>px !important;
@@ -845,6 +853,126 @@ defmodule MyBeliaWeb.CoreComponents do
         object-fit: contain !important;
       }
     </style>
+    """
+  end
+
+  @doc """
+  Renders a reusable admin sidebar component.
+
+  ## Examples
+
+      <.admin_sidebar current_page="permohonan_geran" />
+      <.admin_sidebar current_page="program" />
+      <.admin_sidebar current_page="kursus" />
+  """
+  attr :current_page, :string, default: "dashboard"
+  attr :logo_width, :string, default: "160"
+  attr :logo_height, :string, default: "120"
+
+  def admin_sidebar(assigns) do
+    ~H"""
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <a href="/laman-utama-pengguna" class="admin-logo-link">
+          <.admin_logo_size width={@logo_width} height={@logo_height} />
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="section-title">UTAMA</h3>
+        <ul class="nav-list">
+          <li><a href="/admin" class={"nav-link #{if @current_page == "dashboard", do: "active"}"}>Dashboard</a></li>
+          <li><a href="/admin" class={"nav-link #{if @current_page == "admin", do: "active"}"}>Admin</a></li>
+          <li><a href="/admin" class={"nav-link #{if @current_page == "tetapan", do: "active"}"}>Tetapan</a></li>
+          <li class="dropdown-item">
+            <a href="#" class="nav-link dropdown-toggle" data-dropdown="permohonan-utama">Permohonan</a>
+            <ul class="dropdown-menu" id="permohonan-utama">
+              <li><a href="/admin/permohonan_program" class={"nav-link #{if @current_page == "permohonan_program", do: "active"}"}>Program</a></li>
+              <li><a href="/admin/permohonan_kursus" class={"nav-link #{if @current_page == "permohonan_kursus", do: "active"}"}>Kursus</a></li>
+              <li><a href="/admin/permohonan_geran" class={"nav-link #{if @current_page == "permohonan_geran", do: "active"}"}>Geran</a></li>
+            </ul>
+          </li>
+          <li><a href="/admin" class={"nav-link #{if @current_page == "galeri", do: "active"}"}>Galeri</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="section-title">SISTEM</h3>
+        <ul class="nav-list">
+          <li class="dropdown-item">
+            <a href="#" class="nav-link dropdown-toggle" data-dropdown="log-sistem">Log</a>
+            <ul class="dropdown-menu" id="log-sistem">
+              <li><a href="/admin" class="nav-link">Program</a></li>
+              <li><a href="/admin" class="nav-link">Kursus</a></li>
+              <li><a href="/admin" class="nav-link">Geran</a></li>
+            </ul>
+          </li>
+          <li><a href="/admin" class={"nav-link #{if @current_page == "direktori", do: "active"}"}>Direktori</a></li>
+          <li><a href="/admin" class={"nav-link #{if @current_page == "khidmat", do: "active"}"}>Khidmat Pengguna</a></li>
+        </ul>
+      </div>
+
+      <!-- Logout Section -->
+      <div class="sidebar-section logout-section">
+        <ul class="nav-list">
+          <li><a href="/log-keluar" class="nav-link logout-link">Log Keluar</a></li>
+        </ul>
+      </div>
+    </div>
+    """
+  end
+
+  @doc """
+  Renders the admin page header with menu toggle and user profile.
+
+  ## Examples
+
+      <.admin_header page_title="Permohonan Geran" />
+      <.admin_header page_title="Program Management" />
+  """
+  attr :page_title, :string, required: true
+
+  def admin_header(assigns) do
+    ~H"""
+    <div class="top-header">
+      <div class="menu-icon" id="menu-toggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </div>
+      <h1 class="page-title"><%= @page_title %></h1>
+      <div class="user-profile">
+        <img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" class="profile-icon" />
+      </div>
+    </div>
+    """
+  end
+
+  @doc """
+  Renders the admin page container with sidebar and main content.
+
+  ## Examples
+
+      <.admin_layout current_page="permohonan_geran" page_title="Permohonan Geran">
+        <div>Your content here</div>
+      </.admin_layout>
+  """
+  attr :current_page, :string, default: "dashboard"
+  attr :page_title, :string, required: true
+  slot :inner_block, required: true
+
+  def admin_layout(assigns) do
+    ~H"""
+    <div class="admin-container">
+      <.admin_sidebar current_page={@current_page} />
+
+      <div class="main-content">
+        <.admin_header page_title={@page_title} />
+        <%= render_slot(@inner_block) %>
+      </div>
+    </div>
     """
   end
 end

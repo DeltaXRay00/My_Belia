@@ -1,0 +1,109 @@
+<%= user_topbar(assigns, [
+  brand_logo_width: "200px",
+  brand_logo_height: "80px",
+  profile_image_width: "50px",
+  profile_image_height: "50px"
+]) %>
+
+<!-- Main Content Area -->
+<section class="example-content">
+  <div class="container">
+    <h1>Image Size Adjustment Example</h1>
+    <p>This page demonstrates how to adjust image sizes in the topbar and footer components.</p>
+
+    <div class="content-section">
+      <h2>Topbar Image Sizes</h2>
+      <p>The topbar above has been customized with:</p>
+      <ul>
+        <li><strong>Brand Logo:</strong> 200px × 80px (normally auto)</li>
+        <li><strong>Profile Image:</strong> 50px × 50px (normally auto)</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>Footer Image Sizes</h2>
+      <p>The footer below has been customized with:</p>
+      <ul>
+        <li><strong>Footer Logo:</strong> 120px × 120px (normally auto)</li>
+        <li><strong>Social Ellipses:</strong> 45px × 45px (normally auto)</li>
+        <li><strong>Social Icons:</strong> 25px × 25px (normally auto)</li>
+        <li><strong>Agency Logos:</strong> 100px × 100px (normally auto)</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>Usage Examples</h2>
+      <p>Here are different ways to use the image size functions:</p>
+      
+      <h3>Default Sizes (Auto)</h3>
+      <pre><code>&lt;%= user_topbar(assigns) %&gt;
+&lt;%= user_footer(assigns) %&gt;</code></pre>
+
+      <h3>Custom Sizes</h3>
+      <pre><code>&lt;%= user_topbar(assigns, [
+  brand_logo_width: "200px",
+  brand_logo_height: "80px",
+  profile_image_width: "50px",
+  profile_image_height: "50px"
+]) %&gt;
+
+&lt;%= user_footer(assigns, [
+  footer_logo_width: "120px",
+  footer_logo_height: "120px",
+  social_ellipse_width: "45px",
+  social_ellipse_height: "45px",
+  social_image_width: "25px",
+  social_image_height: "25px",
+  agency_logo_width: "100px",
+  agency_logo_height: "100px"
+]) %&gt;</code></pre>
+
+      <h3>Public Topbar with Custom Sizes</h3>
+      <pre><code>&lt;%= public_topbar(assigns, [
+  brand_logo_width: "180px",
+  brand_logo_height: "70px"
+]) %&gt;</code></pre>
+    </div>
+
+    <div class="content-section">
+      <h2>Available Parameters</h2>
+      
+      <h3>User Topbar Parameters</h3>
+      <ul>
+        <li><code>:brand_logo_width</code> - Width of the KBSS logo</li>
+        <li><code>:brand_logo_height</code> - Height of the KBSS logo</li>
+        <li><code>:profile_image_width</code> - Width of the profile image</li>
+        <li><code>:profile_image_height</code> - Height of the profile image</li>
+      </ul>
+
+      <h3>Public Topbar Parameters</h3>
+      <ul>
+        <li><code>:brand_logo_width</code> - Width of the KBSS logo</li>
+        <li><code>:brand_logo_height</code> - Height of the KBSS logo</li>
+      </ul>
+
+      <h3>Footer Parameters</h3>
+      <ul>
+        <li><code>:footer_logo_width</code> - Width of the KBS footer logo</li>
+        <li><code>:footer_logo_height</code> - Height of the KBS footer logo</li>
+        <li><code>:social_ellipse_width</code> - Width of social media ellipses</li>
+        <li><code>:social_ellipse_height</code> - Height of social media ellipses</li>
+        <li><code>:social_image_width</code> - Width of social media icons</li>
+        <li><code>:social_image_height</code> - Height of social media icons</li>
+        <li><code>:agency_logo_width</code> - Width of agency logos</li>
+        <li><code>:agency_logo_height</code> - Height of agency logos</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<%= user_footer(assigns, [
+  footer_logo_width: "120px",
+  footer_logo_height: "120px",
+  social_ellipse_width: "45px",
+  social_ellipse_height: "45px",
+  social_image_width: "25px",
+  social_image_height: "25px",
+  agency_logo_width: "100px",
+  agency_logo_height: "100px"
+]) %> 

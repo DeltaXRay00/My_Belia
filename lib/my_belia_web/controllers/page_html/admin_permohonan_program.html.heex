@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content={get_csrf_token()}>
+  <title>Admin Permohonan Program - MyBelia</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  <style>
+    /* WYSIWYG Editor Styles */
+    .ql-editor {
+      min-height: 150px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    .ql-toolbar {
+      border-top: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      border-radius: 8px 8px 0 0;
+      background-color: #f8f9fa;
+    }
+    
+    .ql-container {
+      border-bottom: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      border-radius: 0 0 8px 8px;
+      background-color: white;
+    }
+    
+    .ql-editor.ql-blank::before {
+      color: #6b7280;
+      font-style: italic;
+    }
+    
+    /* Form field spacing */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    /* WYSIWYG container spacing */
+    #quill-editor-container {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<.admin_layout current_page="permohonan_program" page_title="Permohonan / Program">
+
+    <!-- Program Management Content -->
+    <div class="program-management-content">
+      <!-- Action Button -->
+      <div class="action-section">
+        <button class="new-program-btn" id="new-program-btn">Program Baru</button>
+      </div>
+
+      <!-- Modal Form for New Program -->
+      <div class="modal-overlay" id="program-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="modal-close" id="modal-close">&times;</button>
+          </div>
+          
+          <form class="program-form">
+            <!-- Image Upload Section -->
+            <div class="image-upload-section">
+              <div class="image-upload-area" id="image-upload-area">
+                <div class="upload-icon" id="upload-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21,15 16,10 5,21"></polyline>
+                  </svg>
+                  <div class="plus-icon">+</div>
+                </div>
+                <img id="preview-image" class="preview-image" style="display: none; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 8px;">
+                <input type="file" id="image-input" name="program_image" accept="image/*" style="display: none;">
+              </div>
+              <div class="upload-error" id="image-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 8px; text-align: center;"></div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-fields">
+              <div class="form-group">
+                <label for="program-name">Nama Program *</label>
+                <input type="text" id="program-name" name="program_name" class="form-input" placeholder="Masukkan nama program" required>
+                <div class="field-error" id="name-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="program-description">Diskripsi *</label>
+                <textarea id="program-description" name="program_description" class="form-textarea wysiwyg-textarea" placeholder="Masukkan diskripsi program dengan format yang diingini..." required rows="8"></textarea>
+                <div class="field-error" id="description-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks. 
+                  Format yang disokong: <strong>Bold</strong>, <em>Italic</em>, <u>Underline</u>, 
+                  Senarai, Penjajaran, Warna, dan Pautan.
+                </small>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start-date">Tarikh Mula Permohonan *</label>
+                  <input type="date" id="start-date" name="start_date" class="form-input" required>
+                  <div class="field-error" id="start-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="end-date">Tarikh Tutup Permohonan *</label>
+                  <input type="date" id="end-date" name="end_date" class="form-input" required>
+                  <div class="field-error" id="end-date-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start-time">Waktu Mula Permohonan *</label>
+                  <input type="time" id="start-time" name="start_time" class="form-input" required>
+                  <div class="field-error" id="start-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="end-time">Waktu Tutup Penerimaan *</label>
+                  <input type="time" id="end-time" name="end_time" class="form-input" required>
+                  <div class="field-error" id="end-time-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-top: 4px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <div class="field-error" id="general-error" style="display: none; color: #ff6b6b; font-size: 12px; margin-bottom: 12px; text-align: center;"></div>
+              <button type="submit" class="create-btn">Cipta</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <h3 class="filter-title">Tapisan</h3>
+        </div>
+        <div class="filter-controls">
+          <form class="search-box" action="/admin/search-programs" method="GET">
+            <input type="text" name="q" placeholder="Carian program..." class="search-input" />
+            <button type="submit" class="search-button" aria-label="Cari">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+            </button>
+          </form>
+          <div class="filter-dropdowns">
+            <div class="filter-item">
+              <label class="filter-label">Status</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Daerah</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Tarikh</label>
+              <div class="filter-dropdown"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Program Grid -->
+      <div class="program-grid">
+        <!-- Display existing programs -->
+        <%= for program <- @programs do %>
+          <div class="program-card" data-program-id={program.id}>
+            <div class="program-card-content" onclick={"window.location.href='/pemohon'"}>
+              <div class="program-image">
+                <img src={program.image_data} alt={program.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
+              </div>
+              <div class="program-info">
+                <h3 class="program-title"><%= program.name %></h3>
+                <p class="program-description"><%= String.slice(program.description, 0, 100) %><%= if String.length(program.description) > 100, do: "...", else: "" %></p>
+                <div class="program-dates">
+                  <small>Mula: <%= Date.to_string(program.start_date) %></small><br>
+                  <small>Tamat: <%= Date.to_string(program.end_date) %></small>
+                </div>
+              </div>
+            </div>
+            <!-- Action Icons -->
+            <div class="program-actions">
+              <button class="action-icon edit-btn" title="Edit Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Edit button clicked for program:', this.dataset.programId); editProgram(this.dataset.programId)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="action-icon status-btn" title="Status Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Status button clicked for program:', this.dataset.programId); changeProgramStatus(this.dataset.programId)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6"></path>
+                  <path d="M19.78 4.22l-4.24 4.24m-8.48 8.48l-4.24 4.24"></path>
+                </svg>
+              </button>
+              <button class="action-icon delete-btn" title="Delete Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Delete button clicked for program:', this.dataset.programId); deleteProgram(this.dataset.programId)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3,6 5,6 21,6"></polyline>
+                  <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        <% end %>
+        
+        <!-- Placeholder cards for remaining slots -->
+        <%= for _i <- 1..(9 - length(@programs)) do %>
+          <div class="program-card placeholder"></div>
+        <% end %>
+      </div>
+
+      <!-- Edit Program Modal -->
+      <div class="modal-overlay" id="edit-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Edit Program</h3>
+            <button class="modal-close" id="edit-modal-close">&times;</button>
+          </div>
+          
+          <form class="program-form" id="edit-form">
+            <input type="hidden" id="edit-program-id" name="program_id">
+            
+            <!-- Image Upload Section -->
+            <div class="image-upload-section">
+              <div class="image-upload-area" id="edit-image-upload-area">
+                <div class="upload-icon" id="edit-upload-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21,15 16,10 5,21"></polyline>
+                  </svg>
+                  <div class="plus-icon">+</div>
+                </div>
+                <img id="edit-preview-image" class="preview-image" style="display: none; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 8px;">
+                <input type="file" id="edit-image-input" name="program_image" accept="image/*" style="display: none;">
+              </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-fields">
+              <div class="form-group">
+                <label for="edit-program-name">Nama Program *</label>
+                <input type="text" id="edit-program-name" name="program_name" class="form-input" placeholder="Masukkan nama program" required>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-program-description">Diskripsi *</label>
+                <textarea id="edit-program-description" name="program_description" class="form-textarea wysiwyg-textarea" placeholder="Masukkan diskripsi program dengan format yang diingini..." required rows="8"></textarea>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks. 
+                  Format yang disokong: <strong>Bold</strong>, <em>Italic</em>, <u>Underline</u>, 
+                  Senarai, Penjajaran, Warna, dan Pautan.
+                </small>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="edit-start-date">Tarikh Mula Permohonan *</label>
+                  <input type="date" id="edit-start-date" name="start_date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label for="edit-end-date">Tarikh Tutup Permohonan *</label>
+                  <input type="date" id="edit-end-date" name="end_date" class="form-input" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="edit-start-time">Waktu Mula Permohonan *</label>
+                  <input type="time" id="edit-start-time" name="start_time" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label for="edit-end-time">Waktu Tutup Penerimaan *</label>
+                  <input type="time" id="edit-end-time" name="end_time" class="form-input" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <button type="submit" class="update-btn">Kemas Kini</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Status Change Modal -->
+      <div class="modal-overlay" id="status-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Tukar Status Program</h3>
+            <button class="modal-close" id="status-modal-close">&times;</button>
+          </div>
+          
+          <form class="status-form" id="status-form">
+            <input type="hidden" id="status-program-id" name="program_id">
+            
+            <div class="form-group">
+              <label for="program-status">Status Program</label>
+              <select id="program-status" name="status" class="form-input" required>
+                <option value="">Pilih status...</option>
+                <option value="pending">Menunggu</option>
+                <option value="in_progress">Sedang Berjalan</option>
+                <option value="completed">Selesai</option>
+              </select>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="status-btn">Tukar Status</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</.admin_layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  // Add click event listener to each dropdown toggle
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get the dropdown menu ID from data attribute
+      const dropdownId = this.getAttribute('data-dropdown');
+      const dropdownMenu = document.getElementById(dropdownId);
+      
+      // Toggle active class on the toggle button
+      this.classList.toggle('active');
+      
+      // Toggle show class on the dropdown menu
+      dropdownMenu.classList.toggle('show');
+    });
+  });
+
+  // Hamburger menu toggle functionality
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('hidden');
+    mainContent.classList.toggle('sidebar-hidden');
+  });
+
+  // Modal functionality
+  const newProgramBtn = document.getElementById('new-program-btn');
+  const programModal = document.getElementById('program-modal');
+  const modalClose = document.getElementById('modal-close');
+  const programForm = document.querySelector('.program-form');
+
+  // Image upload functionality
+  const imageUploadArea = document.getElementById('image-upload-area');
+  const imageInput = document.getElementById('image-input');
+  const previewImage = document.getElementById('preview-image');
+  const uploadIcon = document.getElementById('upload-icon');
+  const imageError = document.getElementById('image-error');
+
+  // Open modal
+  newProgramBtn.addEventListener('click', function() {
+    programModal.classList.add('show');
+    resetForm();
+    // Initialize WYSIWYG editor after modal is shown
+    setTimeout(() => {
+      initializeWysiwygEditors();
+    }, 100);
+  });
+
+  // Close modal
+  modalClose.addEventListener('click', function() {
+    programModal.classList.remove('show');
+    resetForm();
+  });
+
+  // Close modal when clicking outside
+  programModal.addEventListener('click', function(e) {
+    if (e.target === programModal) {
+      programModal.classList.remove('show');
+      resetForm();
+    }
+  });
+
+  // Image upload click handler
+  imageUploadArea.addEventListener('click', function() {
+    imageInput.click();
+  });
+
+  // Image file selection handler
+  imageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        showImageError('Sila pilih fail imej sahaja.');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showImageError('Saiz fail terlalu besar. Maksimum 5MB.');
+        return;
+      }
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        previewImage.style.display = 'block';
+        uploadIcon.style.display = 'none';
+        hideImageError();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Form validation and submission
+  programForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Clear previous errors
+    clearAllErrors();
+    
+    // Ensure WYSIWYG content is captured before submission
+    const descriptionField = document.getElementById('program-description');
+    if (descriptionField && descriptionField.quillInstance) {
+      // Get the HTML content from Quill editor
+      const htmlContent = descriptionField.quillInstance.root.innerHTML;
+      // Set it as the value of the textarea
+      descriptionField.value = htmlContent;
+      console.log('WYSIWYG content captured:', htmlContent);
+    }
+    
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+    
+    // Get form data
+    const formData = new FormData(programForm);
+    const programData = Object.fromEntries(formData);
+    
+    // Send data to server
+    submitProgramToServer(programData);
+  });
+
+  // Validation functions
+  function validateForm() {
+    let isValid = true;
+    
+    // Check image
+    if (!imageInput.files[0]) {
+      showImageError('Sila muat naik imej program.');
+      isValid = false;
+    }
+    
+    // Check program name
+    const programName = document.getElementById('program-name').value.trim();
+    if (!programName) {
+      showFieldError('name-error', 'Sila masukkan nama program.');
+      isValid = false;
+    }
+    
+    // Check description
+    const description = document.getElementById('program-description').value.trim();
+    if (!description) {
+      showFieldError('description-error', 'Sila masukkan diskripsi program.');
+      isValid = false;
+    }
+    
+    // Check dates
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    if (!startDate) {
+      showFieldError('start-date-error', 'Sila pilih tarikh mula permohonan.');
+      isValid = false;
+    }
+    if (!endDate) {
+      showFieldError('end-date-error', 'Sila pilih tarikh tutup permohonan.');
+      isValid = false;
+    }
+    if (startDate && endDate && startDate >= endDate) {
+      showFieldError('end-date-error', 'Tarikh tutup mesti selepas tarikh mula.');
+      isValid = false;
+    }
+    
+    // Check times
+    const startTime = document.getElementById('start-time').value;
+    const endTime = document.getElementById('end-time').value;
+    if (!startTime) {
+      showFieldError('start-time-error', 'Sila pilih waktu mula permohonan.');
+      isValid = false;
+    }
+    if (!endTime) {
+      showFieldError('end-time-error', 'Sila pilih waktu tutup penerimaan.');
+      isValid = false;
+    }
+    
+    return isValid;
+  }
+
+  function showImageError(message) {
+    imageError.textContent = message;
+    imageError.style.display = 'block';
+  }
+
+  function hideImageError() {
+    imageError.style.display = 'none';
+  }
+
+  function showFieldError(fieldId, message) {
+    const errorElement = document.getElementById(fieldId);
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+
+  function clearAllErrors() {
+    // Clear image error
+    hideImageError();
+    
+    // Clear field errors
+    const errorElements = document.querySelectorAll('.field-error');
+    errorElements.forEach(element => {
+      element.style.display = 'none';
+    });
+  }
+
+  function resetForm() {
+    programForm.reset();
+    previewImage.style.display = 'none';
+    uploadIcon.style.display = 'block';
+    clearAllErrors();
+    
+    // Clean up WYSIWYG editors
+    const descriptionField = document.getElementById('program-description');
+    if (descriptionField && descriptionField.quillInstance) {
+      try {
+        descriptionField.quillInstance.destroy();
+      } catch (e) {
+        console.log('Error destroying Quill instance in resetForm:', e);
+      }
+      descriptionField.quillInstance = null;
+    }
+    
+    // Remove all Quill editor containers if they exist
+    const editorContainers = document.querySelectorAll('#quill-editor-container');
+    editorContainers.forEach(container => {
+      container.remove();
+    });
+    
+    // Also remove any orphaned Quill toolbars
+    const orphanedToolbars = document.querySelectorAll('.ql-toolbar');
+    orphanedToolbars.forEach(toolbar => {
+      if (!toolbar.parentNode || !toolbar.parentNode.querySelector('.ql-editor')) {
+        toolbar.remove();
+      }
+    });
+    
+    // Show the original textarea again
+    if (descriptionField) {
+      descriptionField.style.display = 'block';
+    }
+  }
+
+  async function submitProgramToServer(programData) {
+    try {
+      // Show loading state
+      const submitBtn = document.querySelector('.create-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Mencipta...';
+      submitBtn.disabled = true;
+      
+      // Prepare data for server
+      const serverData = {
+        program: {
+          name: programData.program_name,
+          description: programData.program_description,
+          image_data: previewImage.src,
+          start_date: programData.start_date,
+          end_date: programData.end_date,
+          start_time: programData.start_time,
+          end_time: programData.end_time
+        }
+      };
+      
+      // Send to server
+      const response = await fetch('/admin/programs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        body: JSON.stringify(serverData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Success - show message and close modal
+        alert('Program berjaya dicipta!');
+        programModal.classList.remove('show');
+        resetForm();
+        
+        // Add the new program to the grid dynamically
+        addProgramToGrid(result.program);
+      } else {
+        // Show server errors
+        showServerErrors(result.errors);
+      }
+    } catch (error) {
+      console.error('Error submitting program:', error);
+      showFieldError('general-error', 'Ralat dalam menghantar data. Sila cuba lagi.');
+    } finally {
+      // Reset button state
+      const submitBtn = document.querySelector('.create-btn');
+      submitBtn.textContent = 'Cipta';
+      submitBtn.disabled = false;
+    }
+  }
+
+  function showServerErrors(errors) {
+    // Display server-side validation errors
+    Object.keys(errors).forEach(field => {
+      const errorMessages = errors[field];
+      if (Array.isArray(errorMessages)) {
+        const errorMessage = errorMessages[0];
+        switch (field) {
+          case 'name':
+            showFieldError('name-error', errorMessage);
+            break;
+          case 'description':
+            showFieldError('description-error', errorMessage);
+            break;
+          case 'image_data':
+            showImageError(errorMessage);
+            break;
+          case 'start_date':
+            showFieldError('start-date-error', errorMessage);
+            break;
+          case 'end_date':
+            showFieldError('end-date-error', errorMessage);
+            break;
+          case 'start_time':
+            showFieldError('start-time-error', errorMessage);
+            break;
+          case 'end_time':
+            showFieldError('end-time-error', errorMessage);
+            break;
+          default:
+            showFieldError('general-error', errorMessage);
+        }
+      }
+    });
+  }
+
+  // Edit functionality
+  const editModal = document.getElementById('edit-modal');
+  const editModalClose = document.getElementById('edit-modal-close');
+  const editForm = document.getElementById('edit-form');
+  const editImageUploadArea = document.getElementById('edit-image-upload-area');
+  const editImageInput = document.getElementById('edit-image-input');
+  const editPreviewImage = document.getElementById('edit-preview-image');
+  const editUploadIcon = document.getElementById('edit-upload-icon');
+
+  // Status modal functionality
+  const statusModal = document.getElementById('status-modal');
+  const statusModalClose = document.getElementById('status-modal-close');
+  const statusForm = document.getElementById('status-form');
+
+  // Edit modal close handlers
+  editModalClose.addEventListener('click', function() {
+    editModal.classList.remove('show');
+    resetEditForm();
+  });
+
+  editModal.addEventListener('click', function(e) {
+    if (e.target === editModal) {
+      editModal.classList.remove('show');
+      resetEditForm();
+    }
+  });
+
+  // Edit image upload handlers
+  editImageUploadArea.addEventListener('click', function() {
+    editImageInput.click();
+  });
+
+  editImageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        showEditImageError('Sila pilih fail imej sahaja.');
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        showEditImageError('Saiz fail terlalu besar. Maksimum 5MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editPreviewImage.src = e.target.result;
+        editPreviewImage.style.display = 'block';
+        editUploadIcon.style.display = 'none';
+        hideEditImageError();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Edit form submission
+  editForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Ensure WYSIWYG content is captured before submission
+    const editDescriptionField = document.getElementById('edit-program-description');
+    if (editDescriptionField && editDescriptionField.quillInstance) {
+      editDescriptionField.value = editDescriptionField.quillInstance.root.innerHTML;
+    }
+    
+    const formData = new FormData(editForm);
+    const programData = Object.fromEntries(formData);
+    const programId = document.getElementById('edit-program-id').value;
+    
+    submitEditToServer(programData, programId);
+  });
+
+  // Status modal close handlers
+  statusModalClose.addEventListener('click', function() {
+    statusModal.classList.remove('show');
+    statusForm.reset();
+  });
+
+  statusModal.addEventListener('click', function(e) {
+    if (e.target === statusModal) {
+      statusModal.classList.remove('show');
+      statusForm.reset();
+    }
+  });
+
+  // Status form submission
+  statusForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(statusForm);
+    const statusData = Object.fromEntries(formData);
+    const programId = document.getElementById('status-program-id').value;
+    
+    submitStatusToServer(statusData, programId);
+  });
+
+
+
+  // Initialize WYSIWYG editors
+  function initializeWysiwygEditors() {
+    // Initialize main form WYSIWYG editor
+    const descriptionField = document.getElementById('program-description');
+    if (descriptionField) {
+      // Clean up any existing editor first
+      if (descriptionField.quillInstance) {
+        try {
+          descriptionField.quillInstance.destroy();
+        } catch (e) {
+          console.log('Error destroying existing Quill instance:', e);
+        }
+        descriptionField.quillInstance = null;
+      }
+      
+      // Remove any existing editor containers (check for multiple)
+      const existingContainers = document.querySelectorAll('#quill-editor-container');
+      existingContainers.forEach(container => {
+        container.remove();
+      });
+      
+      // Also remove any Quill toolbars that might be left behind
+      const existingToolbars = document.querySelectorAll('.ql-toolbar');
+      existingToolbars.forEach(toolbar => {
+        if (toolbar.parentNode && toolbar.parentNode.id === 'quill-editor-container') {
+          toolbar.remove();
+        }
+      });
+      
+      // Show the original textarea first
+      descriptionField.style.display = 'block';
+      
+      // Create a container for the Quill editor
+      const editorContainer = document.createElement('div');
+      editorContainer.id = 'quill-editor-container';
+      editorContainer.style.height = '200px';
+      editorContainer.style.marginBottom = '10px';
+      
+      // Insert the container before the textarea
+      descriptionField.parentNode.insertBefore(editorContainer, descriptionField);
+      
+      // Hide the original textarea
+      descriptionField.style.display = 'none';
+      
+      // Initialize Quill editor
+      const quill = new Quill(editorContainer, {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'align': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            ['link'],
+            ['clean']
+          ]
+        },
+        placeholder: 'Masukkan diskripsi program dengan format yang diingini...'
+      });
+      
+      // Store the Quill instance on the textarea for easy access
+      descriptionField.quillInstance = quill;
+      
+      // Sync content from Quill to textarea on change
+      quill.on('text-change', function() {
+        descriptionField.value = quill.root.innerHTML;
+      });
+      
+      console.log('WYSIWYG editor initialized for program description');
+    }
+  }
+
+  // Set WYSIWYG content
+  function setWysiwygContent(fieldId, content) {
+    const field = document.getElementById(fieldId);
+    if (field && field.quillInstance) {
+      // Clear the editor first
+      field.quillInstance.setText('');
+      // Then set the HTML content
+      field.quillInstance.root.innerHTML = content || '';
+      console.log('Setting WYSIWYG content for', fieldId, ':', content);
+    } else {
+      console.error('WYSIWYG editor not found or not initialized for', fieldId);
+    }
+  }
+
+  // Add new program to grid dynamically
+  function addProgramToGrid(program) {
+    const programGrid = document.querySelector('.program-grid');
+    const placeholderCards = programGrid.querySelectorAll('.program-card.placeholder');
+    
+    if (placeholderCards.length > 0) {
+      // Remove the first placeholder card
+      const firstPlaceholder = placeholderCards[0];
+      firstPlaceholder.remove();
+      
+      // Create new program card
+      const newProgramCard = document.createElement('div');
+      newProgramCard.className = 'program-card';
+      newProgramCard.setAttribute('data-program-id', program.id);
+      
+      // Create the card content
+      const cardContent = document.createElement('div');
+      cardContent.className = 'program-card-content';
+      cardContent.onclick = function() {
+        window.location.href = '/pemohon';
+      };
+      
+      // Create image section
+      const imageSection = document.createElement('div');
+      imageSection.className = 'program-image';
+      const image = document.createElement('img');
+      image.src = program.image_data;
+      image.alt = program.name;
+      image.style.cssText = 'width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;';
+      imageSection.appendChild(image);
+      
+      // Create info section
+      const infoSection = document.createElement('div');
+      infoSection.className = 'program-info';
+      
+      const title = document.createElement('h3');
+      title.className = 'program-title';
+      title.textContent = program.name;
+      
+      const description = document.createElement('p');
+      description.className = 'program-description';
+      // Strip HTML tags for display
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = program.description;
+      const textContent = tempDiv.textContent || tempDiv.innerText || '';
+      description.textContent = textContent.length > 100 ? textContent.substring(0, 100) + '...' : textContent;
+      
+      const dates = document.createElement('div');
+      dates.className = 'program-dates';
+      dates.innerHTML = `<small>Mula: ${program.start_date}</small><br><small>Tamat: ${program.end_date}</small>`;
+      
+      infoSection.appendChild(title);
+      infoSection.appendChild(description);
+      infoSection.appendChild(dates);
+      
+      cardContent.appendChild(imageSection);
+      cardContent.appendChild(infoSection);
+      newProgramCard.appendChild(cardContent);
+      
+      // Create action icons
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'program-actions';
+      
+      // Edit button
+      const editBtn = document.createElement('button');
+      editBtn.className = 'action-icon edit-btn';
+      editBtn.title = 'Edit Program';
+      editBtn.setAttribute('data-program-id', program.id);
+      editBtn.onclick = function(e) {
+        e.stopPropagation();
+        editProgram(this.dataset.programId);
+      };
+      editBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>`;
+      
+      // Status button
+      const statusBtn = document.createElement('button');
+      statusBtn.className = 'action-icon status-btn';
+      statusBtn.title = 'Status Program';
+      statusBtn.setAttribute('data-program-id', program.id);
+      statusBtn.onclick = function(e) {
+        e.stopPropagation();
+        changeProgramStatus(this.dataset.programId);
+      };
+      statusBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 1v6m0 6v6"></path>
+        <path d="M19.78 4.22l-4.24 4.24m-8.48 8.48l-4.24 4.24"></path>
+      </svg>`;
+      
+      // Delete button
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'action-icon delete-btn';
+      deleteBtn.title = 'Delete Program';
+      deleteBtn.setAttribute('data-program-id', program.id);
+      deleteBtn.onclick = function(e) {
+        e.stopPropagation();
+        deleteProgram(this.dataset.programId);
+      };
+      deleteBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3,6 5,6 21,6"></polyline>
+        <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+      </svg>`;
+      
+      actionsDiv.appendChild(editBtn);
+      actionsDiv.appendChild(statusBtn);
+      actionsDiv.appendChild(deleteBtn);
+      newProgramCard.appendChild(actionsDiv);
+      
+      // Insert the new card at the beginning of the grid
+      programGrid.insertBefore(newProgramCard, programGrid.firstChild);
+      
+      console.log('New program added to grid:', program.name);
+    } else {
+      console.log('No placeholder cards available');
+    }
+  }
+
+  // Action button functions
+  function editProgram(programId) {
+    console.log('Edit program:', programId);
+    // TODO: Implement edit functionality
+    alert('Edit program functionality will be implemented');
+  }
+
+  function changeProgramStatus(programId) {
+    console.log('Change program status:', programId);
+    // TODO: Implement status change functionality
+    alert('Change program status functionality will be implemented');
+  }
+
+  function deleteProgram(programId) {
+    console.log('Delete program:', programId);
+    if (confirm('Are you sure you want to delete this program?')) {
+      // TODO: Implement delete functionality
+      alert('Delete program functionality will be implemented');
+    }
+  }
+});
+
+// Make functions globally accessible
+window.editProgram = function(programId) {
+  console.log('Global editProgram called with:', programId);
+  // Fetch program data and populate edit form
+  fetchProgramData(programId);
+};
+
+window.changeProgramStatus = function(programId) {
+  console.log('Global changeProgramStatus called with:', programId);
+  showStatusModal(programId);
+};
+
+window.deleteProgram = function(programId) {
+  console.log('Global deleteProgram called with:', programId);
+  if (confirm('Adakah anda pasti mahu memadamkan program ini?')) {
+    deleteProgramFromServer(programId);
+  }
+};
+
+// Fetch program data for editing
+function fetchProgramData(programId) {
+  fetch(`/admin/programs/${programId}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        populateEditForm(data.program);
+        showEditModal();
+      } else {
+        alert('Ralat: Tidak dapat memuatkan data program');
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching program:', error);
+      if (error.name === 'AbortError') {
+        console.log('Request was aborted - this is normal');
+        return;
+      }
+      alert('Ralat: Tidak dapat memuatkan data program');
+    });
+}
+
+// Populate edit form with program data
+function populateEditForm(program) {
+  document.getElementById('edit-program-name').value = program.name;
+  document.getElementById('edit-program-description').value = program.description;
+  document.getElementById('edit-start-date').value = program.start_date;
+  document.getElementById('edit-end-date').value = program.end_date;
+  document.getElementById('edit-start-time').value = program.start_time;
+  document.getElementById('edit-end-time').value = program.end_time;
+  document.getElementById('edit-program-id').value = program.id;
+  
+  // Set image preview if exists
+  if (program.image_data) {
+    document.getElementById('edit-preview-image').src = program.image_data;
+    document.getElementById('edit-preview-image').style.display = 'block';
+    document.getElementById('edit-upload-icon').style.display = 'none';
+  }
+  
+  // Initialize WYSIWYG editor for edit form
+  setTimeout(() => {
+    // Clean up any existing editor first
+    cleanupEditForm();
+    initializeEditWysiwygEditor();
+    if (program.description) {
+      setWysiwygContent('edit-program-description', program.description);
+    }
+  }, 100);
+}
+
+// Show edit modal
+function showEditModal() {
+  document.getElementById('edit-modal').classList.add('show');
+}
+
+// Show status change modal
+function showStatusModal(programId) {
+  const statusModal = document.getElementById('status-modal');
+  document.getElementById('status-program-id').value = programId;
+  statusModal.classList.add('show');
+}
+
+// Delete program from server
+function deleteProgramFromServer(programId) {
+  fetch(`/admin/programs/${programId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      alert('Program berjaya dipadamkan!');
+      // Remove the card from the grid
+      const programCard = document.querySelector(`[data-program-id="${programId}"]`);
+      if (programCard) {
+        programCard.remove();
+      }
+    } else {
+      alert('Ralat: ' + (data.error || 'Tidak dapat memadamkan program'));
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting program:', error);
+    if (error.name === 'AbortError') {
+      console.log('Delete request was aborted - this is normal');
+      return;
+    }
+    alert('Ralat: Tidak dapat memadamkan program');
+  });
+}
+
+// Initialize WYSIWYG editor for edit form
+function initializeEditWysiwygEditor() {
+  const descriptionField = document.getElementById('edit-program-description');
+  if (descriptionField) {
+    // Show the original textarea first
+    descriptionField.style.display = 'block';
+    
+    // Create a container for the Quill editor
+    const editorContainer = document.createElement('div');
+    editorContainer.id = 'edit-quill-editor-container';
+    editorContainer.style.height = '200px';
+    editorContainer.style.marginBottom = '10px';
+    
+    // Insert the container before the textarea
+    descriptionField.parentNode.insertBefore(editorContainer, descriptionField);
+    
+    // Hide the original textarea
+    descriptionField.style.display = 'none';
+    
+    // Initialize Quill editor
+    const quill = new Quill(editorContainer, {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          [{ 'align': [] }],
+          [{ 'color': [] }, { 'background': [] }],
+          ['link'],
+          ['clean']
+        ]
+      },
+      placeholder: 'Masukkan diskripsi program dengan format yang diingini...'
+    });
+    
+    // Store the Quill instance on the textarea for easy access
+    descriptionField.quillInstance = quill;
+    
+    // Sync content from Quill to textarea on change
+    quill.on('text-change', function() {
+      descriptionField.value = quill.root.innerHTML;
+    });
+    
+    console.log('WYSIWYG editor initialized for edit program description');
+  }
+}
+
+function submitEditToServer(programData, programId) {
+  // Ensure WYSIWYG content is captured before submission
+  const editDescriptionField = document.getElementById('edit-program-description');
+  if (editDescriptionField && editDescriptionField.quillInstance) {
+    editDescriptionField.value = editDescriptionField.quillInstance.root.innerHTML;
+  }
+  
+  const serverData = {
+    program: {
+      name: programData.program_name,
+      description: programData.program_description,
+      start_date: programData.start_date,
+      end_date: programData.end_date,
+      start_time: programData.start_time,
+      end_time: programData.end_time
+    }
+  };
+
+  fetch(`/admin/programs/${programId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    },
+    body: JSON.stringify(serverData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      alert('Program berjaya dikemas kini!');
+      document.getElementById('edit-modal').classList.remove('show');
+      // Clean up edit form WYSIWYG
+      cleanupEditForm();
+      // Optionally refresh the page or update the card
+      location.reload();
+    } else {
+      alert('Ralat: ' + (data.error || 'Tidak dapat mengemas kini program'));
+    }
+  })
+  .catch(error => {
+    console.error('Error updating program:', error);
+    if (error.name === 'AbortError') {
+      console.log('Edit request was aborted - this is normal');
+      return;
+    }
+    alert('Ralat: Tidak dapat mengemas kini program');
+  });
+}
+
+// Clean up edit form WYSIWYG
+function cleanupEditForm() {
+  const descriptionField = document.getElementById('edit-program-description');
+  if (descriptionField && descriptionField.quillInstance) {
+    try {
+      descriptionField.quillInstance.destroy();
+    } catch (e) {
+      console.log('Error destroying edit Quill instance:', e);
+    }
+    descriptionField.quillInstance = null;
+  }
+  
+  // Remove all edit Quill editor containers if they exist
+  const editorContainers = document.querySelectorAll('#edit-quill-editor-container');
+  editorContainers.forEach(container => {
+    container.remove();
+  });
+  
+  // Also remove any orphaned Quill toolbars
+  const orphanedToolbars = document.querySelectorAll('.ql-toolbar');
+  orphanedToolbars.forEach(toolbar => {
+    if (!toolbar.parentNode || !toolbar.parentNode.querySelector('.ql-editor')) {
+      toolbar.remove();
+    }
+  });
+  
+  // Remove any remaining Quill containers that might be left
+  const allQuillContainers = document.querySelectorAll('.ql-container');
+  allQuillContainers.forEach(container => {
+    if (container.parentNode && container.parentNode.id === 'edit-quill-editor-container') {
+      container.remove();
+    }
+  });
+  
+  // Show the original textarea again
+  if (descriptionField) {
+    descriptionField.style.display = 'block';
+  }
+  
+  console.log('Edit form WYSIWYG cleanup completed');
+}
+
+// Reset edit form
+function resetEditForm() {
+  editForm.reset();
+  
+  // Reset image preview
+  editPreviewImage.style.display = 'none';
+  editUploadIcon.style.display = 'block';
+  
+  // Clean up WYSIWYG editor
+  cleanupEditForm();
+  
+  console.log('Edit form reset completed');
+}
+
+function submitStatusToServer(statusData, programId) {
+  const serverData = {
+    program: {
+      status: statusData.status
+    }
+  };
+
+  fetch(`/admin/programs/${programId}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    },
+    body: JSON.stringify(serverData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Status program berjaya ditukar!');
+      document.getElementById('status-modal').classList.remove('show');
+      document.getElementById('status-form').reset();
+      // Optionally refresh the page or update the card
+      location.reload();
+    } else {
+      alert('Ralat: ' + (data.error || 'Tidak dapat menukar status program'));
+    }
+  })
+  .catch(error => {
+    console.error('Error updating program status:', error);
+    alert('Ralat: Tidak dapat menukar status program');
+  });
+}
+</script>
+</body>
+</html> 
