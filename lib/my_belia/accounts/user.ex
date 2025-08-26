@@ -14,6 +14,24 @@ defmodule MyBelia.Accounts.User do
     field :last_login, :utc_datetime
     field :jawatan, :string
     field :unit_bahagian, :string
+
+    # Optional Profile Fields (for /profil_pengguna)
+    field :ic_number, :string
+    field :birth_date, :date
+    field :birth_place, :string
+    field :gender, :string
+    field :phone_number, :string
+    field :religion, :string
+    field :race, :string
+    field :residential_address, :string
+    field :mailing_address, :string
+    field :education_level, :string
+    field :institution, :string
+    field :field_of_study, :string
+    field :course, :string
+    field :graduation_date, :date
+    field :avatar_url, :string
+
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
 
@@ -22,7 +40,14 @@ defmodule MyBelia.Accounts.User do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :password_confirmation, :full_name, :name, :daerah, :role, :status, :last_login, :jawatan, :unit_bahagian])
+    |> cast(attrs, [
+      :email, :password, :password_confirmation, :full_name, :name, :daerah,
+      :role, :status, :last_login, :jawatan, :unit_bahagian,
+      :ic_number, :birth_date, :birth_place, :gender, :phone_number,
+      :religion, :race, :residential_address, :mailing_address,
+      :education_level, :institution, :field_of_study, :course, :graduation_date,
+      :avatar_url
+    ])
     |> validate_required([:email, :full_name])
     |> validate_format(:email, ~r/@/)
     |> validate_password()

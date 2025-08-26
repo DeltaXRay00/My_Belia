@@ -1009,32 +1009,35 @@ body {
 .profile-container {
   display: flex;
   height: calc(100vh - 80px); /* Full height minus only topbar */
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   overflow: hidden; /* Prevent container overflow */
 }
 
 /* Profile Sidebar */
 .profile-sidebar {
   width: 280px;
-  background-color: #333;
+  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
   color: white;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   height: 100%;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .profile-sidebar .sidebar-header {
-  padding: 20px;
+  padding: 25px 20px;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .profile-sidebar .sidebar-logo {
   width: 120px;
   height: auto;
   margin-bottom: 10px;
+  filter: brightness(1.1);
 }
 
 .profile-sidebar .sidebar-tagline {
@@ -1044,7 +1047,7 @@ body {
 }
 
 .profile-sidebar .sidebar-section {
-  padding: 20px;
+  padding: 25px 20px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -1053,9 +1056,10 @@ body {
 .profile-sidebar .section-title {
   font-size: 14px;
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   text-transform: uppercase;
   color: white;
+  letter-spacing: 1px;
 }
 
 .profile-sidebar .nav-list {
@@ -1070,21 +1074,26 @@ body {
 
 .profile-sidebar .nav-link {
   display: block;
-  padding: 10px 15px;
+  padding: 12px 16px;
   color: white;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
-  border-radius: 6px;
-  transition: background-color 0.2s;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
 .profile-sidebar .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
 }
 
 .profile-sidebar .nav-link.active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
 }
 
 .profile-sidebar .logout-section {
@@ -1096,81 +1105,176 @@ body {
 }
 
 .profile-sidebar .logout-link {
-  color: #ff6b6b !important;
+  color: #e74c3c !important;
   text-align: center;
   justify-content: center;
   display: flex;
   align-items: center;
   margin: 0;
-  padding: 10px 15px 0 15px;
-  border-radius: 6px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  transition: all 0.3s ease;
 }
 
 .profile-sidebar .logout-link:hover {
-  background-color: rgba(255, 107, 107, 0.1) !important;
+  background: rgba(231, 76, 60, 0.1) !important;
+  border-color: rgba(231, 76, 60, 0.5);
+  transform: translateX(5px);
 }
 
 /* Profile Main Content */
 .profile-main {
   flex: 1;
   padding: 30px;
-  background-color: #f5f5f5;
+  background: transparent;
   overflow-y: auto;
   height: 100%;
 }
 
+/* Page Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: #7f8c8d;
+  margin: 0;
+  font-weight: 400;
+}
+
 /* User Header */
 .user-header {
-  text-align: center;
-  margin-bottom: 40px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 30px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.user-avatar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-avatar {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 15px;
+  border: 4px solid #3498db;
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-.username {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
+.user-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.avatar-overlay {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 35px;
+  height: 35px;
+  background: #3498db;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-overlay:hover {
+  background: #2980b9;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.avatar-icon {
+  font-size: 14px;
+  color: white;
 }
 
 /* Form Sections */
 .form-sections {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding-bottom: 100px; /* Add more bottom padding to push footer down */
 }
 
-.form-section {
+/* Override any existing form-section styles for profile page */
+.profile-main .form-section {
   background: white;
   border-radius: 20px;
-  padding: 30px;
+  padding: 35px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
-.form-title {
-  font-size: 20px;
+.profile-main .form-section:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.section-icon {
+  font-size: 24px;
+  margin-right: 15px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* Override any existing form-title styles for profile page */
+.profile-main .form-title {
+  font-size: 22px;
   font-weight: 700;
-  color: #333;
-  margin-bottom: 25px;
-  text-align: center;
+  color: #2c3e50;
+  margin: 0;
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 25px;
 }
 
 .form-group {
@@ -1178,66 +1282,141 @@ body {
   flex-direction: column;
 }
 
-.form-group label {
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Override any existing form-label styles for profile page */
+.profile-main .form-label {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: #2c3e50;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
 }
 
-.form-input {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
+/* Override any existing form-input styles for profile page */
+.profile-main .form-input {
+  padding: 14px 18px;
+  border: 2px solid #ecf0f1;
+  border-radius: 12px;
   font-size: 14px;
   background: white;
-  transition: border-color 0.2s;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.form-input:focus {
+.profile-main .form-input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  transform: translateY(-1px);
 }
 
-.form-textarea {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
+.profile-main .form-input::placeholder {
+  color: #bdc3c7;
+  font-style: italic;
+}
+
+/* Override any existing form-textarea styles for profile page */
+.profile-main .form-textarea {
+  padding: 14px 18px;
+  border: 2px solid #ecf0f1;
+  border-radius: 12px;
   font-size: 14px;
   background: white;
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
   font-family: inherit;
-  transition: border-color 0.2s;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.form-textarea:focus {
+.profile-main .form-textarea:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  transform: translateY(-1px);
 }
 
-/* Add Button */
-.add-button {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #007bff;
-  color: white;
-  border: none;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
+.profile-main .form-textarea::placeholder {
+  color: #bdc3c7;
+  font-style: italic;
+}
+
+/* Add Education Button */
+.add-education-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
 }
 
-.add-button:hover {
-  background: #0056b3;
+.add-education-btn:hover {
+  background: linear-gradient(135deg, #229954, #27ae60);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+.btn-icon {
+  font-size: 16px;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.btn-text {
+  font-weight: 600;
+}
+
+/* Form Actions */
+.form-actions {
+  text-align: center;
+  margin-top: 40px;
+  padding: 30px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+  min-width: 200px;
+}
+
+.save-btn:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.save-btn:active {
+  transform: translateY(0);
 }
 
 /* Responsive for Profile Page */
@@ -1258,6 +1437,16 @@ body {
   .form-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  
+  .user-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .user-avatar-container {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1265,16 +1454,70 @@ body {
     padding: 20px;
   }
   
-  .form-section {
-    padding: 20px;
+  .profile-main .form-section {
+    padding: 25px;
   }
   
   .form-grid {
     grid-template-columns: 1fr;
   }
   
-  .form-title {
-    font-size: 18px;
+  .profile-main .form-title {
+    font-size: 20px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+  
+  .user-avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .avatar-overlay {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .avatar-icon {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-main {
+    padding: 15px;
+  }
+  
+  .profile-main .form-section {
+    padding: 20px;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .section-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .user-avatar {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .avatar-overlay {
+    width: 28px;
+    height: 28px;
+    bottom: 3px;
+    right: 3px;
+  }
+  
+  .avatar-icon {
+    font-size: 11px;
   }
 }
 
@@ -1284,73 +1527,365 @@ body {
   z-index: 1;
 }
 
+/* Flash Messages */
+.flash-message {
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.3s ease;
+}
+
+.flash-message.success {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+  border: 1px solid rgba(39, 174, 96, 0.3);
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.2);
+}
+
+.flash-message.error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Document Upload Page Styles */
-.page-title-section {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.page-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
-}
-
 .document-form-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding-bottom: 100px;
 }
 
-.document-list {
-  background: #f8f9fa;
+/* Upload Guidelines */
+.upload-guidelines {
+  background: white;
   border-radius: 20px;
   padding: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.guidelines-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.guidelines-icon {
+  font-size: 24px;
+  margin-right: 15px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.guidelines-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.guidelines-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.guideline-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.guideline-icon {
+  font-size: 18px;
+  margin-right: 12px;
+  width: 35px;
+  height: 35px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guideline-text {
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* Document List */
+.document-list {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .document-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  border-radius: 20px;
+  background: #f8f9fa;
+  border-radius: 15px;
   padding: 20px;
   margin-bottom: 15px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.document-item:hover {
+  background: #f1f3f4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.document-item.uploaded {
+  background: #e8f5e8;
+  border-color: #27ae60;
 }
 
 .document-item:last-child {
   margin-bottom: 0;
 }
 
-.document-label {
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
+.document-info {
+  display: flex;
+  align-items: center;
   flex: 1;
 }
 
-.upload-button {
-  background: #4d4d4d;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 12px 24px;
+.document-icon {
+  font-size: 24px;
+  margin-right: 15px;
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.document-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.document-label {
   font-size: 16px;
   font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  min-width: 120px;
+  color: #2c3e50;
+  margin-bottom: 4px;
 }
 
-.upload-button:hover {
-  background: #333;
+.document-status {
+  font-size: 12px;
+  color: #7f8c8d;
+  font-weight: 500;
 }
 
-.upload-button:active {
-  transform: translateY(1px);
+.document-status.uploaded {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.upload-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-input {
+  display: none;
+}
+
+/* Override app.css upload button styles with more specific selectors */
+.document-list .upload-button,
+.document-form-container .upload-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: #2c3e50 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 12px 20px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  min-width: 120px !important;
+  width: auto !important;
+  height: auto !important;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2) !important;
+}
+
+.document-list .upload-button:hover,
+.document-form-container .upload-button:hover {
+  background: #34495e !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3) !important;
+}
+
+.document-list .upload-button.uploaded,
+.document-form-container .upload-button.uploaded {
+  background: #27ae60 !important;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.2) !important;
+}
+
+.document-list .upload-button.uploaded:hover,
+.document-form-container .upload-button.uploaded:hover {
+  background: #229954 !important;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3) !important;
+}
+
+.document-list .upload-button .upload-icon,
+.document-form-container .upload-button .upload-icon {
+  font-size: 16px !important;
+  color: white !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.document-list .upload-button .upload-text,
+.document-form-container .upload-button .upload-text {
+  font-weight: 600 !important;
+  color: white !important;
+}
+
+/* Progress Summary */
+.upload-progress {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.progress-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.progress-count {
+  font-size: 14px;
+  color: #7f8c8d;
+  font-weight: 600;
+  background: #f8f9fa;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #ecf0f1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* Responsive Design for Document Upload */
+@media (max-width: 768px) {
+  .document-form-container {
+    padding: 0 15px;
+  }
+  
+  .upload-guidelines,
+  .document-list,
+  .upload-progress {
+    padding: 20px;
+  }
+  
+  .document-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .upload-controls {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .guidelines-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .document-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .document-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .upload-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Program Card Content Styles for Senarai Program */

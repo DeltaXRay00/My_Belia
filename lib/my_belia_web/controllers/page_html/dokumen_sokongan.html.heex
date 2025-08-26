@@ -28,67 +28,218 @@
 
   <!-- Right Main Content -->
   <div class="profile-main">
-    <!-- Page Title -->
-    <div class="page-title-section">
-      <h1 class="page-title">DOKUMEN SOKONGAN</h1>
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Dokumen Sokongan</h1>
+      <p class="page-subtitle">Muat naik dokumen-dokumen yang diperlukan</p>
     </div>
 
     <!-- Document Upload Form -->
     <div class="document-form-container">
+      <!-- Upload Guidelines -->
+      <div class="upload-guidelines">
+        <div class="guidelines-header">
+          <div class="guidelines-icon">📋</div>
+          <h3 class="guidelines-title">Garis Panduan Muat Naik</h3>
+        </div>
+        <div class="guidelines-content">
+          <div class="guideline-item">
+            <span class="guideline-icon">📄</span>
+            <span class="guideline-text">Format yang diterima: PDF, JPG, PNG</span>
+          </div>
+          <div class="guideline-item">
+            <span class="guideline-icon">📏</span>
+            <span class="guideline-text">Saiz maksimum fail: 10MB setiap fail</span>
+          </div>
+          <div class="guideline-item">
+            <span class="guideline-icon">🔒</span>
+            <span class="guideline-text">Semua dokumen akan dirahsiakan</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document List -->
       <div class="document-list">
         <!-- Document Item 1 -->
-        <div class="document-item">
-          <span class="document-label">Salinan Kad Pengenalan</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="ic">
+          <div class="document-info">
+            <div class="document-icon">🆔</div>
+            <div class="document-details">
+              <span class="document-label">Salinan Kad Pengenalan</span>
+              <span class="document-status" id="status-ic">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-ic" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('ic', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-ic').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
 
         <!-- Document Item 2 -->
-        <div class="document-item">
-          <span class="document-label">Salinan Surat Beranak</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="birth">
+          <div class="document-info">
+            <div class="document-icon">📜</div>
+            <div class="document-details">
+              <span class="document-label">Salinan Surat Beranak</span>
+              <span class="document-status" id="status-birth">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-birth" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('birth', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-birth').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
 
         <!-- Document Item 3 -->
-        <div class="document-item">
-          <span class="document-label">Salinan Kad Pengenalan Bapa</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="father-ic">
+          <div class="document-info">
+            <div class="document-icon">👨</div>
+            <div class="document-details">
+              <span class="document-label">Salinan Kad Pengenalan Bapa</span>
+              <span class="document-status" id="status-father-ic">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-father-ic" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('father-ic', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-father-ic').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
 
         <!-- Document Item 4 -->
-        <div class="document-item">
-          <span class="document-label">Salinan Kad Pengenalan Ibu</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="mother-ic">
+          <div class="document-info">
+            <div class="document-icon">👩</div>
+            <div class="document-details">
+              <span class="document-label">Salinan Kad Pengenalan Ibu</span>
+              <span class="document-status" id="status-mother-ic">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-mother-ic" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('mother-ic', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-mother-ic').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
 
         <!-- Document Item 5 -->
-        <div class="document-item">
-          <span class="document-label">Resume / CV</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="resume">
+          <div class="document-info">
+            <div class="document-icon">📄</div>
+            <div class="document-details">
+              <span class="document-label">Resume / CV</span>
+              <span class="document-status" id="status-resume">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-resume" class="file-input" accept=".pdf,.doc,.docx" onchange="handleFileUpload('resume', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-resume').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
 
         <!-- Document Item 6 -->
-        <div class="document-item">
-          <span class="document-label">Surat Iringan</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="cover-letter">
+          <div class="document-info">
+            <div class="document-icon">✉️</div>
+            <div class="document-details">
+              <span class="document-label">Surat Iringan</span>
+              <span class="document-status" id="status-cover-letter">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-cover-letter" class="file-input" accept=".pdf,.doc,.docx" onchange="handleFileUpload('cover-letter', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-cover-letter').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
 
         <!-- Document Item 7 -->
-        <div class="document-item">
-          <span class="document-label">Surat Iringan Sokongan</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="support-letter">
+          <div class="document-info">
+            <div class="document-icon">📝</div>
+            <div class="document-details">
+              <span class="document-label">Surat Iringan Sokongan</span>
+              <span class="document-status" id="status-support-letter">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-support-letter" class="file-input" accept=".pdf,.doc,.docx" onchange="handleFileUpload('support-letter', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-support-letter').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
 
         <!-- Document Item 8 -->
-        <div class="document-item">
-          <span class="document-label">Sijil-sijil Pendidikan</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="education">
+          <div class="document-info">
+            <div class="document-icon">🎓</div>
+            <div class="document-details">
+              <span class="document-label">Sijil-sijil Pendidikan</span>
+              <span class="document-status" id="status-education">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-education" class="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFileUpload('education', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-education').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
 
         <!-- Document Item 9 -->
-        <div class="document-item">
-          <span class="document-label">Sijil-sijil Aktiviti Luar</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="document-item" data-document="activities">
+          <div class="document-info">
+            <div class="document-icon">🏆</div>
+            <div class="document-details">
+              <span class="document-label">Sijil-sijil Aktiviti Luar</span>
+              <span class="document-status" id="status-activities">Belum dimuat naik</span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" id="file-activities" class="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFileUpload('activities', this)" />
+            <button class="upload-button" onclick="document.getElementById('file-activities').click()">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Muat Naik</span>
+            </button>
+          </div>
         </div>
+      </div>
+
+      <!-- Progress Summary -->
+      <div class="upload-progress">
+        <div class="progress-header">
+          <h3 class="progress-title">Kemajuan Muat Naik</h3>
+          <span class="progress-count" id="progress-count">0 / 9 dokumen</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Save Button -->
+      <div class="form-actions">
+        <button class="save-btn" type="button" onclick="saveDocuments()">
+          <span class="btn-icon">💾</span>
+          <span class="btn-text">Simpan Semua Dokumen</span>
+        </button>
       </div>
     </div>
   </div>
@@ -97,4 +248,86 @@
 <!-- Footer positioned outside main container -->
 <div class="profile-footer-wrapper">
   <%= user_footer(assigns) %>
-</div> 
+</div>
+
+<script>
+let uploadedFiles = {};
+
+function handleFileUpload(documentType, input) {
+  const files = input.files;
+  if (files.length === 0) return;
+
+  const file = files[0]; // For single file inputs
+  const statusElement = document.getElementById(`status-${documentType}`);
+  const documentItem = document.querySelector(`[data-document="${documentType}"]`);
+  const uploadButton = documentItem.querySelector('.upload-button');
+
+  // Validate file
+  if (!validateFile(file)) return;
+
+  // Store file info
+  uploadedFiles[documentType] = {
+    file: file,
+    name: file.name,
+    size: file.size,
+    type: file.type
+  };
+
+  // Update UI
+  statusElement.textContent = file.name;
+  statusElement.className = 'document-status uploaded';
+  uploadButton.innerHTML = '<span class="upload-icon">✅</span><span class="upload-text">Dimuat Naik</span>';
+  uploadButton.className = 'upload-button uploaded';
+  documentItem.className = 'document-item uploaded';
+
+  // Update progress
+  updateProgress();
+}
+
+function validateFile(file) {
+  // Check file size (10MB limit)
+  if (file.size > 10 * 1024 * 1024) {
+    alert('Saiz fail terlalu besar. Maksimum 10MB.');
+    return false;
+  }
+
+  // Check file type
+  const allowedTypes = [
+    'application/pdf',
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    alert('Format fail tidak diterima. Sila pilih fail PDF, JPG, PNG, atau DOC.');
+    return false;
+  }
+
+  return true;
+}
+
+function updateProgress() {
+  const totalDocuments = 9;
+  const uploadedCount = Object.keys(uploadedFiles).length;
+  const progressPercentage = (uploadedCount / totalDocuments) * 100;
+
+  document.getElementById('progress-count').textContent = `${uploadedCount} / ${totalDocuments} dokumen`;
+  document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+}
+
+function saveDocuments() {
+  const uploadedCount = Object.keys(uploadedFiles).length;
+  
+  if (uploadedCount === 0) {
+    alert('Sila muat naik sekurang-kurangnya satu dokumen.');
+    return;
+  }
+
+  // Here you would typically send the files to the server
+  console.log('Uploaded files:', uploadedFiles);
+  alert(`Berjaya menyimpan ${uploadedCount} dokumen!`);
+}
+</script> 

@@ -28,102 +28,233 @@
 
   <!-- Right Main Content -->
   <div class="profile-main">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Profil Pengguna</h1>
+      <p class="page-subtitle">Kemaskini maklumat peribadi anda</p>
+    </div>
+
+    <!-- Flash Messages -->
+    <%= if live_flash(@flash, :info) do %>
+      <div class="flash-message success">
+        <%= live_flash(@flash, :info) %>
+      </div>
+    <% end %>
+    
+    <%= if live_flash(@flash, :error) do %>
+      <div class="flash-message error">
+        <%= live_flash(@flash, :error) %>
+      </div>
+    <% end %>
+
     <!-- User Header -->
     <div class="user-header">
-      <img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="User" class="user-avatar" />
-      <p class="username">Username</p>
+      <div class="user-avatar-container">
+        <img src={@current_user.avatar_url || ~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="User" class="user-avatar" id="user-avatar" />
+        <div class="avatar-overlay" onclick="document.getElementById('avatar-upload').click()">
+          <i class="avatar-icon">📷</i>
+        </div>
+        <form phx-submit="save-avatar" phx-change="validate-avatar" class="avatar-upload-form">
+          <input type="file" id="avatar-upload" phx-upload-ref={@uploads.avatar.ref} accept="image/*" style="display: none;" />
+        </form>
+      </div>
     </div>
 
     <!-- Form Sections -->
-    <div class="form-sections">
+    <form phx-submit="save-profile" class="form-sections">
       <!-- Personal Information Section -->
       <div class="form-section">
-        <h3 class="form-title">Nama Penuh</h3>
+        <div class="section-header">
+          <div class="section-icon">👤</div>
+          <h3 class="form-title">Maklumat Peribadi</h3>
+        </div>
+        
+        <!-- Full Name Field (Full Width) -->
+        <div class="form-group full-width">
+          <label class="form-label">Nama Penuh</label>
+          <input type="text" name="user[full_name]" value={@current_user.full_name} class="form-input" placeholder="Masukkan nama penuh anda" />
+        </div>
+        
         <div class="form-grid">
           <div class="form-group">
-            <label>Kad Pengenalan</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Kad Pengenalan</label>
+            <input type="text" name="user[ic_number]" value={@current_user.ic_number} class="form-input" placeholder="Contoh: 880101-01-1234" />
           </div>
           <div class="form-group">
-            <label>Tarikh Lahir</label>
-            <input type="date" class="form-input" />
+            <label class="form-label">Tarikh Lahir</label>
+            <input type="date" name="user[birth_date]" value={@current_user.birth_date} class="form-input" />
           </div>
           <div class="form-group">
-            <label>Tempat Lahir</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Tempat Lahir</label>
+            <input type="text" name="user[birth_place]" value={@current_user.birth_place} class="form-input" placeholder="Bandar, Negeri" />
           </div>
           <div class="form-group">
-            <label>Jantina</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Jantina</label>
+            <select name="user[gender]" class="form-input">
+              <option value="">Pilih jantina</option>
+              <option value="lelaki" selected={@current_user.gender == "lelaki"}>Lelaki</option>
+              <option value="perempuan" selected={@current_user.gender == "perempuan"}>Perempuan</option>
+            </select>
           </div>
           <div class="form-group">
-            <label>Nombor Telefon</label>
-            <input type="tel" class="form-input" />
+            <label class="form-label">Nombor Telefon</label>
+            <input type="tel" name="user[phone_number]" value={@current_user.phone_number} class="form-input" placeholder="Contoh: 012-3456789" />
           </div>
           <div class="form-group">
-            <label>E-mel</label>
-            <input type="email" class="form-input" />
+            <label class="form-label">E-mel</label>
+            <input type="email" name="user[email]" value={@current_user.email} class="form-input" placeholder="contoh@email.com" readonly />
           </div>
           <div class="form-group">
-            <label>Agama</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Agama</label>
+            <select name="user[religion]" class="form-input">
+              <option value="">Pilih agama</option>
+              <option value="islam" selected={@current_user.religion == "islam"}>Islam</option>
+              <option value="kristian" selected={@current_user.religion == "kristian"}>Kristian</option>
+              <option value="buddha" selected={@current_user.religion == "buddha"}>Buddha</option>
+              <option value="hindu" selected={@current_user.religion == "hindu"}>Hindu</option>
+              <option value="lain-lain" selected={@current_user.religion == "lain-lain"}>Lain-lain</option>
+            </select>
           </div>
           <div class="form-group">
-            <label>Kaum</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Kaum</label>
+            <select name="user[race]" class="form-input">
+              <option value="">Pilih kaum</option>
+              <option value="melayu" selected={@current_user.race == "melayu"}>Melayu</option>
+              <option value="cina" selected={@current_user.race == "cina"}>Cina</option>
+              <option value="india" selected={@current_user.race == "india"}>India</option>
+              <option value="lain-lain" selected={@current_user.race == "lain-lain"}>Lain-lain</option>
+            </select>
           </div>
           <div class="form-group">
-            <label>Daerah</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Daerah</label>
+            <input type="text" name="user[daerah]" value={@current_user.daerah} class="form-input" placeholder="Nama daerah" />
           </div>
         </div>
       </div>
 
       <!-- Address Section -->
       <div class="form-section">
-        <h3 class="form-title">ALAMAT</h3>
-        <div class="form-group">
-          <label>Alamat Tempat Tinggal</label>
-          <textarea class="form-textarea"></textarea>
+        <div class="section-header">
+          <div class="section-icon">🏠</div>
+          <h3 class="form-title">Alamat</h3>
         </div>
         <div class="form-group">
-          <label>Alamat Surat-Menyurat</label>
-          <textarea class="form-textarea"></textarea>
+          <label class="form-label">Alamat Tempat Tinggal</label>
+          <textarea name="user[residential_address]" class="form-textarea" placeholder="Masukkan alamat tempat tinggal anda" rows="4"><%= @current_user.residential_address %></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Alamat Surat-Menyurat</label>
+          <textarea name="user[mailing_address]" class="form-textarea" placeholder="Masukkan alamat surat-menyurat (jika berbeza)" rows="4"><%= @current_user.mailing_address %></textarea>
         </div>
       </div>
 
       <!-- Education Section -->
       <div class="form-section">
-        <h3 class="form-title">PENDIDIKAN</h3>
+        <div class="section-header">
+          <div class="section-icon">🎓</div>
+          <h3 class="form-title">Pendidikan</h3>
+        </div>
         <div class="form-grid">
           <div class="form-group">
-            <label>Tahap Pendidikan</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Tahap Pendidikan</label>
+            <select name="user[education_level]" class="form-input">
+              <option value="">Pilih tahap pendidikan</option>
+              <option value="spm" selected={@current_user.education_level == "spm"}>SPM</option>
+              <option value="stpm" selected={@current_user.education_level == "stpm"}>STPM</option>
+              <option value="diploma" selected={@current_user.education_level == "diploma"}>Diploma</option>
+              <option value="ijazah" selected={@current_user.education_level == "ijazah"}>Ijazah</option>
+              <option value="sarjana" selected={@current_user.education_level == "sarjana"}>Sarjana</option>
+              <option value="doktor" selected={@current_user.education_level == "doktor"}>Doktor</option>
+            </select>
           </div>
           <div class="form-group">
-            <label>Institusi</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Institusi</label>
+            <input type="text" name="user[institution]" value={@current_user.institution} class="form-input" placeholder="Nama institusi" />
           </div>
           <div class="form-group">
-            <label>Bidang</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Bidang</label>
+            <input type="text" name="user[field_of_study]" value={@current_user.field_of_study} class="form-input" placeholder="Bidang pengajian" />
           </div>
           <div class="form-group">
-            <label>Kursus</label>
-            <input type="text" class="form-input" />
+            <label class="form-label">Kursus</label>
+            <input type="text" name="user[course]" value={@current_user.course} class="form-input" placeholder="Nama kursus" />
           </div>
-          <div class="form-group">
-            <label>Tarikh Bergraduat</label>
-            <input type="date" class="form-input" />
+          <div class="form-group full-width">
+            <label class="form-label">Tarikh Bergraduat</label>
+            <input type="date" name="user[graduation_date]" value={@current_user.graduation_date} class="form-input" />
           </div>
         </div>
-        <button class="add-button">+</button>
+        <button class="add-education-btn" type="button">
+          <span class="btn-icon">+</span>
+          <span class="btn-text">Tambah Pendidikan</span>
+        </button>
       </div>
-    </div>
+
+      <!-- Save Button Section -->
+      <div class="form-actions">
+        <button class="save-btn" type="submit">
+          <span class="btn-icon">💾</span>
+          <span class="btn-text">Simpan Perubahan</span>
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
 <!-- Footer positioned outside main container -->
 <div class="profile-footer-wrapper">
   <%= user_footer(assigns) %>
-</div> 
+</div>
+
+<script>
+// Handle avatar upload with LiveView
+document.addEventListener('DOMContentLoaded', function() {
+  const avatar = document.getElementById('user-avatar');
+  const avatarUpload = document.getElementById('avatar-upload');
+  
+  if (avatar && avatarUpload) {
+    // Click avatar to trigger file upload
+    avatar.addEventListener('click', function() {
+      avatarUpload.click();
+    });
+    
+    // Handle file selection
+    avatarUpload.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // Validate file
+        if (!file.type.startsWith('image/')) {
+          alert('Sila pilih fail imej sahaja.');
+          return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Saiz fail terlalu besar. Maksimum 5MB.');
+          return;
+        }
+        
+        // Show preview immediately
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          avatar.src = e.target.result;
+          
+          // Add animation
+          avatar.style.transform = 'scale(1.1)';
+          setTimeout(() => {
+            avatar.style.transform = 'scale(1)';
+          }, 200);
+        };
+        reader.readAsDataURL(file);
+        
+        // Auto-submit the form to save the avatar
+        setTimeout(() => {
+          const form = avatarUpload.closest('form');
+          if (form) {
+            form.dispatchEvent(new Event('submit', { bubbles: true }));
+          }
+        }, 100);
+      }
+    });
+  }
+});
+</script> 
