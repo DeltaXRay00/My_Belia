@@ -34,6 +34,7 @@ defmodule MyBeliaWeb.Router do
     live "/log-masuk", PageLive.LoginLive
     post "/log-masuk", AuthController, :login_post
     live "/daftar", PageLive.RegisterLive
+    post "/daftar", AuthController, :register_post
     get "/log-keluar", AuthController, :logout
   end
 
@@ -124,6 +125,25 @@ defmodule MyBeliaWeb.Router do
     live "/admin/permohonan_geran", AdminLive.AdminPermohonanGeranLive
     live "/admin/permohonan-geran", AdminLive.AdminPermohonanGeranLive
     live "/admin/geran", AdminLive.AdminPermohonanGeranLive
+
+    # Admin Reports Management (LiveView)
+    live "/laporan_program", AdminLive.LaporanProgramLive
+    live "/laporan_program/new", AdminLive.LaporanProgramNewLive
+    live "/laporan_program/:id", AdminLive.LaporanProgramShowLive
+    live "/laporan_program/:id/edit", AdminLive.LaporanProgramEditLive
+
+    # Admin Course Logs Management (LiveView)
+    live "/laporan_kursus", AdminLive.LaporanKursusLive
+    live "/laporan_kursus/new", AdminLive.LaporanKursusNewLive
+    live "/laporan_kursus/:id", AdminLive.LaporanKursusShowLive
+    live "/laporan_kursus/:id/edit", AdminLive.LaporanKursusEditLive
+
+    # Admin Listing Page (LiveView)
+    live "/senarai_admin", AdminLive.SenaraiAdminLive
+    get "/senarai_admin/new", PageController, :new_admin
+    post "/senarai_admin", PageController, :create_admin
+    get "/senarai_admin/:id/edit", PageController, :edit_admin
+    put "/senarai_admin/:id", PageController, :update_admin
 
     # Admin Grant Status Pages (LiveView)
     live "/admin/permohonan_geran/lulus", AdminLive.AdminPermohonanGeranLulusLive

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Report - MyBelia</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href={~p"/assets/admin.css"} />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f5f5;
+      overflow-x: hidden;
+    }
+    .admin-container {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<.admin_layout current_page="laporan_program" page_title={"Edit Report #{@report.id}"}>
+
+    <!-- Edit Report Content -->
+    <div class="program-management-content">
+      <div class="action-section">
+                    <.link href={~p"/laporan_program"}>
+          <button class="back-btn">Back to Reports</button>
+        </.link>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-header">
+          <h3 class="filter-title">Edit Report</h3>
+        </div>
+        <div class="section-content" style="padding: 20px;">
+          <.simple_form :let={f} for={@changeset} action={~p"/laporan_program/#{@report}"}>
+            <.error :if={@changeset.action}>
+              Oops, something went wrong! Please check the errors below.
+            </.error>
+            <div class="form-group">
+              <.input field={f[:title]} type="text" label="Title" class="form-input" />
+            </div>
+            <div class="form-group">
+              <.input field={f[:description]} type="textarea" label="Description" class="form-textarea" />
+            </div>
+            <div class="form-group">
+              <.input field={f[:status]} type="text" label="Status" class="form-input" />
+            </div>
+            <div class="form-group">
+              <.input field={f[:program_id]} type="number" label="Program ID" class="form-input" />
+            </div>
+            <div class="form-group">
+              <.input field={f[:course_id]} type="number" label="Course ID" class="form-input" />
+            </div>
+            <div class="form-actions">
+              <.button class="create-btn">Update Report</.button>
+            </div>
+          </.simple_form>
+        </div>
+      </div>
+    </div>
+</.admin_layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  // Add click event listener to each dropdown toggle
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get the dropdown menu ID from data attribute
+      const dropdownId = this.getAttribute('data-dropdown');
+      const dropdownMenu = document.getElementById(dropdownId);
+      
+      // Toggle active class on the toggle button
+      this.classList.toggle('active');
+      
+      // Toggle show class on the dropdown menu
+      dropdownMenu.classList.toggle('show');
+    });
+  });
+
+  // Hamburger menu toggle functionality
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('hidden');
+    mainContent.classList.toggle('sidebar-hidden');
+  });
+});
+</script>
+</body>
+</html>

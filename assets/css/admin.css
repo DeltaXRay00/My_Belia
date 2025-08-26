@@ -518,19 +518,19 @@ body {
   background-color: #1408ff;
   color: var(--text-white);
   border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
+  border-radius: 6px;
+  padding: 6px 12px;
   font-family: var(--font-family-inter);
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 500;
+  font-size: 12px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  box-shadow: 0 2px 4px rgba(20, 8, 255, 0.2);
+  box-shadow: 0 1px 3px rgba(20, 8, 255, 0.2);
 }
 
 .new-program-btn:hover {
   background-color: #0f06cc;
-  box-shadow: 0 3px 6px rgba(20, 8, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(20, 8, 255, 0.3);
   transform: translateY(-1px);
 }
 
@@ -1406,4 +1406,47 @@ body {
 
 .option-item span {
   display: block;
+}
+
+/* Quick Access Links Styles */
+.quick-access-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 15px;
+}
+
+.quick-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.quick-link-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.quick-link-item:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+}
+
+.quick-link-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.quick-link-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
 } 

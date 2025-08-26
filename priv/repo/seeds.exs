@@ -22,7 +22,7 @@ case Accounts.get_user_by_email("admin@mybelia.gov.my") do
       password: "ABC#xyz00!",
       password_confirmation: "ABC#xyz00!",
       full_name: "Administrator",
-      role: "admin"
+      role: "superadmin"
     })
     IO.puts("Admin account created: #{admin.email}")
 

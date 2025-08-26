@@ -882,7 +882,7 @@ defmodule MyBeliaWeb.CoreComponents do
         <h3 class="section-title">UTAMA</h3>
         <ul class="nav-list">
           <li><a href="/admin" class={"nav-link #{if @current_page == "dashboard", do: "active"}"}>Dashboard</a></li>
-          <li><a href="/admin" class={"nav-link #{if @current_page == "admin", do: "active"}"}>Admin</a></li>
+          <li><a href="/senarai_admin" class={"nav-link #{if @current_page == "admin", do: "active"}"}>Admin</a></li>
           <li><a href="/admin" class={"nav-link #{if @current_page == "tetapan", do: "active"}"}>Tetapan</a></li>
           <li class="dropdown-item">
             <a href="#" class="nav-link dropdown-toggle" data-dropdown="permohonan-utama">Permohonan</a>
@@ -899,15 +899,15 @@ defmodule MyBeliaWeb.CoreComponents do
       <div class="sidebar-section">
         <h3 class="section-title">SISTEM</h3>
         <ul class="nav-list">
-          <li class="dropdown-item">
-            <a href="#" class="nav-link dropdown-toggle" data-dropdown="log-sistem">Log</a>
-            <ul class="dropdown-menu" id="log-sistem">
-              <li><a href="/admin" class="nav-link">Program</a></li>
-              <li><a href="/admin" class="nav-link">Kursus</a></li>
-              <li><a href="/admin" class="nav-link">Geran</a></li>
-            </ul>
-          </li>
-          <li><a href="/admin" class={"nav-link #{if @current_page == "direktori", do: "active"}"}>Direktori</a></li>
+                <li class="dropdown-item">
+        <a href="#" class={"nav-link dropdown-toggle #{if @current_page == "laporan_program" or @current_page == "laporan_kursus", do: "active"}"} data-dropdown="laporan-sistem">Laporan</a>
+        <ul class={"dropdown-menu #{if @current_page == "laporan_program" or @current_page == "laporan_kursus", do: "show"}"} id="laporan-sistem">
+          <li><a href="/laporan_program" class={"nav-link #{if @current_page == "laporan_program", do: "active"}"}>Program</a></li>
+          <li><a href="/laporan_kursus" class={"nav-link #{if @current_page == "laporan_kursus", do: "active"}"}>Kursus</a></li>
+          <li><a href="/admin" class="nav-link">Geran</a></li>
+        </ul>
+      </li>
+
           <li><a href="/admin" class={"nav-link #{if @current_page == "khidmat", do: "active"}"}>Khidmat Pengguna</a></li>
         </ul>
       </div>
