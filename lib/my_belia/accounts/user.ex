@@ -7,7 +7,13 @@ defmodule MyBelia.Accounts.User do
     field :email, :string
     field :password_hash, :string
     field :full_name, :string
+    field :name, :string
+    field :daerah, :string
     field :role, :string, default: "user"
+    field :status, :string, default: "active"
+    field :last_login, :utc_datetime
+    field :jawatan, :string
+    field :unit_bahagian, :string
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
 
@@ -16,13 +22,25 @@ defmodule MyBelia.Accounts.User do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :password_confirmation, :full_name, :role])
-    |> validate_required([:email, :password, :password_confirmation, :full_name])
+    |> cast(attrs, [:email, :password, :password_confirmation, :full_name, :name, :daerah, :role, :status, :last_login, :jawatan, :unit_bahagian])
+    |> validate_required([:email, :full_name])
     |> validate_format(:email, ~r/@/)
-    |> validate_length(:password, min: 6)
-    |> validate_confirmation(:password)
+    |> validate_password()
     |> unique_constraint(:email)
     |> put_password_hash()
+  end
+
+    defp validate_password(changeset) do
+    case get_change(changeset, :password) do
+      nil ->
+        # No password change, skip password validation
+        changeset
+      _password ->
+        # Password is being changed, validate it
+        changeset
+        |> validate_length(:password, min: 6)
+        |> validate_confirmation(:password)
+    end
   end
 
   defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do

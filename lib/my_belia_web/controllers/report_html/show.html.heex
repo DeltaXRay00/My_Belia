@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Details - MyBelia</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href={~p"/assets/admin.css"} />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f5f5;
+      overflow-x: hidden;
+    }
+    .admin-container {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<.admin_layout current_page="laporan_program" page_title={"Report #{@report.id}"}>
+
+    <!-- Report Details Content -->
+    <div class="program-management-content">
+      <div class="action-section">
+                    <.link href={~p"/laporan_program/#{@report}/edit"}>
+          <button class="new-program-btn">Edit Report</button>
+        </.link>
+                    <.link href={~p"/laporan_program"}>
+          <button class="back-btn">Back to Reports</button>
+        </.link>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-header">
+          <h3 class="filter-title">Report Details</h3>
+        </div>
+        <div class="section-content" style="padding: 20px;">
+          <div class="form-group">
+            <label class="filter-label">Title:</label>
+            <p style="margin: 8px 0; font-size: 16px; color: #333;"><%= @report.title %></p>
+          </div>
+          <div class="form-group">
+            <label class="filter-label">Description:</label>
+            <p style="margin: 8px 0; font-size: 16px; color: #333;"><%= @report.description %></p>
+          </div>
+          <div class="form-group">
+            <label class="filter-label">Status:</label>
+            <p style="margin: 8px 0; font-size: 16px; color: #333;"><%= @report.status %></p>
+          </div>
+          <div class="form-group">
+            <label class="filter-label">Program ID:</label>
+            <p style="margin: 8px 0; font-size: 16px; color: #333;"><%= @report.program_id %></p>
+          </div>
+          <div class="form-group">
+            <label class="filter-label">Course ID:</label>
+            <p style="margin: 8px 0; font-size: 16px; color: #333;"><%= @report.course_id %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+</.admin_layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  // Add click event listener to each dropdown toggle
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get the dropdown menu ID from data attribute
+      const dropdownId = this.getAttribute('data-dropdown');
+      const dropdownMenu = document.getElementById(dropdownId);
+      
+      // Toggle active class on the toggle button
+      this.classList.toggle('active');
+      
+      // Toggle show class on the dropdown menu
+      dropdownMenu.classList.toggle('show');
+    });
+  });
+
+  // Hamburger menu toggle functionality
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('hidden');
+    mainContent.classList.toggle('sidebar-hidden');
+  });
+});
+</script>
+</body>
+</html>

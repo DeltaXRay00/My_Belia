@@ -21,7 +21,7 @@ defmodule MyBeliaWeb.PageController do
         conn
         |> put_session(:user_id, user.id)
         |> put_flash(:info, "Log masuk berjaya!")
-        |> redirect(to: if(user.role == "admin", do: "/admin", else: "/laman-utama-pengguna"))
+        |> redirect(to: if(user.role == "admin" or user.role == "superadmin", do: "/admin", else: "/laman-utama-pengguna"))
 
       {:error, :not_found} ->
         conn
@@ -406,5 +406,157 @@ defmodule MyBeliaWeb.PageController do
       conn
       |> put_flash(:error, "Kursus tidak dijumpai")
       |> redirect(to: "/senarai_kursus")
+  end
+
+  def senarai_admin(conn, _params) do
+    # Get all admin users (excluding superadmin)
+    admins = MyBelia.Accounts.list_admin_users()
+    current_user = conn.assigns.current_user
+    conn
+    |> put_layout(false)
+    |> render("senarai_admin.html", admins: admins, current_user: current_user, current_user_role: current_user.role)
+  end
+
+  def new_admin(conn, _params) do
+    current_user = conn.assigns.current_user
+
+    # Only superadmin can access the new admin form
+    if current_user.role == "superadmin" do
+      changeset = MyBelia.Accounts.change_user(%MyBelia.Accounts.User{})
+      conn
+      |> put_layout(false)
+      |> render("new_admin.html", changeset: changeset)
+    else
+      conn
+      |> put_flash(:error, "Anda tidak mempunyai kebenaran untuk mendaftarkan admin baru.")
+      |> redirect(to: ~p"/senarai_admin")
+    end
+  end
+
+  def create_admin(conn, %{"user" => user_params}) do
+    current_user = conn.assigns.current_user
+
+    # Only superadmin can create new admin accounts
+    if current_user.role == "superadmin" do
+      # Set role to admin and status to active for new admin accounts
+      admin_params = Map.merge(user_params, %{
+        "role" => "admin",
+        "status" => "active"
+      })
+
+      case MyBelia.Accounts.create_user(admin_params) do
+        {:ok, _user} ->
+          conn
+          |> put_flash(:info, "Admin berjaya didaftarkan.")
+          |> redirect(to: ~p"/senarai_admin")
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          conn
+          |> put_layout(false)
+          |> render("new_admin.html", changeset: changeset)
+      end
+    else
+      conn
+      |> put_flash(:error, "Anda tidak mempunyai kebenaran untuk mendaftarkan admin baru.")
+      |> redirect(to: ~p"/senarai_admin")
+    end
+  end
+
+  def edit_admin(conn, %{"id" => id}) do
+    admin = MyBelia.Accounts.get_user!(id)
+    current_user = conn.assigns.current_user
+
+    # Check permissions: superadmin can edit any admin, normal admin can only edit their own profile
+    cond do
+      current_user.role == "superadmin" ->
+        changeset = MyBelia.Accounts.change_user(admin)
+        conn
+        |> put_layout(false)
+        |> render("edit_admin.html", admin: admin, changeset: changeset)
+
+      current_user.role == "admin" and admin.id == current_user.id ->
+        changeset = MyBelia.Accounts.change_user(admin)
+        conn
+        |> put_layout(false)
+        |> render("edit_admin.html", admin: admin, changeset: changeset)
+
+      true ->
+        conn
+        |> put_flash(:error, "Anda tidak mempunyai kebenaran untuk mengemaskini admin ini.")
+        |> redirect(to: ~p"/senarai_admin")
+    end
+  end
+
+  def update_admin(conn, %{"id" => id, "user" => user_params}) do
+    admin = MyBelia.Accounts.get_user!(id)
+    current_user = conn.assigns.current_user
+
+    # Check permissions: superadmin can edit any admin, normal admin can only edit their own profile
+    cond do
+      current_user.role == "superadmin" ->
+        # Ensure role remains admin and status remains active
+        admin_params = Map.merge(user_params, %{
+          "role" => "admin",
+          "status" => "active"
+        })
+
+        case MyBelia.Accounts.update_user(admin, admin_params) do
+          {:ok, _user} ->
+            conn
+            |> put_flash(:info, "Maklumat admin berjaya dikemaskini.")
+            |> redirect(to: ~p"/senarai_admin")
+
+          {:error, %Ecto.Changeset{} = changeset} ->
+            conn
+            |> put_layout(false)
+            |> render("edit_admin.html", admin: admin, changeset: changeset)
+        end
+
+      current_user.role == "admin" and admin.id == current_user.id ->
+        # Normal admin can only update their own profile, but cannot change role or status
+        # Remove role and status from params to prevent changes
+        admin_params = Map.drop(user_params, ["role", "status"])
+
+        case MyBelia.Accounts.update_user(admin, admin_params) do
+          {:ok, _user} ->
+            conn
+            |> put_flash(:info, "Maklumat profil anda berjaya dikemaskini.")
+            |> redirect(to: ~p"/senarai_admin")
+
+          {:error, %Ecto.Changeset{} = changeset} ->
+            conn
+            |> put_layout(false)
+            |> render("edit_admin.html", admin: admin, changeset: changeset)
+        end
+
+      true ->
+        conn
+        |> put_flash(:error, "Anda tidak mempunyai kebenaran untuk mengemaskini admin ini.")
+        |> redirect(to: ~p"/senarai_admin")
+    end
+  end
+
+  def delete_admin(conn, %{"id" => id}) do
+    admin = MyBelia.Accounts.get_user!(id)
+    current_user = conn.assigns.current_user
+
+    # Only superadmin can delete admin accounts
+    if current_user.role == "superadmin" do
+      case MyBelia.Accounts.delete_user(admin) do
+        {:ok, _user} ->
+          conn
+          |> put_flash(:info, "Admin berjaya dipadamkan.")
+          |> redirect(to: ~p"/senarai_admin")
+
+        {:error, _changeset} ->
+          conn
+          |> put_flash(:error, "Ralat semasa memadamkan admin.")
+          |> redirect(to: ~p"/senarai_admin")
+      end
+    else
+      conn
+      |> put_flash(:error, "Anda tidak mempunyai kebenaran untuk memadamkan admin.")
+      |> redirect(to: ~p"/senarai_admin")
+    end
   end
 end

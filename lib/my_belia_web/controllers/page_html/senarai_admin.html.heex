@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senarai Admin - MyBelia</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href={~p"/assets/admin.css"} />
+  <style>
+    .admin-listing-content {
+      flex: 1;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    .page-header {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+    .page-subtitle {
+      color: #666;
+      margin: 5px 0 0 0;
+      font-size: 14px;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-text {
+      flex: 1;
+    }
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .new-admin-btn {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .new-admin-btn:hover {
+      background: #059669;
+    }
+    .new-admin-btn::before {
+      content: "➕";
+      font-size: 16px;
+    }
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      border-left: 4px solid #1e3a8a;
+    }
+    .stat-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    .admin-table-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    .admin-table th {
+      background: #1e3a8a;
+      color: white;
+      padding: 16px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .admin-table td {
+      padding: 16px 12px;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 14px;
+      color: #374151;
+      vertical-align: middle;
+    }
+    .admin-table tr:hover {
+      background-color: #f8fafc;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .admin-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .admin-name {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 14px;
+    }
+    .admin-nickname {
+      font-size: 12px;
+      color: #6b7280;
+      font-style: italic;
+    }
+    .email-info {
+      display: flex;
+      align-items: center;
+    }
+    .email-text {
+      font-size: 13px;
+      color: #2563eb;
+      font-family: 'Courier New', monospace;
+    }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    .status-active {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .status-inactive {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+    .btn-action {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .btn-edit {
+      background: #3b82f6;
+      color: white;
+    }
+    .btn-edit:hover {
+      background: #2563eb;
+    }
+    .btn-delete {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-delete:hover {
+      background: #dc2626;
+    }
+    .btn-icon {
+      font-size: 14px;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+    }
+    .empty-state h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .empty-state p {
+      margin: 0;
+      font-size: 14px;
+    }
+    
+    /* Filter Section Styles */
+    .filter-section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .filter-header {
+      background: #f8fafc;
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .filter-header h3 {
+      margin: 0 0 5px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #374151;
+    }
+    .filter-header p {
+      margin: 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .filter-form {
+      padding: 20px;
+    }
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .filter-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+    }
+    .filter-input, .filter-select {
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    .filter-input:focus, .filter-select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .filter-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid #e5e7eb;
+    }
+    .btn-clear {
+      background: #6b7280;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-clear:hover {
+      background: #4b5563;
+    }
+    .filter-results {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .admin-row {
+      transition: opacity 0.3s ease;
+    }
+    .admin-row.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<.admin_layout current_page="admin" page_title="Senarai Admin">
+
+    <!-- Admin Listing Content -->
+    <div class="admin-listing-content">
+      <div class="page-header">
+        <div class="header-content">
+          <div class="header-text">
+            <h1 class="page-title">Senarai Admin</h1>
+            <p class="page-subtitle">Senarai semua admin yang telah didaftarkan oleh Superadmin</p>
+          </div>
+          <div class="header-actions">
+            <%= if @current_user_role == "superadmin" do %>
+              <.link href="/senarai_admin/new">
+                <button class="new-admin-btn">Admin Baru</button>
+              </.link>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Filter Section -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <h3>Penapis Admin</h3>
+          <p>Cari dan tapis senarai admin mengikut kriteria tertentu</p>
+        </div>
+        
+                  <form class="filter-form" id="adminFilterForm">
+            <div class="filter-row">
+              <div class="filter-group">
+                <label for="searchInput" class="filter-label">Cari Admin</label>
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  class="filter-input" 
+                  placeholder="Cari mengikut nama, emel, atau daerah..."
+                  onkeyup="filterAdmins()"
+                />
+              </div>
+              
+              <div class="filter-group">
+                <label for="daerahFilter" class="filter-label">Daerah</label>
+                <select id="daerahFilter" class="filter-select" onchange="filterAdmins()">
+                  <option value="">Semua Daerah</option>
+                  <%= for daerah <- Enum.uniq(Enum.map(@admins, & &1.daerah) |> Enum.filter(&(&1 != nil and &1 != ""))) do %>
+                    <option value={daerah}><%= daerah %></option>
+                  <% end %>
+                </select>
+              </div>
+            </div>
+          
+          <div class="filter-actions">
+            <button type="button" class="btn-clear" onclick="clearFilters()">
+              <span class="btn-icon">🔄</span>
+              Kosongkan Penapis
+            </button>
+            <div class="filter-results">
+              <span id="filterResults">Menunjukkan <%= length(@admins) %> admin</span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="admin-table-container">
+        <%= if Enum.empty?(@admins) do %>
+          <div class="empty-state">
+            <h3>Tiada Admin Dijumpai</h3>
+            <p>Belum ada admin yang didaftarkan dalam sistem.</p>
+          </div>
+        <% else %>
+                             <table class="admin-table">
+                     <thead>
+                       <tr>
+                         <th>No.</th>
+                         <th>Maklumat Admin</th>
+                         <th>Emel</th>
+                         <th>Daerah</th>
+                         <th>Status</th>
+                         <th>Tindakan</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <%= for {admin, index} <- Enum.with_index(@admins, 1) do %>
+                         <tr class="admin-row" data-admin-name={String.downcase(admin.full_name || "")} data-admin-email={String.downcase(admin.email || "")} data-admin-daerah={String.downcase(admin.daerah || "")} data-admin-id={admin.id} data-current-user-id={@current_user.id}>
+                           <td class="text-center"><%= index %></td>
+                           <td>
+                             <div class="admin-info">
+                               <div class="admin-name"><%= admin.full_name || "N/A" %></div>
+                               <div class="admin-nickname"><%= if admin.name && admin.name != admin.full_name, do: "(" <> admin.name <> ")", else: "" %></div>
+                             </div>
+                           </td>
+                           <td>
+                             <div class="email-info">
+                               <span class="email-text"><%= admin.email %></span>
+                             </div>
+                           </td>
+                           <td><%= admin.daerah || "N/A" %></td>
+                           <td>
+                             <span class={"status-badge #{if admin.id == @current_user.id, do: "status-active", else: "status-inactive"}"}>
+                               <%= if admin.id == @current_user.id, do: "Aktif", else: "Tidak Aktif" %>
+                             </span>
+                           </td>
+
+                           <td>
+                             <div class="action-buttons">
+                               <%= if @current_user_role == "superadmin" or (@current_user_role == "admin" and admin.id == @current_user.id) do %>
+                                 <button class="btn-action btn-edit" data-admin-id={admin.id} onclick="editAdmin(this.dataset.adminId)" title="Kemaskini Admin">
+                                   <span class="btn-icon">✏️</span>
+                                 </button>
+                               <% end %>
+                               <%= if @current_user_role == "superadmin" do %>
+                                 <button class="btn-action btn-delete" data-admin-id={admin.id} onclick="deleteAdmin(this.dataset.adminId)" title="Padam Admin">
+                                   <span class="btn-icon">🗑️</span>
+                                 </button>
+                               <% end %>
+                             </div>
+                           </td>
+                         </tr>
+                       <% end %>
+                     </tbody>
+                   </table>
+        <% end %>
+      </div>
+    </div>
+</.admin_layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  // Add click event listener to each dropdown toggle
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get the dropdown menu ID from data attribute
+      const dropdownId = this.getAttribute('data-dropdown');
+      const dropdownMenu = document.getElementById(dropdownId);
+      
+      // Toggle active class on the toggle button
+      this.classList.toggle('active');
+      
+      // Toggle show class on the dropdown menu
+      dropdownMenu.classList.toggle('show');
+    });
+  });
+
+  // Hamburger menu toggle functionality
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('hidden');
+    mainContent.classList.toggle('sidebar-hidden');
+  });
+});
+
+// Admin action functions
+function editAdmin(adminId) {
+  // Check if current user is superadmin or editing their own profile
+  const currentUserId = <%= @current_user.id %>;
+  const currentUserRole = '<%= @current_user_role %>';
+  
+  if (currentUserRole === 'superadmin' || (currentUserRole === 'admin' && adminId == currentUserId)) {
+    // Redirect to edit admin page
+    window.location.href = `/senarai_admin/${adminId}/edit`;
+  } else {
+    alert('Anda tidak mempunyai kebenaran untuk mengemaskini admin ini.');
+  }
+}
+
+function deleteAdmin(adminId) {
+  // Check if current user is superadmin
+  const currentUserRole = '<%= @current_user_role %>';
+  
+  if (currentUserRole !== 'superadmin') {
+    alert('Anda tidak mempunyai kebenaran untuk memadamkan admin.');
+    return;
+  }
+  
+  if (confirm('Adakah anda pasti mahu memadamkan admin ini? Tindakan ini tidak boleh dibatalkan.')) {
+    // Send DELETE request to remove admin
+    fetch(`/senarai_admin/${adminId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('Admin berjaya dipadamkan.');
+        window.location.reload(); // Reload page to update the list
+      } else {
+        alert('Ralat semasa memadamkan admin. Sila cuba lagi.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Ralat semasa memadamkan admin. Sila cuba lagi.');
+    });
+  }
+}
+
+// Filter functions
+function filterAdmins() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const daerahFilter = document.getElementById('daerahFilter').value.toLowerCase();
+  
+  const adminRows = document.querySelectorAll('.admin-row');
+  let visibleCount = 0;
+  
+  adminRows.forEach(row => {
+    const adminName = row.getAttribute('data-admin-name');
+    const adminEmail = row.getAttribute('data-admin-email');
+    const adminDaerah = row.getAttribute('data-admin-daerah');
+    const adminId = row.getAttribute('data-admin-id');
+    const currentUserId = row.getAttribute('data-current-user-id');
+    
+    // Check search filter
+    const matchesSearch = searchTerm === '' || 
+      adminName.includes(searchTerm) || 
+      adminEmail.includes(searchTerm) || 
+      adminDaerah.includes(searchTerm);
+    
+    // Check daerah filter
+    const matchesDaerah = daerahFilter === '' || adminDaerah === daerahFilter;
+    
+    // Show/hide row based on filters
+    if (matchesSearch && matchesDaerah) {
+      row.classList.remove('hidden');
+      visibleCount++;
+    } else {
+      row.classList.add('hidden');
+    }
+  });
+  
+  // Update results count
+  document.getElementById('filterResults').textContent = `Menunjukkan ${visibleCount} admin`;
+}
+
+function clearFilters() {
+  // Clear all filter inputs
+  document.getElementById('searchInput').value = '';
+  document.getElementById('daerahFilter').value = '';
+  
+  // Show all rows
+  const adminRows = document.querySelectorAll('.admin-row');
+  adminRows.forEach(row => {
+    row.classList.remove('hidden');
+  });
+  
+  // Update results count
+  const totalCount = adminRows.length;
+  document.getElementById('filterResults').textContent = `Menunjukkan ${totalCount} admin`;
+}
+</script>
+</body>
+</html> 

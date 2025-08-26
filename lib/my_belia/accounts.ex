@@ -75,4 +75,34 @@ defmodule MyBelia.Accounts do
         end
     end
   end
+
+  @doc """
+  Returns the list of admin users (excluding superadmin).
+  """
+  def list_admin_users do
+    User
+    |> where([u], u.role == "admin")
+    |> order_by([u], u.inserted_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of superadmin users.
+  """
+  def list_superadmin_users do
+    User
+    |> where([u], u.role == "superadmin")
+    |> order_by([u], u.inserted_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of all admin users (both admin and superadmin).
+  """
+  def list_all_admin_users do
+    User
+    |> where([u], u.role == "admin" or u.role == "superadmin")
+    |> order_by([u], u.inserted_at)
+    |> Repo.all()
+  end
 end

@@ -21,7 +21,7 @@
         <h1 class="login-title">Daftar Akaun MyBelia</h1>
         <p class="login-subtitle">Buat akaun baharu untuk mengakses platform</p>
         
-        <form class="login-form" method="POST" action="/daftar">
+        <form class="login-form" method="POST" action="/daftar" onsubmit="console.log('Form submitted'); return true;">
           <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
           <div class="form-group">
             <label for="fullname">Nama Penuh</label>
@@ -45,12 +45,12 @@
           
           <div class="terms-checkbox">
             <label class="checkbox-label">
-              <input type="checkbox" name="terms" required />
+              <input type="checkbox" name="terms" />
               <span>Saya bersetuju dengan <a href="/terms" class="terms-link">Terma dan Syarat</a> serta <a href="/privacy" class="terms-link">Dasar Privasi</a></span>
             </label>
           </div>
           
-          <button type="submit" class="login-button">DAFTAR AKAUN</button>
+          <button type="submit" class="login-button" onclick="console.log('Button clicked');">DAFTAR AKAUN</button>
         </form>
         
         <div class="google-login">

@@ -19,6 +19,8 @@ defmodule MyBeliaWeb.Plugs.AdminAuth do
         case user.role do
           "admin" ->
             assign(conn, :current_user, user)
+          "superadmin" ->
+            assign(conn, :current_user, user)
           _ ->
             conn
             |> put_flash(:error, "Anda tidak mempunyai kebenaran untuk mengakses halaman admin.")

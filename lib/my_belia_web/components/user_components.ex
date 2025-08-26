@@ -41,15 +41,13 @@ defmodule MyBeliaWeb.UserComponents do
           <span class="multi-line">HUBUNGI<br>KAMI</span>
         </nav>
         <div class="topnav-right">
-          <%= if @current_user && @current_user.role == "admin" do %>
+          <%= if @current_user && (@current_user.role == "admin" || @current_user.role == "superadmin") do %>
             <a href="/admin" class="admin-link">Admin</a>
           <% end %>
           <a href="/profil_pengguna" class="profile-icon">
             <img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" style={"width: #{@profile_image_width}; height: #{@profile_image_height};"} />
           </a>
-          <%= unless @current_user && @current_user.role == "admin" do %>
-            <a href="/log-keluar" class="logout-link">Log Keluar</a>
-          <% end %>
+          <a href="/log-keluar" class="logout-link">Log Keluar</a>
         </div>
       </div>
     </div>
