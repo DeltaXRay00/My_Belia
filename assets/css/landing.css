@@ -1382,6 +1382,50 @@ body {
   font-weight: 600;
 }
 
+/* Additional Education Sections */
+.additional-education {
+  margin-top: 20px;
+  border: 2px dashed #e0e0e0;
+  background: #fafafa;
+}
+
+.additional-education .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remove-education-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.remove-education-btn:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+.remove-education-btn .btn-icon {
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.remove-education-btn .btn-text {
+  font-size: 12px;
+}
+
 /* Form Actions */
 .form-actions {
   text-align: center;

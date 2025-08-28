@@ -35,15 +35,15 @@
     </div>
 
     <!-- Flash Messages -->
-    <%= if live_flash(@flash, :info) do %>
+    <%= if Phoenix.Flash.get(@flash, :info) do %>
       <div class="flash-message success">
-        <%= live_flash(@flash, :info) %>
+        <%= Phoenix.Flash.get(@flash, :info) %>
       </div>
     <% end %>
     
-    <%= if live_flash(@flash, :error) do %>
+    <%= if Phoenix.Flash.get(@flash, :error) do %>
       <div class="flash-message error">
-        <%= live_flash(@flash, :error) %>
+        <%= Phoenix.Flash.get(@flash, :error) %>
       </div>
     <% end %>
 
@@ -56,6 +56,7 @@
         </div>
         <form phx-submit="save-avatar" phx-change="validate-avatar" class="avatar-upload-form">
           <input type="file" id="avatar-upload" phx-upload-ref={@uploads.avatar.ref} accept="image/*" style="display: none;" />
+          <button type="submit" id="avatar-submit" style="display: none;">Upload</button>
         </form>
       </div>
     </div>
@@ -184,10 +185,54 @@
             <input type="date" name="user[graduation_date]" value={@current_user.graduation_date} class="form-input" />
           </div>
         </div>
-        <button class="add-education-btn" type="button">
+        <button class="add-education-btn" type="button" onclick="addEducationSection()">
           <span class="btn-icon">+</span>
           <span class="btn-text">Tambah Pendidikan</span>
         </button>
+        <div id="additional-education-sections">
+          <%= for {education, index} <- Enum.with_index(@current_user.user_educations, 1) do %>
+            <div class="form-section additional-education">
+              <div class="section-header">
+                <div class="section-icon">🎓</div>
+                <h3 class="form-title">Pendidikan Tambahan <%= index %></h3>
+                <button type="button" class="remove-education-btn" onclick="removeEducationSection(this)">
+                  <span class="btn-icon">🗑️</span>
+                  <span class="btn-text">Buang</span>
+                </button>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Tahap Pendidikan</label>
+                  <select name={"additional_education[#{index}][education_level]"} class="form-input">
+                    <option value="">Pilih tahap pendidikan</option>
+                    <option value="spm" selected={education.education_level == "spm"}>SPM</option>
+                    <option value="stpm" selected={education.education_level == "stpm"}>STPM</option>
+                    <option value="diploma" selected={education.education_level == "diploma"}>Diploma</option>
+                    <option value="ijazah" selected={education.education_level == "ijazah"}>Ijazah</option>
+                    <option value="sarjana" selected={education.education_level == "sarjana"}>Sarjana</option>
+                    <option value="doktor" selected={education.education_level == "doktor"}>Doktor</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Institusi</label>
+                  <input type="text" name={"additional_education[#{index}][institution]"} value={education.institution} class="form-input" placeholder="Nama institusi" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Bidang</label>
+                  <input type="text" name={"additional_education[#{index}][field_of_study]"} value={education.field_of_study} class="form-input" placeholder="Bidang pengajian" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Kursus</label>
+                  <input type="text" name={"additional_education[#{index}][course]"} value={education.course} class="form-input" placeholder="Nama kursus" />
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label">Tarikh Bergraduat</label>
+                  <input type="date" name={"additional_education[#{index}][graduation_date]"} value={education.graduation_date} class="form-input" />
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
       </div>
 
       <!-- Save Button Section -->
@@ -211,8 +256,9 @@
 document.addEventListener('DOMContentLoaded', function() {
   const avatar = document.getElementById('user-avatar');
   const avatarUpload = document.getElementById('avatar-upload');
+  const avatarForm = document.querySelector('.avatar-upload-form');
   
-  if (avatar && avatarUpload) {
+  if (avatar && avatarUpload && avatarForm) {
     // Click avatar to trigger file upload
     avatar.addEventListener('click', function() {
       avatarUpload.click();
@@ -246,15 +292,83 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         reader.readAsDataURL(file);
         
-        // Auto-submit the form to save the avatar
-        setTimeout(() => {
-          const form = avatarUpload.closest('form');
-          if (form) {
-            form.dispatchEvent(new Event('submit', { bubbles: true }));
-          }
-        }, 100);
+        // Submit the form to trigger LiveView upload and save
+          avatarForm.dispatchEvent(new Event('submit', { bubbles: true }));
       }
     });
   }
 });
+
+// Handle adding education sections
+let educationCounter = <%= length(@current_user.user_educations) %>;
+
+function addEducationSection() {
+  educationCounter++;
+  const container = document.getElementById('additional-education-sections');
+  
+  const newSection = document.createElement('div');
+  newSection.className = 'form-section additional-education';
+  newSection.innerHTML = `
+    <div class="section-header">
+      <div class="section-icon">🎓</div>
+      <h3 class="form-title">Pendidikan Tambahan ${educationCounter}</h3>
+      <button type="button" class="remove-education-btn" onclick="removeEducationSection(this)">
+        <span class="btn-icon">🗑️</span>
+        <span class="btn-text">Buang</span>
+      </button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Tahap Pendidikan</label>
+        <select name="additional_education[${educationCounter}][education_level]" class="form-input">
+          <option value="">Pilih tahap pendidikan</option>
+          <option value="spm">SPM</option>
+          <option value="stpm">STPM</option>
+          <option value="diploma">Diploma</option>
+          <option value="ijazah">Ijazah</option>
+          <option value="sarjana">Sarjana</option>
+          <option value="doktor">Doktor</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Institusi</label>
+        <input type="text" name="additional_education[${educationCounter}][institution]" class="form-input" placeholder="Nama institusi" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bidang</label>
+        <input type="text" name="additional_education[${educationCounter}][field_of_study]" class="form-input" placeholder="Bidang pengajian" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kursus</label>
+        <input type="text" name="additional_education[${educationCounter}][course]" class="form-input" placeholder="Nama kursus" />
+      </div>
+      <div class="form-group full-width">
+        <label class="form-label">Tarikh Bergraduat</label>
+        <input type="date" name="additional_education[${educationCounter}][graduation_date]" class="form-input" />
+      </div>
+    </div>
+  `;
+  
+  container.appendChild(newSection);
+  
+  // Add smooth animation
+  newSection.style.opacity = '0';
+  newSection.style.transform = 'translateY(-20px)';
+  setTimeout(() => {
+    newSection.style.transition = 'all 0.3s ease';
+    newSection.style.opacity = '1';
+    newSection.style.transform = 'translateY(0)';
+  }, 10);
+}
+
+function removeEducationSection(button) {
+  const section = button.closest('.additional-education');
+  section.style.transition = 'all 0.3s ease';
+  section.style.opacity = '0';
+  section.style.transform = 'translateY(-20px)';
+  
+  setTimeout(() => {
+    section.remove();
+  }, 300);
+}
 </script> 

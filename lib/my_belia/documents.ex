@@ -14,6 +14,12 @@ defmodule MyBelia.Documents do
     |> Repo.all()
   end
 
+  def get_user_documents(user_id) do
+    UserDocument
+    |> where(user_id: ^user_id)
+    |> Repo.all()
+  end
+
   def get_user_document!(id), do: Repo.get!(UserDocument, id)
 
   def get_user_document_by(user_id, doc_type) do
@@ -33,9 +39,15 @@ defmodule MyBelia.Documents do
   end
 
   def upsert_user_document(attrs) do
+    IO.inspect("Upserting document with attrs: #{inspect(attrs)}", label: "UPSERT")
+
     case get_user_document_by(attrs.user_id, attrs.doc_type) do
-      nil -> create_user_document(attrs)
-      %UserDocument{} = doc -> update_user_document(doc, attrs)
+      nil ->
+        IO.inspect("No existing document found, creating new one", label: "UPSERT")
+        create_user_document(attrs)
+      %UserDocument{} = doc ->
+        IO.inspect("Existing document found, updating: #{inspect(doc)}", label: "UPSERT")
+        update_user_document(doc, attrs)
     end
   end
 

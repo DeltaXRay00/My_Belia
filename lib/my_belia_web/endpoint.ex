@@ -12,8 +12,16 @@ defmodule MyBeliaWeb.Endpoint do
   ]
 
   socket "/live", Phoenix.LiveView.Socket,
-    websocket: [connect_info: [session: @session_options]],
-    longpoll: [connect_info: [session: @session_options]]
+    websocket: [
+      connect_info: [session: @session_options],
+      check_origin: false,
+      timeout: 45_000,
+      transport_options: [max_frame_size: 16_777_216]
+    ],
+    longpoll: [
+      connect_info: [session: @session_options],
+      timeout: 45_000
+    ]
 
   # Serve at "/" the static files from "priv/static" directory.
   #

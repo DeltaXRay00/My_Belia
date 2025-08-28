@@ -20,6 +20,6 @@ defmodule MyBelia.Documents.UserDocument do
     |> cast(attrs, [:user_id, :doc_type, :file_name, :content_type, :file_size, :file_url])
     |> validate_required([:user_id, :doc_type, :file_name])
     |> validate_length(:doc_type, max: 50)
-    |> unique_constraint(:doc_type, name: :unique_user_doc_type)
+    |> unique_constraint([:user_id, :doc_type], name: :unique_user_doc_type)
   end
 end

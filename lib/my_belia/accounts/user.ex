@@ -32,6 +32,10 @@ defmodule MyBelia.Accounts.User do
     field :graduation_date, :date
     field :avatar_url, :string
 
+    # Associations
+    has_many :user_educations, MyBelia.Accounts.UserEducation, on_delete: :delete_all
+    has_many :user_documents, MyBelia.Documents.UserDocument, on_delete: :delete_all
+
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
 

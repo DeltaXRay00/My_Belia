@@ -105,4 +105,60 @@ defmodule MyBelia.Accounts do
     |> order_by([u], u.inserted_at)
     |> Repo.all()
   end
+
+  # User Education functions
+  alias MyBelia.Accounts.UserEducation
+
+  @doc """
+  Gets a user with their education records.
+  """
+  def get_user_with_educations!(id) do
+    User
+    |> Repo.get!(id)
+    |> Repo.preload(:user_educations)
+  end
+
+  @doc """
+  Creates a user education record.
+  """
+  def create_user_education(attrs \\ %{}) do
+    %UserEducation{}
+    |> UserEducation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a user education record.
+  """
+  def update_user_education(%UserEducation{} = user_education, attrs) do
+    user_education
+    |> UserEducation.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a user education record.
+  """
+  def delete_user_education(%UserEducation{} = user_education) do
+    Repo.delete(user_education)
+  end
+
+  @doc """
+  Gets user education records by user ID.
+  """
+  def get_user_educations(user_id) do
+    UserEducation
+    |> where([ue], ue.user_id == ^user_id)
+    |> order_by([ue], ue.inserted_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Deletes all education records for a user.
+  """
+  def delete_user_educations(user_id) do
+    UserEducation
+    |> where([ue], ue.user_id == ^user_id)
+    |> Repo.delete_all()
+  end
 end

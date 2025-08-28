@@ -27,198 +27,319 @@
   </div>
 
   <!-- Right Main Content -->
-  <div class="profile-main">
+  <div class="profile-main dokumen-full-width">
     <!-- Page Header -->
     <div class="page-header">
       <h1 class="page-title">Dokumen Sokongan</h1>
-      <p class="page-subtitle">Muat naik dokumen-dokumen yang diperlukan</p>
+      <p class="page-subtitle">Muat naik semua dokumen yang diperlukan</p>
+    </div>
+
+    <!-- Flash Messages -->
+    <%= if Phoenix.Flash.get(@flash, :info) do %>
+      <div class="flash-message success">
+        <%= Phoenix.Flash.get(@flash, :info) %>
+      </div>
+    <% end %>
+    
+    <%= if Phoenix.Flash.get(@flash, :error) do %>
+      <div class="flash-message error">
+        <%= Phoenix.Flash.get(@flash, :error) %>
+      </div>
+    <% end %>
+
+    <!-- Upload Guidelines -->
+    <div class="upload-guidelines">
+      <div class="guidelines-header">
+        <div class="guidelines-icon">📋</div>
+        <h3 class="guidelines-title">Garis Panduan Muat Naik</h3>
+      </div>
+      <div class="guidelines-content">
+        <div class="guideline-item">
+          <span class="guideline-icon">📄</span>
+          <span class="guideline-text">Format yang diterima: PDF sahaja</span>
+        </div>
+        <div class="guideline-item">
+          <span class="guideline-icon">⚖️</span>
+          <span class="guideline-text">Saiz maksimum fail: 10MB setiap fail</span>
+        </div>
+        <div class="guideline-item">
+          <span class="guideline-icon">🔒</span>
+          <span class="guideline-text">Semua dokumen akan dirahsiakan</span>
+        </div>
+      </div>
     </div>
 
     <!-- Document Upload Form -->
-    <div class="document-form-container">
-      <!-- Upload Guidelines -->
-      <div class="upload-guidelines">
-        <div class="guidelines-header">
-          <div class="guidelines-icon">📋</div>
-          <h3 class="guidelines-title">Garis Panduan Muat Naik</h3>
-        </div>
-        <div class="guidelines-content">
-          <div class="guideline-item">
-            <span class="guideline-icon">📄</span>
-            <span class="guideline-text">Format yang diterima: PDF, JPG, PNG</span>
-          </div>
-          <div class="guideline-item">
-            <span class="guideline-icon">📏</span>
-            <span class="guideline-text">Saiz maksimum fail: 10MB setiap fail</span>
-          </div>
-          <div class="guideline-item">
-            <span class="guideline-icon">🔒</span>
-            <span class="guideline-text">Semua dokumen akan dirahsiakan</span>
-          </div>
-        </div>
-      </div>
-
+    <form phx-submit="save-all-documents" phx-change="validate-documents" class="form-sections">
       <!-- Document List -->
       <div class="document-list">
-        <!-- Document Item 1 -->
+        <!-- Document Item 1: IC Card -->
         <div class="document-item" data-document="ic">
           <div class="document-info">
             <div class="document-icon">🆔</div>
             <div class="document-details">
               <span class="document-label">Salinan Kad Pengenalan</span>
-              <span class="document-status" id="status-ic">Belum dimuat naik</span>
+              <span class="document-status" id="status-ic">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "ic")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "ic")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-ic" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('ic', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-ic').click()">
+            <input type="file" name="ic_file" accept=".pdf" class="file-input" style="display: none;" id="ic_file" />
+            <label for="ic_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
 
-        <!-- Document Item 2 -->
+        <!-- Document Item 2: Birth Certificate -->
         <div class="document-item" data-document="birth">
           <div class="document-info">
             <div class="document-icon">📜</div>
             <div class="document-details">
               <span class="document-label">Salinan Surat Beranak</span>
-              <span class="document-status" id="status-birth">Belum dimuat naik</span>
+              <span class="document-status" id="status-birth">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "birth")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "birth")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-birth" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('birth', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-birth').click()">
+            <input type="file" name="birth_file" accept=".pdf" class="file-input" style="display: none;" id="birth_file" />
+            <label for="birth_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
 
-        <!-- Document Item 3 -->
+        <!-- Document Item 3: Father's IC -->
         <div class="document-item" data-document="father-ic">
           <div class="document-info">
             <div class="document-icon">👨</div>
             <div class="document-details">
               <span class="document-label">Salinan Kad Pengenalan Bapa</span>
-              <span class="document-status" id="status-father-ic">Belum dimuat naik</span>
+              <span class="document-status" id="status-father-ic">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "father_ic")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "father_ic")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-father-ic" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('father-ic', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-father-ic').click()">
+            <input type="file" name="father_ic_file" accept=".pdf" class="file-input" style="display: none;" id="father_ic_file" />
+            <label for="father_ic_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
 
-        <!-- Document Item 4 -->
+        <!-- Document Item 4: Mother's IC -->
         <div class="document-item" data-document="mother-ic">
           <div class="document-info">
             <div class="document-icon">👩</div>
             <div class="document-details">
               <span class="document-label">Salinan Kad Pengenalan Ibu</span>
-              <span class="document-status" id="status-mother-ic">Belum dimuat naik</span>
+              <span class="document-status" id="status-mother-ic">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "mother_ic")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "mother_ic")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-mother-ic" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('mother-ic', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-mother-ic').click()">
+            <input type="file" name="mother_ic_file" accept=".pdf" class="file-input" style="display: none;" id="mother_ic_file" />
+            <label for="mother_ic_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
 
-        <!-- Document Item 5 -->
+        <!-- Document Item 5: Resume -->
         <div class="document-item" data-document="resume">
           <div class="document-info">
             <div class="document-icon">📄</div>
             <div class="document-details">
               <span class="document-label">Resume / CV</span>
-              <span class="document-status" id="status-resume">Belum dimuat naik</span>
+              <span class="document-status" id="status-resume">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "resume")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "resume")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-resume" class="file-input" accept=".pdf,.doc,.docx" onchange="handleFileUpload('resume', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-resume').click()">
+            <input type="file" name="resume_file" accept=".pdf" class="file-input" style="display: none;" id="resume_file" />
+            <label for="resume_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
 
-        <!-- Document Item 6 -->
+        <!-- Document Item 6: Cover Letter -->
         <div class="document-item" data-document="cover-letter">
           <div class="document-info">
             <div class="document-icon">✉️</div>
             <div class="document-details">
               <span class="document-label">Surat Iringan</span>
-              <span class="document-status" id="status-cover-letter">Belum dimuat naik</span>
+              <span class="document-status" id="status-cover-letter">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "cover_letter")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "cover_letter")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-cover-letter" class="file-input" accept=".pdf,.doc,.docx" onchange="handleFileUpload('cover-letter', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-cover-letter').click()">
+            <input type="file" name="cover_letter_file" accept=".pdf" class="file-input" style="display: none;" id="cover_letter_file" />
+            <label for="cover_letter_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
 
-        <!-- Document Item 7 -->
+        <!-- Document Item 7: Support Letter -->
         <div class="document-item" data-document="support-letter">
           <div class="document-info">
             <div class="document-icon">📝</div>
             <div class="document-details">
               <span class="document-label">Surat Iringan Sokongan</span>
-              <span class="document-status" id="status-support-letter">Belum dimuat naik</span>
+              <span class="document-status" id="status-support-letter">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "support_letter")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "support_letter")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-support-letter" class="file-input" accept=".pdf,.doc,.docx" onchange="handleFileUpload('support-letter', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-support-letter').click()">
+            <input type="file" name="support_letter_file" accept=".pdf" class="file-input" style="display: none;" id="support_letter_file" />
+            <label for="support_letter_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
 
-        <!-- Document Item 8 -->
+        <!-- Document Item 8: Education Certificates -->
         <div class="document-item" data-document="education">
           <div class="document-info">
             <div class="document-icon">🎓</div>
             <div class="document-details">
               <span class="document-label">Sijil-sijil Pendidikan</span>
-              <span class="document-status" id="status-education">Belum dimuat naik</span>
+              <span class="document-status" id="status-education">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "education_cert")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "education_cert")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-education" class="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFileUpload('education', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-education').click()">
+            <input type="file" name="education_cert_file" accept=".pdf" class="file-input" style="display: none;" id="education_cert_file" />
+            <label for="education_cert_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
 
-        <!-- Document Item 9 -->
+        <!-- Document Item 9: Activity Certificates -->
         <div class="document-item" data-document="activities">
           <div class="document-info">
             <div class="document-icon">🏆</div>
             <div class="document-details">
               <span class="document-label">Sijil-sijil Aktiviti Luar</span>
-              <span class="document-status" id="status-activities">Belum dimuat naik</span>
+              <span class="document-status" id="status-activities">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "activity_cert")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "activity_cert")).file_name %>
+                  </span>
+                <% else %>
+                  <span class="status-pending">
+                    <span class="status-icon">⏳</span>
+                    Belum dimuat naik
+                  </span>
+                <% end %>
+              </span>
             </div>
           </div>
           <div class="upload-controls">
-            <input type="file" id="file-activities" class="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFileUpload('activities', this)" />
-            <button class="upload-button" onclick="document.getElementById('file-activities').click()">
+            <input type="file" name="activity_cert_file" accept=".pdf" class="file-input" style="display: none;" id="activity_cert_file" />
+            <label for="activity_cert_file" class="upload-button">
               <span class="upload-icon">📤</span>
-              <span class="upload-text">Muat Naik</span>
-            </button>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
           </div>
         </div>
       </div>
@@ -227,21 +348,23 @@
       <div class="upload-progress">
         <div class="progress-header">
           <h3 class="progress-title">Kemajuan Muat Naik</h3>
-          <span class="progress-count" id="progress-count">0 / 9 dokumen</span>
+          <span class="progress-count" id="progress-count">
+            <%= @uploaded_count %> / 9 dokumen
+          </span>
         </div>
         <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill"></div>
+          <div class="progress-fill" id="progress-fill" style={"width: #{@upload_progress}%"}></div>
         </div>
       </div>
 
       <!-- Save Button -->
       <div class="form-actions">
-        <button class="save-btn" type="button" onclick="saveDocuments()">
+        <button class="save-btn" type="submit">
           <span class="btn-icon">💾</span>
           <span class="btn-text">Simpan Semua Dokumen</span>
         </button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
@@ -250,84 +373,267 @@
   <%= user_footer(assigns) %>
 </div>
 
-<script>
-let uploadedFiles = {};
-
-function handleFileUpload(documentType, input) {
-  const files = input.files;
-  if (files.length === 0) return;
-
-  const file = files[0]; // For single file inputs
-  const statusElement = document.getElementById(`status-${documentType}`);
-  const documentItem = document.querySelector(`[data-document="${documentType}"]`);
-  const uploadButton = documentItem.querySelector('.upload-button');
-
-  // Validate file
-  if (!validateFile(file)) return;
-
-  // Store file info
-  uploadedFiles[documentType] = {
-    file: file,
-    name: file.name,
-    size: file.size,
-    type: file.type
-  };
-
-  // Update UI
-  statusElement.textContent = file.name;
-  statusElement.className = 'document-status uploaded';
-  uploadButton.innerHTML = '<span class="upload-icon">✅</span><span class="upload-text">Dimuat Naik</span>';
-  uploadButton.className = 'upload-button uploaded';
-  documentItem.className = 'document-item uploaded';
-
-  // Update progress
-  updateProgress();
-}
-
-function validateFile(file) {
-  // Check file size (10MB limit)
-  if (file.size > 10 * 1024 * 1024) {
-    alert('Saiz fail terlalu besar. Maksimum 10MB.');
-    return false;
+<style>
+  /* Override profile-main padding to use full width */
+  .dokumen-full-width {
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
   }
-
-  // Check file type
-  const allowedTypes = [
-    'application/pdf',
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  ];
-
-  if (!allowedTypes.includes(file.type)) {
-    alert('Format fail tidak diterima. Sila pilih fail PDF, JPG, PNG, atau DOC.');
-    return false;
-  }
-
-  return true;
-}
-
-function updateProgress() {
-  const totalDocuments = 9;
-  const uploadedCount = Object.keys(uploadedFiles).length;
-  const progressPercentage = (uploadedCount / totalDocuments) * 100;
-
-  document.getElementById('progress-count').textContent = `${uploadedCount} / ${totalDocuments} dokumen`;
-  document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
-}
-
-function saveDocuments() {
-  const uploadedCount = Object.keys(uploadedFiles).length;
   
-  if (uploadedCount === 0) {
-    alert('Sila muat naik sekurang-kurangnya satu dokumen.');
-    return;
+  /* Add padding to content instead */
+  .dokumen-full-width .page-header {
+    padding: 30px 30px 0 30px;
   }
-
-  // Here you would typically send the files to the server
-  console.log('Uploaded files:', uploadedFiles);
-  alert(`Berjaya menyimpan ${uploadedCount} dokumen!`);
-}
-</script> 
+  
+  .dokumen-full-width .upload-guidelines {
+    margin: 30px;
+  }
+  
+  .dokumen-full-width .form-sections {
+    padding: 0 30px 30px 30px;
+  }
+  
+  /* Document upload specific styles */
+  .document-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .document-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+  }
+  
+  .document-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .document-icon {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .document-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .document-label {
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .document-status {
+    font-size: 14px;
+  }
+  
+  .status-success {
+    color: #28a745;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .status-pending {
+    color: #6c757d;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .status-icon {
+    font-size: 14px;
+  }
+  
+  .upload-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .upload-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  .upload-button:hover {
+    background: #0056b3;
+  }
+  
+  .upload-icon {
+    font-size: 16px;
+  }
+  
+  .upload-text {
+    font-size: 14px;
+  }
+  
+  .upload-progress {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .progress-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .progress-count {
+    font-size: 14px;
+    color: #6c757d;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: #007bff;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
+  .form-actions {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .save-btn:hover {
+    background: #218838;
+  }
+  
+  .btn-icon {
+    font-size: 18px;
+  }
+  
+  .btn-text {
+    font-size: 16px;
+  }
+  
+  /* Guidelines styles */
+  .upload-guidelines {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  .guidelines-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .guidelines-icon {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8f5e8;
+    border-radius: 8px;
+    color: #28a745;
+  }
+  
+  .guidelines-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .guidelines-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+  }
+  
+  .guideline-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+  }
+  
+  .guideline-icon {
+    font-size: 16px;
+    color: #007bff;
+  }
+  
+  .guideline-text {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+  }
+</style> 
