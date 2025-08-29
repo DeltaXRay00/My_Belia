@@ -54,15 +54,19 @@
         <div class="avatar-overlay" onclick="document.getElementById('avatar-upload').click()">
           <i class="avatar-icon">📷</i>
         </div>
-        <form phx-submit="save-avatar" phx-change="validate-avatar" class="avatar-upload-form">
-          <input type="file" id="avatar-upload" phx-upload-ref={@uploads.avatar.ref} accept="image/*" style="display: none;" />
-          <button type="submit" id="avatar-submit" style="display: none;">Upload</button>
-        </form>
       </div>
     </div>
 
     <!-- Form Sections -->
     <form phx-submit="save-profile" class="form-sections">
+      <!-- Hidden avatar upload input -->
+      <input type="file" id="avatar-upload" name="avatar" phx-upload-ref={@uploads.avatar.ref} accept="image/*" style="display: none;" />
+      <!-- Hidden field to track if avatar was uploaded -->
+      <input type="hidden" name="avatar_uploaded" value="false" id="avatar-uploaded-flag" />
+      <!-- Hidden field to trigger avatar upload -->
+      <input type="hidden" name="trigger_avatar_upload" value="false" id="trigger-avatar-upload" />
+      <!-- Hidden field to store file data -->
+      <input type="hidden" name="avatar_file_data" value="" id="avatar-file-data" />
       <!-- Personal Information Section -->
       <div class="form-section">
         <div class="section-header">
@@ -256,9 +260,8 @@
 document.addEventListener('DOMContentLoaded', function() {
   const avatar = document.getElementById('user-avatar');
   const avatarUpload = document.getElementById('avatar-upload');
-  const avatarForm = document.querySelector('.avatar-upload-form');
   
-  if (avatar && avatarUpload && avatarForm) {
+  if (avatar && avatarUpload) {
     // Click avatar to trigger file upload
     avatar.addEventListener('click', function() {
       avatarUpload.click();
@@ -292,8 +295,20 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         reader.readAsDataURL(file);
         
-        // Submit the form to trigger LiveView upload and save
-          avatarForm.dispatchEvent(new Event('submit', { bubbles: true }));
+        // Set flag to indicate avatar was uploaded
+        const avatarFlag = document.getElementById('avatar-uploaded-flag');
+        if (avatarFlag) {
+          avatarFlag.value = 'true';
+          console.log('Avatar upload flag set to true');
+        }
+        
+        // Trigger LiveView avatar upload event
+        const liveViewElement = document.querySelector('[data-phx-view]');
+        if (liveViewElement && window.liveSocket) {
+          console.log('Triggering LiveView avatar upload event');
+          // Send a custom event to trigger avatar upload
+          window.liveSocket.execJS(liveViewElement, "avatar-upload", {});
+        }
       }
     });
   }

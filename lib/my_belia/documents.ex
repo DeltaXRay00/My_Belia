@@ -39,14 +39,10 @@ defmodule MyBelia.Documents do
   end
 
   def upsert_user_document(attrs) do
-    IO.inspect("Upserting document with attrs: #{inspect(attrs)}", label: "UPSERT")
-
     case get_user_document_by(attrs.user_id, attrs.doc_type) do
       nil ->
-        IO.inspect("No existing document found, creating new one", label: "UPSERT")
         create_user_document(attrs)
       %UserDocument{} = doc ->
-        IO.inspect("Existing document found, updating: #{inspect(doc)}", label: "UPSERT")
         update_user_document(doc, attrs)
     end
   end

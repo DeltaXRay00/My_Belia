@@ -70,7 +70,7 @@
     </div>
 
     <!-- Document Upload Form -->
-    <form phx-submit="save-all-documents" phx-change="validate-documents" class="form-sections">
+    <form phx-submit="save-all-documents" phx-change="validate-documents" class="form-sections" enctype="multipart/form-data">
       <!-- Document List -->
       <div class="document-list">
         <!-- Document Item 1: IC Card -->
@@ -86,10 +86,24 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "ic")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "ic_file") do %>
+                    <%= if Map.get(@selected_files, "ic_file").status == :uploaded do %>
+                      <span class="status-success">
+                        <span class="status-icon">✅</span>
+                        <%= Map.get(@selected_files, "ic_file").filename %>
+                      </span>
+                    <% else %>
+                      <span class="status-selected">
+                        <span class="status-icon">📎</span>
+                        <%= Map.get(@selected_files, "ic_file").filename %>
+                      </span>
+                    <% end %>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -116,10 +130,17 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "birth")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "birth_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "birth_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -146,10 +167,17 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "father_ic")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "father_ic_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "father_ic_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -176,10 +204,17 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "mother_ic")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "mother_ic_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "mother_ic_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -206,10 +241,17 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "resume")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "resume_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "resume_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -236,10 +278,17 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "cover_letter")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "cover_letter_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "cover_letter_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -266,10 +315,17 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "support_letter")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "support_letter_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "support_letter_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -296,10 +352,17 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "education_cert")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "education_cert_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "education_cert_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -326,10 +389,17 @@
                     <%= Enum.find(@user_documents, &(&1.doc_type == "activity_cert")).file_name %>
                   </span>
                 <% else %>
-                  <span class="status-pending">
-                    <span class="status-icon">⏳</span>
-                    Belum dimuat naik
-                  </span>
+                  <%= if Map.get(@selected_files, "activity_cert_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "activity_cert_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
                 <% end %>
               </span>
             </div>
@@ -467,6 +537,14 @@
     gap: 5px;
   }
   
+  .status-selected {
+    color: #007bff;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
   .status-icon {
     font-size: 14px;
   }
@@ -493,6 +571,14 @@
   
   .upload-button:hover {
     background: #0056b3;
+  }
+  
+  .upload-button.selected {
+    background: #28a745 !important;
+  }
+  
+  .upload-button.selected:hover {
+    background: #218838 !important;
   }
   
   .upload-icon {
