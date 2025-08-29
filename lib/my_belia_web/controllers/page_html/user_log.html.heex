@@ -1,0 +1,395 @@
+<%= user_topbar(assigns) %>
+
+<!-- Main Content Area -->
+<div class="profile-container">
+  <!-- Left Sidebar -->
+  <div class="profile-sidebar">
+    <div class="sidebar-header">
+      <img src={~p"/images/node-17.png"} alt="MyBelia" class="sidebar-logo" />
+    </div>
+    
+    <div class="sidebar-section">
+      <h3 class="section-title">Profil Pengguna</h3>
+      <ul class="nav-list">
+        <li><a href="/profil_pengguna" class="nav-link">Profil Pengguna</a></li>
+        <li><a href="/dokumen_sokongan" class="nav-link">Muat Naik Fail</a></li>
+        <li><a href="/permohonan" class="nav-link">Permohonan</a></li>
+        <li><a href="/log" class="nav-link active">Log</a></li>
+      </ul>
+    </div>
+    
+    <!-- Logout Section -->
+    <div class="sidebar-section logout-section">
+      <ul class="nav-list">
+        <li><a href="/log-keluar" class="nav-link logout-link">Log Keluar</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Right Main Content -->
+  <div class="profile-main">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Log Aktiviti</h1>
+      <p class="page-subtitle">Timeline aktiviti permohonan anda</p>
+    </div>
+
+    <!-- Flash Messages -->
+    <%= if Phoenix.Flash.get(@flash, :info) do %>
+      <div class="flash-message success">
+        <%= Phoenix.Flash.get(@flash, :info) %>
+      </div>
+    <% end %>
+    
+    <%= if Phoenix.Flash.get(@flash, :error) do %>
+      <div class="flash-message error">
+        <%= Phoenix.Flash.get(@flash, :error) %>
+      </div>
+    <% end %>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div class="filter-tabs">
+        <button class="filter-tab active" phx-click="filter-activities" phx-value-filter="all">
+          Semua Aktiviti
+        </button>
+        <button class="filter-tab" phx-click="filter-activities" phx-value-filter="applications">
+          Permohonan
+        </button>
+        <button class="filter-tab" phx-click="filter-activities" phx-value-filter="reviews">
+          Semakan
+        </button>
+      </div>
+    </div>
+
+    <!-- Activity Timeline -->
+    <div class="timeline-container">
+      <%= if length(@all_activities) == 0 do %>
+        <div class="empty-state">
+          <div class="empty-icon">📊</div>
+          <h3>Tiada Aktiviti</h3>
+          <p>Anda belum mempunyai sebarang aktiviti permohonan.</p>
+          <div class="empty-actions">
+            <a href="/senarai_program" class="btn btn-primary">Lihat Program</a>
+            <a href="/senarai_kursus" class="btn btn-secondary">Lihat Kursus</a>
+          </div>
+        </div>
+      <% else %>
+        <div class="timeline">
+          <%= for {activity, index} <- Enum.with_index(@all_activities) do %>
+            <div class="timeline-item">
+                             <div class="timeline-marker">
+                 <div class={"marker-icon #{activity.type}"}>
+                   <%= case activity.type do
+                     "application" -> "📝"
+                     "review" -> "✅"
+                     _ -> "📋"
+                   end %>
+                 </div>
+               </div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <h3 class="activity-title"><%= activity.title %></h3>
+                                     <div class={"activity-status #{activity.status}"}>
+                     <%= case activity.status do
+                       "menunggu" -> "Menunggu"
+                       "diluluskan" -> "Diluluskan"
+                       "ditolak" -> "Ditolak"
+                       "tidak_lengkap" -> "Tidak Lengkap"
+                       _ -> activity.status
+                     end %>
+                   </div>
+                </div>
+                <div class="activity-meta">
+                                     <span class="activity-date">
+                     <%= Date.to_string(activity.date) %>
+                   </span>
+                                     <span class="activity-category">
+                     <%= case activity.category do
+                       "program" -> "Program"
+                       "course" -> "Kursus"
+                       _ -> activity.category
+                     end %>
+                   </span>
+                </div>
+                <p class="activity-description"><%= activity.description %></p>
+                
+                <%= if activity.type == "review" and activity.reviewer do %>
+                  <div class="reviewer-info">
+                    <span class="reviewer-label">Disemak oleh:</span>
+                    <span class="reviewer-name"><%= activity.reviewer.full_name %></span>
+                  </div>
+                <% end %>
+                
+                <%= if activity.application.review_notes and activity.application.review_notes != "" do %>
+                  <div class="review-notes">
+                    <span class="notes-label">Nota Semakan:</span>
+                    <p class="notes-content"><%= activity.application.review_notes %></p>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= user_footer(assigns) %>
+
+
+
+<style>
+  .filter-section {
+    margin-bottom: 2rem;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+  }
+
+  .filter-tab:hover {
+    background: #f8fafc;
+  }
+
+  .filter-tab.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  .timeline-container {
+    margin-top: 2rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    border: 2px dashed #cbd5e1;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    margin-bottom: 0.5rem;
+    color: #475569;
+  }
+
+  .empty-state p {
+    color: #64748b;
+    margin-bottom: 2rem;
+  }
+
+  .empty-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #2563eb;
+  }
+
+  .btn-secondary {
+    background: #64748b;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background: #475569;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e2e8f0;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: -2.5rem;
+    top: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .marker-icon {
+    font-size: 0.875rem;
+  }
+
+  .marker-icon.application {
+    color: #3b82f6;
+  }
+
+  .marker-icon.review {
+    color: #10b981;
+  }
+
+  .timeline-content {
+    padding: 1.5rem;
+  }
+
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .activity-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+    flex: 1;
+  }
+
+  .activity-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 1rem;
+  }
+
+  .activity-status.menunggu {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .activity-status.diluluskan {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .activity-status.ditolak {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .activity-status.tidak_lengkap {
+    background: #f3e8ff;
+    color: #7c3aed;
+  }
+
+  .activity-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  .activity-date {
+    font-weight: 500;
+  }
+
+  .activity-category {
+    background: #f1f5f9;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  .activity-description {
+    color: #475569;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+  }
+
+  .reviewer-label {
+    font-weight: 500;
+    color: #64748b;
+  }
+
+  .reviewer-name {
+    color: #1e293b;
+    font-weight: 600;
+  }
+
+  .review-notes {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fef3c7;
+    border-radius: 0.5rem;
+    border-left: 4px solid #f59e0b;
+  }
+
+  .notes-label {
+    font-weight: 600;
+    color: #92400e;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .notes-content {
+    color: #92400e;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style> 

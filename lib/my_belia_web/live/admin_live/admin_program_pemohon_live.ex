@@ -1,31 +1,28 @@
-defmodule MyBeliaWeb.AdminLive.AdminPermohonanProgramLive do
+defmodule MyBeliaWeb.AdminLive.AdminProgramPemohonLive do
   use MyBeliaWeb, :live_view
   alias MyBelia.ProgramApplications
   alias MyBelia.Programs
 
-  def mount(_params, session, socket) do
+  def mount(%{"id" => program_id}, session, socket) do
     user_id = session["user_id"]
     current_user = if user_id, do: MyBelia.Accounts.get_user!(user_id)
-    programs = Programs.list_programs()
 
-    # Get program application counts for each program
-    program_applications_counts = Enum.reduce(programs, %{}, fn program, acc ->
-      count = ProgramApplications.get_program_applications_count(program.id)
-      Map.put(acc, program.id, count)
-    end)
+    program = Programs.get_program!(program_id)
+    program_applications = ProgramApplications.get_program_applications_with_details(program_id)
 
     {:ok,
      assign(socket,
        current_user: current_user,
-       programs: programs,
-       program_applications_counts: program_applications_counts,
-       page_title: "Admin Permohonan Program"
+       program: program,
+       program_applications: program_applications,
+       current_filter: "all",
+       page_title: "Pemohon Program - #{program.name}"
      ),
      layout: false}
   end
 
   def render(assigns) do
-    MyBeliaWeb.PageHTML.admin_permohonan_program(assigns)
+    MyBeliaWeb.PageHTML.admin_program_pemohon(assigns)
   end
 
   def handle_event("review-application", %{"application_id" => application_id, "status" => status, "notes" => notes}, socket) do
@@ -34,7 +31,7 @@ defmodule MyBeliaWeb.AdminLive.AdminPermohonanProgramLive do
     case ProgramApplications.update_application_status(application_id, status, current_user.id, notes) do
       {:ok, _application} ->
         # Refresh the applications list
-        program_applications = ProgramApplications.list_program_applications_with_details()
+        program_applications = ProgramApplications.get_program_applications_with_details(socket.assigns.program.id)
 
         status_text = case status do
           "diluluskan" -> "Diluluskan"
@@ -54,14 +51,16 @@ defmodule MyBeliaWeb.AdminLive.AdminPermohonanProgramLive do
   end
 
   def handle_event("filter-applications", %{"filter" => filter}, socket) do
+    program_id = socket.assigns.program.id
+
     case filter do
       "all" ->
-        program_applications = ProgramApplications.list_program_applications_with_details()
-        {:noreply, assign(socket, program_applications: program_applications)}
+        program_applications = ProgramApplications.get_program_applications_with_details(program_id)
+        {:noreply, assign(socket, program_applications: program_applications, current_filter: "all")}
 
       status when status in ["menunggu", "diluluskan", "ditolak", "tidak_lengkap"] ->
-        program_applications = ProgramApplications.list_program_applications_by_status(status)
-        {:noreply, assign(socket, program_applications: program_applications)}
+        program_applications = ProgramApplications.get_program_applications_by_status(program_id, status)
+        {:noreply, assign(socket, program_applications: program_applications, current_filter: status)}
 
       _ ->
         {:noreply, socket}

@@ -1,0 +1,500 @@
+<.admin_layout current_page="permohonan_program" page_title={"Pemohon Program #{@program.name}"}>
+
+  <!-- Status Filter Tabs -->
+  <div class="status-tabs">
+    <button class={"status-tab #{if @current_filter == "all", do: "active"}"} phx-click="filter-applications" phx-value-filter="all">
+      Utama
+    </button>
+    <button class={"status-tab #{if @current_filter == "diluluskan", do: "active"}"} phx-click="filter-applications" phx-value-filter="diluluskan">
+      Lulus
+    </button>
+    <button class={"status-tab #{if @current_filter == "ditolak", do: "active"}"} phx-click="filter-applications" phx-value-filter="ditolak">
+      Tolak
+    </button>
+    <button class={"status-tab #{if @current_filter == "tidak_lengkap", do: "active"}"} phx-click="filter-applications" phx-value-filter="tidak_lengkap">
+      Tidak Lengkap
+    </button>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="action-btn primary">Kemas Kini</button>
+    <button class="action-btn danger">Hantar Status</button>
+    <button class="action-btn secondary" onclick={"window.location.href='/admin/permohonan_program'"}>
+      Kembali ke Program
+    </button>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <div class="filter-title">Tapisan</div>
+    <div class="filter-row">
+      <input type="text" class="filter-input" placeholder="Carian..." />
+      <input type="text" class="filter-input" placeholder="Daerah" />
+      <input type="text" class="filter-input" placeholder="Umur" />
+    </div>
+  </div>
+
+  <!-- Applications Table -->
+  <div class="applications-table">
+    <table class="applications-table-content">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Nama Pemohon</th>
+          <th>Daerah</th>
+          <th>Umur</th>
+          <th>Tarikh Permohonan</th>
+          <th>Tindakan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for {application, index} <- Enum.with_index(@program_applications, 1) do %>
+          <tr>
+            <td><%= index %></td>
+            <td><%= application.user.full_name %></td>
+            <td><%= application.user.daerah %></td>
+            <td><%= Date.diff(Date.utc_today(), application.user.birth_date) |> div(365) %></td>
+            <td><%= Date.to_string(application.application_date) %></td>
+            <td>
+              <div class="action-buttons-small">
+                <button class="action-btn-small view" title="Lihat" onclick={"viewApplication('#{application.id}')"}>
+                  👁️
+                </button>
+                <button class="action-btn-small delete" title="Padam" onclick={"deleteApplication('#{application.id}')"}>
+                  🗑️
+                </button>
+                <button class="action-btn-small more" title="Lain-lain" onclick={"showMoreOptions('#{application.id}')"}>
+                  ⋯
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Review Modal -->
+  <div class="modal-overlay" id="review-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Semak Permohonan</h3>
+        <button class="modal-close" id="review-modal-close">&times;</button>
+      </div>
+      
+      <form phx-submit="review-application" class="review-form">
+        <input type="hidden" id="review-application-id" name="application_id">
+        <input type="hidden" id="review-status" name="status">
+        
+        <div class="form-group">
+          <label for="review-notes">Nota Semakan</label>
+          <textarea id="review-notes" name="notes" class="form-textarea" placeholder="Masukkan nota semakan (pilihan)..." rows="4"></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Batal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+        <style>
+        /* Topbar title auto-resize */
+        .top-header .page-title {
+          font-size: clamp(1rem, 2.5vw, 1.5rem);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 60%;
+          line-height: 1.2;
+        }
+
+        /* Status filter tabs */
+        .status-tabs {
+          display: flex;
+          gap: 0.5rem;
+          margin: 2rem auto 1rem auto;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          max-width: 500px;
+          padding-top: 1rem;
+          border-top: 1px solid #e5e7eb;
+        }
+
+            .status-tab {
+          padding: 0.75rem 1.5rem;
+          border: 1px solid #d1d5db;
+          background: #f9fafb;
+          border-radius: 0.75rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 600;
+          font-size: 0.875rem;
+          color: #374151;
+          min-width: 100px;
+          text-align: center;
+        }
+
+        .status-tab:hover {
+          background: #f3f4f6;
+          border-color: #9ca3af;
+        }
+
+        .status-tab.active {
+          background: #3b82f6;
+          color: white;
+          border-color: #3b82f6;
+          box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+        }
+
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin: 0 auto 1.5rem auto;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+    }
+
+            .action-btn {
+          padding: 0.875rem 1.75rem;
+          border: none;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          font-weight: 600;
+          transition: all 0.2s ease;
+          font-size: 0.875rem;
+          min-width: 120px;
+          text-align: center;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn.primary {
+          background: #3b82f6;
+          color: white;
+        }
+
+        .action-btn.primary:hover {
+          background: #2563eb;
+          box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .action-btn.danger {
+          background: #ef4444;
+          color: white;
+        }
+
+        .action-btn.danger:hover {
+          background: #dc2626;
+          box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+
+        .action-btn.secondary {
+          background: #6b7280;
+          color: white;
+        }
+
+        .action-btn.secondary:hover {
+          background: #4b5563;
+          box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
+        }
+
+    /* Filter section */
+    .filter-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .filter-title {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #374151;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .filter-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Applications table */
+    .applications-table {
+      background: white;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .applications-table-content {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .applications-table-content th,
+    .applications-table-content td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .applications-table-content th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #374151;
+      font-size: 0.875rem;
+    }
+
+    .applications-table-content td {
+      font-size: 0.875rem;
+    }
+
+    .applications-table-content tr:hover {
+      background: #f9fafb;
+    }
+
+    .action-buttons-small {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+            .action-btn-small {
+          width: 36px;
+          height: 36px;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn-small.view {
+          background: #3b82f6;
+          color: white;
+        }
+
+        .action-btn-small.view:hover {
+          background: #2563eb;
+          box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .action-btn-small.delete {
+          background: #ef4444;
+          color: white;
+        }
+
+        .action-btn-small.delete:hover {
+          background: #dc2626;
+          box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+
+        .action-btn-small.more {
+          background: #6b7280;
+          color: white;
+        }
+
+        .action-btn-small.more:hover {
+          background: #4b5563;
+          box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
+        }
+
+    /* Review modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 0.75rem;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #6b7280;
+    }
+
+    .review-form {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+    }
+  </style>
+
+        <script>
+        // Application review functions
+        function reviewApplication(applicationId, status) {
+          document.getElementById('review-application-id').value = applicationId;
+          document.getElementById('review-status').value = status;
+          document.getElementById('review-modal').classList.add('show');
+        }
+
+        function viewApplication(applicationId) {
+          // For now, just show an alert. You can implement a detailed view modal later
+          alert('Lihat permohonan ID: ' + applicationId);
+        }
+
+        function deleteApplication(applicationId) {
+          if (confirm('Adakah anda pasti mahu memadamkan pemohon ini?')) {
+            alert('Pemohon telah dipadamkan');
+          }
+        }
+
+        function showMoreOptions(applicationId) {
+          // For now, just show an alert. You can implement a dropdown menu later
+          alert('Lain-lain pilihan untuk permohonan ID: ' + applicationId);
+        }
+
+        function closeReviewModal() {
+          document.getElementById('review-modal').classList.remove('show');
+          document.getElementById('review-notes').value = '';
+        }
+
+        // Sidebar dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+          const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+          
+          dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              
+              const dropdownId = this.getAttribute('data-dropdown');
+              const dropdownMenu = document.getElementById(dropdownId);
+              
+              // Toggle active class on the toggle button
+              this.classList.toggle('active');
+              
+              // Toggle show class on the dropdown menu
+              dropdownMenu.classList.toggle('show');
+            });
+          });
+
+          // Hamburger menu toggle functionality
+          const menuToggle = document.getElementById('menu-toggle');
+          const sidebar = document.querySelector('.sidebar');
+          const mainContent = document.querySelector('.main-content');
+          
+          if (menuToggle && sidebar && mainContent) {
+            menuToggle.addEventListener('click', function() {
+              sidebar.classList.toggle('hidden');
+              mainContent.classList.toggle('sidebar-hidden');
+            });
+          }
+        });
+      </script>
+</.admin_layout> 

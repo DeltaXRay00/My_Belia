@@ -43,8 +43,60 @@
 						</div>
 					</div>
 				</div>
+				
+				<!-- Application Status Section -->
+				<%= if @current_user != nil do %>
+					<div class="application-status-section">
+						<%= if @has_applied do %>
+							<div class="application-status applied">
+								<div class="status-icon">✅</div>
+								<div class="status-text">
+									<h3>Permohonan Dihantar</h3>
+									<p>Anda telah memohon untuk program ini. Status permohonan anda akan dikemas kini.</p>
+								</div>
+							</div>
+						<% else %>
+							<%= if @can_apply do %>
+								<div class="application-status eligible">
+									<div class="status-icon">📋</div>
+									<div class="status-text">
+										<h3>Layak Memohon</h3>
+										<p>Anda layak untuk memohon program ini. Pastikan semua maklumat anda lengkap.</p>
+									</div>
+								</div>
+							<% else %>
+								<div class="application-status not-eligible">
+									<div class="status-icon">⚠️</div>
+									<div class="status-text">
+										<h3>Tidak Layak Memohon</h3>
+										<p>Untuk memohon program ini, anda perlu:</p>
+										<ul>
+											<li>Muat naik dokumen sokongan di halaman <a href="/dokumen_sokongan">Dokumen Sokongan</a></li>
+											<li>Lengkapkan maklumat pendidikan di halaman <a href="/profil_pengguna">Profil Pengguna</a></li>
+										</ul>
+									</div>
+								</div>
+							<% end %>
+						<% end %>
+					</div>
+				<% else %>
+					<div class="application-status-section">
+						<div class="application-status not-logged-in">
+							<div class="status-icon">🔒</div>
+							<div class="status-text">
+								<h3>Log Masuk Diperlukan</h3>
+								<p>Anda perlu <a href="/log-masuk">log masuk</a> untuk memohon program ini.</p>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				
 				<div class="program-detail-actions">
-					<button class="apply-now-btn">Mohon Sekarang</button>
+					<%= if @current_user != nil and @can_apply do %>
+						<button class="apply-now-btn" phx-click="apply-for-program">Mohon Sekarang</button>
+					<% else %>
+						<button class="apply-now-btn disabled" disabled>Mohon Sekarang</button>
+					<% end %>
 					<a href="/senarai_program" class="back-to-list-btn">Kembali ke Senarai</a>
 				</div>
 			</div>
