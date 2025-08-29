@@ -45,12 +45,167 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
-// WYSIWYG Editor functionality
+// File upload handling
 document.addEventListener('DOMContentLoaded', function() {
+  initializeFileUploads();
   initializeWysiwygEditors();
 });
 
-// Initialize WYSIWYG editors for description fields
+// Initialize file upload functionality
+function initializeFileUploads() {
+  const fileInputs = document.querySelectorAll('input[type="file"]');
+  
+  fileInputs.forEach(input => {
+    input.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        console.log('File selected:', file.name, 'Size:', file.size, 'Type:', file.type);
+        
+        // Check if this is a document upload input (has .document-item parent)
+        const documentItem = input.closest('.document-item');
+        
+        if (documentItem) {
+          // This is a document upload input - handle document upload logic
+          const statusElement = documentItem.querySelector('.document-status');
+          const uploadButton = documentItem.querySelector('.upload-button');
+          
+          if (statusElement && uploadButton) {
+            // Update status to show selected file
+            statusElement.innerHTML = `
+              <span class="status-selected">
+                <span class="status-icon">📎</span>
+                ${file.name}
+              </span>
+            `;
+            
+            // Update button text
+            uploadButton.innerHTML = `
+              <span class="upload-icon">✅</span>
+              <span class="upload-text">Fail Dipilih</span>
+            `;
+            uploadButton.style.background = '#28a745';
+          }
+          
+          // Convert file to base64 and send to LiveView for document upload
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const base64Data = e.target.result;
+            console.log('File converted to base64, length:', base64Data.length);
+            
+            // Check if liveSocket exists
+            console.log('window.liveSocket exists:', !!window.liveSocket);
+            if (window.liveSocket) {
+              console.log('liveSocket methods:', Object.keys(window.liveSocket));
+              console.log('liveSocket.execJS exists:', typeof window.liveSocket.execJS);
+            }
+            
+            // Send file data to LiveView
+            if (window.liveSocket && window.liveSocket.execJS) {
+              const fileKey = input.name;
+              console.log('Sending upload-file event with fileKey:', fileKey);
+              
+              try {
+                // Since pushEvent doesn't exist, let's use a different approach
+                // We'll trigger a custom event on the document that LiveView can listen to
+                console.log('Using custom event approach');
+                
+                // Create a custom event with the file data
+                const uploadEvent = new CustomEvent('file-upload', {
+                  detail: {
+                    file_key: fileKey,
+                    filename: file.name,
+                    content_type: file.type,
+                    file_data: base64Data
+                  }
+                });
+                
+                // Dispatch the event on the document
+                document.dispatchEvent(uploadEvent);
+                console.log('Custom file-upload event dispatched');
+                
+                // Also try to trigger a form submission with the file data
+                const form = input.closest('form');
+                if (form) {
+                  console.log('Found form, triggering submit with file data');
+                  
+                  // Create a hidden input with the file data
+                  const hiddenInput = document.createElement('input');
+                  hiddenInput.type = 'hidden';
+                  hiddenInput.name = 'upload_file_data';
+                  hiddenInput.value = JSON.stringify({
+                    file_key: fileKey,
+                    filename: file.name,
+                    content_type: file.type,
+                    file_data: base64Data
+                  });
+                  
+                  form.appendChild(hiddenInput);
+                  
+                  // Trigger the form submit
+                  const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                  form.dispatchEvent(submitEvent);
+                  
+                  // Remove the hidden input
+                  form.removeChild(hiddenInput);
+                  console.log('Form submit triggered with file data');
+                }
+                
+              } catch (error) {
+                console.error('Error sending upload-file event:', error);
+              }
+            } else {
+              console.error('liveSocket or execJS not available');
+              console.log('Available methods on liveSocket:', window.liveSocket ? Object.getOwnPropertyNames(window.liveSocket) : 'liveSocket is null');
+            }
+          };
+          
+          reader.onerror = function(error) {
+            console.error('FileReader error:', error);
+          };
+          
+          reader.readAsDataURL(file);
+        } else {
+          // This is not a document upload input (e.g., avatar upload)
+          console.log('Non-document file input detected (likely avatar upload)');
+          
+          // Show visual feedback for avatar upload if needed
+          const avatarImg = document.getElementById('user-avatar');
+          if (avatarImg && input.id === 'avatar-upload') {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              avatarImg.src = e.target.result;
+              console.log('Avatar preview updated');
+              
+              // Set flag to indicate avatar was uploaded
+              const avatarFlag = document.getElementById('avatar-uploaded-flag');
+              if (avatarFlag) {
+                avatarFlag.value = 'true';
+                console.log('Avatar upload flag set to true');
+              }
+              
+              // Set trigger to force avatar upload processing
+              const triggerField = document.getElementById('trigger-avatar-upload');
+              if (triggerField) {
+                triggerField.value = 'true';
+                console.log('Avatar upload trigger set to true');
+              }
+              
+              // Store file data as base64 in hidden field
+              const fileDataField = document.getElementById('avatar-file-data');
+              if (fileDataField) {
+                fileDataField.value = e.target.result;
+                console.log('Avatar file data stored in hidden field');
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      }
+    });
+  });
+}
+
+// WYSIWYG Editor functionality
 function initializeWysiwygEditors() {
   // Check if Quill is available (loaded via CDN)
   if (typeof Quill === 'undefined') {

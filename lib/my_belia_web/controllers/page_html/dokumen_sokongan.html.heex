@@ -27,74 +27,699 @@
   </div>
 
   <!-- Right Main Content -->
-  <div class="profile-main">
-    <!-- Page Title -->
-    <div class="page-title-section">
-      <h1 class="page-title">DOKUMEN SOKONGAN</h1>
+  <div class="profile-main dokumen-full-width">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Dokumen Sokongan</h1>
+      <p class="page-subtitle">Muat naik semua dokumen yang diperlukan</p>
     </div>
 
-    <!-- Document Upload Form -->
-    <div class="document-form-container">
-      <div class="document-list">
-        <!-- Document Item 1 -->
-        <div class="document-item">
-          <span class="document-label">Salinan Kad Pengenalan</span>
-          <button class="upload-button">Muat Naik</button>
-        </div>
+    <!-- Flash Messages -->
+    <%= if Phoenix.Flash.get(@flash, :info) do %>
+      <div class="flash-message success">
+        <%= Phoenix.Flash.get(@flash, :info) %>
+      </div>
+    <% end %>
+    
+    <%= if Phoenix.Flash.get(@flash, :error) do %>
+      <div class="flash-message error">
+        <%= Phoenix.Flash.get(@flash, :error) %>
+      </div>
+    <% end %>
 
-        <!-- Document Item 2 -->
-        <div class="document-item">
-          <span class="document-label">Salinan Surat Beranak</span>
-          <button class="upload-button">Muat Naik</button>
+    <!-- Upload Guidelines -->
+    <div class="upload-guidelines">
+      <div class="guidelines-header">
+        <div class="guidelines-icon">📋</div>
+        <h3 class="guidelines-title">Garis Panduan Muat Naik</h3>
+      </div>
+      <div class="guidelines-content">
+        <div class="guideline-item">
+          <span class="guideline-icon">📄</span>
+          <span class="guideline-text">Format yang diterima: PDF sahaja</span>
         </div>
-
-        <!-- Document Item 3 -->
-        <div class="document-item">
-          <span class="document-label">Salinan Kad Pengenalan Bapa</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="guideline-item">
+          <span class="guideline-icon">⚖️</span>
+          <span class="guideline-text">Saiz maksimum fail: 10MB setiap fail</span>
         </div>
-
-        <!-- Document Item 4 -->
-        <div class="document-item">
-          <span class="document-label">Salinan Kad Pengenalan Ibu</span>
-          <button class="upload-button">Muat Naik</button>
-        </div>
-
-        <!-- Document Item 5 -->
-        <div class="document-item">
-          <span class="document-label">Resume / CV</span>
-          <button class="upload-button">Muat Naik</button>
-        </div>
-
-        <!-- Document Item 6 -->
-        <div class="document-item">
-          <span class="document-label">Surat Iringan</span>
-          <button class="upload-button">Muat Naik</button>
-        </div>
-
-        <!-- Document Item 7 -->
-        <div class="document-item">
-          <span class="document-label">Surat Iringan Sokongan</span>
-          <button class="upload-button">Muat Naik</button>
-        </div>
-
-        <!-- Document Item 8 -->
-        <div class="document-item">
-          <span class="document-label">Sijil-sijil Pendidikan</span>
-          <button class="upload-button">Muat Naik</button>
-        </div>
-
-        <!-- Document Item 9 -->
-        <div class="document-item">
-          <span class="document-label">Sijil-sijil Aktiviti Luar</span>
-          <button class="upload-button">Muat Naik</button>
+        <div class="guideline-item">
+          <span class="guideline-icon">🔒</span>
+          <span class="guideline-text">Semua dokumen akan dirahsiakan</span>
         </div>
       </div>
     </div>
+
+    <!-- Document Upload Form -->
+    <form phx-submit="save-all-documents" phx-change="validate-documents" class="form-sections" enctype="multipart/form-data">
+      <!-- Document List -->
+      <div class="document-list">
+        <!-- Document Item 1: IC Card -->
+        <div class="document-item" data-document="ic">
+          <div class="document-info">
+            <div class="document-icon">🆔</div>
+            <div class="document-details">
+              <span class="document-label">Salinan Kad Pengenalan</span>
+              <span class="document-status" id="status-ic">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "ic")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "ic")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "ic_file") do %>
+                    <%= if Map.get(@selected_files, "ic_file").status == :uploaded do %>
+                      <span class="status-success">
+                        <span class="status-icon">✅</span>
+                        <%= Map.get(@selected_files, "ic_file").filename %>
+                      </span>
+                    <% else %>
+                      <span class="status-selected">
+                        <span class="status-icon">📎</span>
+                        <%= Map.get(@selected_files, "ic_file").filename %>
+                      </span>
+                    <% end %>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="ic_file" accept=".pdf" class="file-input" style="display: none;" id="ic_file" />
+            <label for="ic_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Document Item 2: Birth Certificate -->
+        <div class="document-item" data-document="birth">
+          <div class="document-info">
+            <div class="document-icon">📜</div>
+            <div class="document-details">
+              <span class="document-label">Salinan Surat Beranak</span>
+              <span class="document-status" id="status-birth">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "birth")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "birth")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "birth_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "birth_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="birth_file" accept=".pdf" class="file-input" style="display: none;" id="birth_file" />
+            <label for="birth_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Document Item 3: Father's IC -->
+        <div class="document-item" data-document="father-ic">
+          <div class="document-info">
+            <div class="document-icon">👨</div>
+            <div class="document-details">
+              <span class="document-label">Salinan Kad Pengenalan Bapa</span>
+              <span class="document-status" id="status-father-ic">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "father_ic")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "father_ic")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "father_ic_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "father_ic_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="father_ic_file" accept=".pdf" class="file-input" style="display: none;" id="father_ic_file" />
+            <label for="father_ic_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Document Item 4: Mother's IC -->
+        <div class="document-item" data-document="mother-ic">
+          <div class="document-info">
+            <div class="document-icon">👩</div>
+            <div class="document-details">
+              <span class="document-label">Salinan Kad Pengenalan Ibu</span>
+              <span class="document-status" id="status-mother-ic">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "mother_ic")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "mother_ic")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "mother_ic_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "mother_ic_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="mother_ic_file" accept=".pdf" class="file-input" style="display: none;" id="mother_ic_file" />
+            <label for="mother_ic_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Document Item 5: Resume -->
+        <div class="document-item" data-document="resume">
+          <div class="document-info">
+            <div class="document-icon">📄</div>
+            <div class="document-details">
+              <span class="document-label">Resume / CV</span>
+              <span class="document-status" id="status-resume">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "resume")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "resume")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "resume_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "resume_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="resume_file" accept=".pdf" class="file-input" style="display: none;" id="resume_file" />
+            <label for="resume_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Document Item 6: Cover Letter -->
+        <div class="document-item" data-document="cover-letter">
+          <div class="document-info">
+            <div class="document-icon">✉️</div>
+            <div class="document-details">
+              <span class="document-label">Surat Iringan</span>
+              <span class="document-status" id="status-cover-letter">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "cover_letter")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "cover_letter")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "cover_letter_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "cover_letter_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="cover_letter_file" accept=".pdf" class="file-input" style="display: none;" id="cover_letter_file" />
+            <label for="cover_letter_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Document Item 7: Support Letter -->
+        <div class="document-item" data-document="support-letter">
+          <div class="document-info">
+            <div class="document-icon">📝</div>
+            <div class="document-details">
+              <span class="document-label">Surat Iringan Sokongan</span>
+              <span class="document-status" id="status-support-letter">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "support_letter")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "support_letter")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "support_letter_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "support_letter_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="support_letter_file" accept=".pdf" class="file-input" style="display: none;" id="support_letter_file" />
+            <label for="support_letter_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Document Item 8: Education Certificates -->
+        <div class="document-item" data-document="education">
+          <div class="document-info">
+            <div class="document-icon">🎓</div>
+            <div class="document-details">
+              <span class="document-label">Sijil-sijil Pendidikan</span>
+              <span class="document-status" id="status-education">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "education_cert")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "education_cert")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "education_cert_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "education_cert_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="education_cert_file" accept=".pdf" class="file-input" style="display: none;" id="education_cert_file" />
+            <label for="education_cert_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Document Item 9: Activity Certificates -->
+        <div class="document-item" data-document="activities">
+          <div class="document-info">
+            <div class="document-icon">🏆</div>
+            <div class="document-details">
+              <span class="document-label">Sijil-sijil Aktiviti Luar</span>
+              <span class="document-status" id="status-activities">
+                <%= if Enum.any?(@user_documents, &(&1.doc_type == "activity_cert")) do %>
+                  <span class="status-success">
+                    <span class="status-icon">✅</span>
+                    <%= Enum.find(@user_documents, &(&1.doc_type == "activity_cert")).file_name %>
+                  </span>
+                <% else %>
+                  <%= if Map.get(@selected_files, "activity_cert_file") do %>
+                    <span class="status-selected">
+                      <span class="status-icon">📎</span>
+                      <%= Map.get(@selected_files, "activity_cert_file").filename %>
+                    </span>
+                  <% else %>
+                    <span class="status-pending">
+                      <span class="status-icon">⏳</span>
+                      Belum dimuat naik
+                    </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <input type="file" name="activity_cert_file" accept=".pdf" class="file-input" style="display: none;" id="activity_cert_file" />
+            <label for="activity_cert_file" class="upload-button">
+              <span class="upload-icon">📤</span>
+              <span class="upload-text">Pilih Fail</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Summary -->
+      <div class="upload-progress">
+        <div class="progress-header">
+          <h3 class="progress-title">Kemajuan Muat Naik</h3>
+          <span class="progress-count" id="progress-count">
+            <%= @uploaded_count %> / 9 dokumen
+          </span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style={"width: #{@upload_progress}%"}></div>
+        </div>
+      </div>
+
+      <!-- Save Button -->
+      <div class="form-actions">
+        <button class="save-btn" type="submit">
+          <span class="btn-icon">💾</span>
+          <span class="btn-text">Simpan Semua Dokumen</span>
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
 <!-- Footer positioned outside main container -->
 <div class="profile-footer-wrapper">
   <%= user_footer(assigns) %>
-</div> 
+</div>
+
+<style>
+  /* Override profile-main padding to use full width */
+  .dokumen-full-width {
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+  
+  /* Add padding to content instead */
+  .dokumen-full-width .page-header {
+    padding: 30px 30px 0 30px;
+  }
+  
+  .dokumen-full-width .upload-guidelines {
+    margin: 30px;
+  }
+  
+  .dokumen-full-width .form-sections {
+    padding: 0 30px 30px 30px;
+  }
+  
+  /* Document upload specific styles */
+  .document-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .document-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+  }
+  
+  .document-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .document-icon {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .document-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .document-label {
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .document-status {
+    font-size: 14px;
+  }
+  
+  .status-success {
+    color: #28a745;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .status-pending {
+    color: #6c757d;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .status-selected {
+    color: #007bff;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .status-icon {
+    font-size: 14px;
+  }
+  
+  .upload-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .upload-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  .upload-button:hover {
+    background: #0056b3;
+  }
+  
+  .upload-button.selected {
+    background: #28a745 !important;
+  }
+  
+  .upload-button.selected:hover {
+    background: #218838 !important;
+  }
+  
+  .upload-icon {
+    font-size: 16px;
+  }
+  
+  .upload-text {
+    font-size: 14px;
+  }
+  
+  .upload-progress {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .progress-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .progress-count {
+    font-size: 14px;
+    color: #6c757d;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: #007bff;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
+  .form-actions {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .save-btn:hover {
+    background: #218838;
+  }
+  
+  .btn-icon {
+    font-size: 18px;
+  }
+  
+  .btn-text {
+    font-size: 16px;
+  }
+  
+  /* Guidelines styles */
+  .upload-guidelines {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  .guidelines-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .guidelines-icon {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8f5e8;
+    border-radius: 8px;
+    color: #28a745;
+  }
+  
+  .guidelines-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .guidelines-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+  }
+  
+  .guideline-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+  }
+  
+  .guideline-icon {
+    font-size: 16px;
+    color: #007bff;
+  }
+  
+  .guideline-text {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+  }
+</style> 
