@@ -58,7 +58,7 @@
             <td><%= Date.to_string(application.application_date) %></td>
             <td>
               <div class="action-buttons-small">
-                <button class="action-btn-small view" title="Lihat" onclick={"viewApplication('#{application.id}')"}>
+                <button class="action-btn-small view" title="Lihat" phx-click="view-application" phx-value-application_id={application.id}>
                   👁️
                 </button>
                 <button class="action-btn-small delete" title="Padam" onclick={"deleteApplication('#{application.id}')"}>
@@ -98,9 +98,205 @@
         </div>
       </form>
     </div>
-  </div>
+    </div>
 
-        <style>
+  <!-- View Application Modal -->
+  <%= if @show_view_modal and @selected_application do %>
+    <div class="modal-overlay show">
+      <div class="modal-content large">
+        <div class="modal-header">
+          <h3>Maklumat Pemohon: <%= @selected_application.user.full_name %></h3>
+          <button class="modal-close" phx-click="close-view-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <!-- Profile Information -->
+          <div class="info-section">
+            <h4>Maklumat Profil</h4>
+            <div class="profile-grid">
+              <div class="profile-item">
+                <label>Nama Penuh:</label>
+                <span><%= @selected_application.user.full_name || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Emel:</label>
+                <span><%= @selected_application.user.email || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>No. K/P:</label>
+                <span><%= @selected_application.user.ic_number || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>No. Telefon:</label>
+                <span><%= @selected_application.user.phone_number || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Tarikh Lahir:</label>
+                <span><%= if @selected_application.user.birth_date, do: Date.to_string(@selected_application.user.birth_date), else: "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Umur:</label>
+                <span><%= if @selected_application.user.birth_date, do: "#{Date.diff(Date.utc_today(), @selected_application.user.birth_date) |> div(365)} tahun", else: "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Tempat Lahir:</label>
+                <span><%= @selected_application.user.birth_place || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Jantina:</label>
+                <span><%= @selected_application.user.gender || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Agama:</label>
+                <span><%= @selected_application.user.religion || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Bangsa:</label>
+                <span><%= @selected_application.user.race || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Daerah:</label>
+                <span><%= @selected_application.user.daerah || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Alamat Kediaman:</label>
+                <span><%= @selected_application.user.residential_address || "Tiada maklumat" %></span>
+              </div>
+              <div class="profile-item">
+                <label>Alamat Surat-Menyurat:</label>
+                <span><%= @selected_application.user.mailing_address || "Tiada maklumat" %></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Education Information -->
+          <div class="info-section">
+            <h4>Maklumat Pendidikan</h4>
+            <%= if assigns[:education_entries] && length(@education_entries) > 0 do %>
+              <% total_edu = length(@education_entries) %>
+              <%= for {edu, idx} <- Enum.with_index(@education_entries) do %>
+                <div class={"profile-grid edu-block #{if idx > 0, do: "edu-block--with-separator", else: ""}"}>
+                  <div class="profile-item">
+                    <label>Peringkat Tertinggi:</label>
+                    <span><%= edu.education_level || @selected_application.user.education_level || "Tiada maklumat" %></span>
+                  </div>
+                  <div class="profile-item">
+                    <label>Bidang Pengajian:</label>
+                    <span><%= edu.field_of_study || @selected_application.user.field_of_study || "Tiada maklumat" %></span>
+                  </div>
+                  <div class="profile-item">
+                    <label>Kursus/Program:</label>
+                    <span><%= edu.course || @selected_application.user.course || "Tiada maklumat" %></span>
+                  </div>
+                  <div class="profile-item">
+                    <label>Institusi:</label>
+                    <span><%= edu.institution || @selected_application.user.institution || "Tiada maklumat" %></span>
+                  </div>
+                  <div class="profile-item">
+                    <label>Tahun Tamat:</label>
+                    <span><%= if edu.graduation_date, do: Calendar.strftime(edu.graduation_date, "%d/%m/%Y"), else: (if @selected_application.user.graduation_date, do: Calendar.strftime(@selected_application.user.graduation_date, "%d/%m/%Y"), else: "Tiada maklumat") %></span>
+                  </div>
+                </div>
+                <%= if idx < total_edu - 1 do %>
+                  <div class="edu-divider"></div>
+                <% end %>
+              <% end %>
+            <% else %>
+              <%= if @selected_application.user.education_level || @selected_application.user.field_of_study || @selected_application.user.course || @selected_application.user.institution || @selected_application.user.graduation_date do %>
+                <div class="profile-grid edu-block">
+                  <div class="profile-item">
+                    <label>Peringkat Tertinggi:</label>
+                    <span><%= @selected_application.user.education_level || "Tiada maklumat" %></span>
+                  </div>
+                  <div class="profile-item">
+                    <label>Bidang Pengajian:</label>
+                    <span><%= @selected_application.user.field_of_study || "Tiada maklumat" %></span>
+                  </div>
+                  <div class="profile-item">
+                    <label>Kursus/Program:</label>
+                    <span><%= @selected_application.user.course || "Tiada maklumat" %></span>
+                  </div>
+                  <div class="profile-item">
+                    <label>Institusi:</label>
+                    <span><%= @selected_application.user.institution || "Tiada maklumat" %></span>
+                  </div>
+                  <div class="profile-item">
+                    <label>Tahun Tamat:</label>
+                    <span><%= if @selected_application.user.graduation_date, do: Calendar.strftime(@selected_application.user.graduation_date, "%d/%m/%Y"), else: "Tiada maklumat" %></span>
+                  </div>
+                </div>
+              <% else %>
+              <p class="no-documents">Tiada maklumat pendidikan.</p>
+              <% end %>
+            <% end %>
+          </div>
+
+          <!-- Documents Information -->
+          <%= if length(@user_documents) > 0 do %>
+            <div class="info-section">
+              <h4>Dokumen Yang Telah Dimuat Naik</h4>
+              <div class="documents-grid">
+                <%= for document <- @user_documents do %>
+                  <div class="document-item">
+                    <div class="document-icon">📄</div>
+                    <div class="document-info">
+                      <div class="document-name"><%= document.doc_type %></div>
+                      <div class="document-date">Dimuat naik: <%= Calendar.strftime(document.inserted_at, "%d/%m/%Y %H:%M") %></div>
+                    </div>
+                    <div class="document-actions">
+                      <button class="btn btn-small btn-primary" onclick={"window.open('#{document.file_url}', '_blank')"}>
+                        Lihat
+                      </button>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <div class="info-section">
+              <h4>Dokumen Yang Telah Dimuat Naik</h4>
+              <p class="no-documents">Tiada dokumen yang telah dimuat naik.</p>
+            </div>
+          <% end %>
+
+          <!-- Application Information -->
+          <div class="info-section">
+            <h4>Maklumat Permohonan</h4>
+            <div class="profile-grid">
+              <div class="profile-item">
+                <label>Tarikh Permohonan:</label>
+                <span><%= Date.to_string(@selected_application.application_date) %></span>
+              </div>
+              <div class="profile-item">
+                <label>Status:</label>
+                <span class={"status-badge status-#{@selected_application.status}"}>
+                  <%= case @selected_application.status do %>
+                    <% "menunggu" -> %> Menunggu
+                    <% "diluluskan" -> %> Diluluskan
+                    <% "ditolak" -> %> Ditolak
+                    <% "tidak_lengkap" -> %> Tidak Lengkap
+                    <% _ -> %> <%= @selected_application.status %>
+                  <% end %>
+                </span>
+              </div>
+              <%= if @selected_application.review_notes do %>
+                <div class="profile-item full-width">
+                  <label>Nota Semakan:</label>
+                  <span><%= @selected_application.review_notes %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary" phx-click="close-view-modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <style>
         /* Topbar title auto-resize */
         .top-header .page-title {
           font-size: clamp(1rem, 2.5vw, 1.5rem);
@@ -433,6 +629,163 @@
     .btn:hover {
       opacity: 0.8;
     }
+
+    /* View Modal Styles */
+    .modal-content.large {
+      max-width: 800px;
+      width: 95%;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    .info-section {
+      margin-bottom: 2rem;
+    }
+
+    .info-section h4 {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #3b82f6;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .profile-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .profile-item.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .profile-item label {
+      font-weight: 500;
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+
+    .profile-item span {
+      color: #374151;
+      font-size: 0.875rem;
+    }
+
+    .documents-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .document-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      background: #f9fafb;
+    }
+
+    .document-icon {
+      font-size: 1.5rem;
+    }
+
+    .document-info {
+      flex: 1;
+    }
+
+    .document-name {
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 0.25rem;
+    }
+
+    .document-date {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .document-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .no-documents {
+      color: #6b7280;
+      font-style: italic;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-badge.status-menunggu {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge.status-diluluskan {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.status-ditolak {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-badge.status-tidak_lengkap {
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+
+    .edu-block {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #fff;
+    }
+    .edu-block.edu-block--with-separator {
+      border-top: 4px solid #3b82f6;
+      margin-top: 1rem;
+      box-shadow: 0 -1px 0 rgba(59,130,246,0.1) inset;
+    }
+    .edu-divider {
+      border-top: 2px solid #d1d5db;
+      margin: 0.75rem 0 1.25rem 0;
+    }
   </style>
 
         <script>
@@ -443,10 +796,7 @@
           document.getElementById('review-modal').classList.add('show');
         }
 
-        function viewApplication(applicationId) {
-          // For now, just show an alert. You can implement a detailed view modal later
-          alert('Lihat permohonan ID: ' + applicationId);
-        }
+        
 
         function deleteApplication(applicationId) {
           if (confirm('Adakah anda pasti mahu memadamkan pemohon ini?')) {
