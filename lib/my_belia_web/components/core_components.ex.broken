@@ -81,16 +81,22 @@ defmodule MyBeliaWeb.CoreComponents do
     <div class="relative">
       <button
         type="button"
-        class="action-btn-small more"
-        title="Lain-lain"
-        phx-click={JS.push("toggle-status-dropdown", value: %{dropdown_id: @id})}
+        class="action-icon more-btn"
+        title="Lebih Banyak"
+        phx-click={JS.toggle(to: "##{@id}")}
+        aria-expanded={@show}
+        aria-haspopup="true"
       >
-        ⋯
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="1"></circle>
+          <circle cx="19" cy="12" r="1"></circle>
+          <circle cx="5" cy="12" r="1"></circle>
+        </svg>
       </button>
 
       <div
         id={@id}
-        class={"absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200 #{if @show, do: "block", else: "hidden"}"}
+        class={"absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 #{if @show, do: "block", else: "hidden"}"}
         phx-click-away={JS.hide(to: "##{@id}")}
       >
         <div class="py-1">
@@ -98,10 +104,10 @@ defmodule MyBeliaWeb.CoreComponents do
             <%= if status_value != @current_status do %>
               <button
                 type="button"
-                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 border-b border-gray-100 last:border-b-0"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 phx-click={JS.push("select-new-status", value: %{application_id: @application_id, new_status: status_value})}
               >
-                Ubah kepada: <%= status_label %>
+                <%= status_label %>
               </button>
             <% end %>
           <% end %>
@@ -128,63 +134,69 @@ defmodule MyBeliaWeb.CoreComponents do
       <div
         id={@id}
         class="fixed inset-0 z-50 overflow-y-auto"
+      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" />
+      <div
+        class="fixed inset-0 overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
         aria-describedby={"#{@id}-description"}
         role="dialog"
         aria-modal="true"
+        tabindex="0"
       >
-        <!-- Background overlay -->
-        <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+        <div class="flex min-h-full items-center justify-center">
+          <div class="w-full max-w-md p-4 sm:p-6 lg:py-8">
+            <.focus_wrap
+              id={"#{@id}-container"}
+              phx-window-keydown={JS.exec(@on_cancel, "phx-remove")}
+              phx-key="escape"
+              phx-click-away={JS.exec(@on_cancel, "phx-remove")}
+              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white p-6 shadow-lg ring-1 transition"
+            >
+              <div class="text-center">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                  Ubah Status Permohonan
+                </h3>
 
-        <!-- Modal content -->
-        <div class="flex min-h-full items-center justify-center p-4">
-          <div class="relative w-full max-w-md bg-white rounded-lg shadow-xl">
-            <!-- Modal header -->
-            <div class="px-6 py-4 border-b border-gray-200">
-              <h3 class="text-lg font-medium text-gray-900">
-                Ubah Status Permohonan
-              </h3>
-            </div>
+                <div class="mb-6">
+                  <p class="text-sm text-gray-600 mb-4">
+                    Adakah anda pasti mahu mengubah status permohonan ini?
+                  </p>
 
-            <!-- Modal body -->
-            <div class="px-6 py-4">
-              <p class="text-sm text-gray-600 mb-4">
-                Adakah anda pasti mahu mengubah status permohonan ini?
-              </p>
+                  <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center justify-center space-x-3 text-sm">
+                      <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
+                        <%= get_status_label(@current_status) %>
+                      </span>
+                      <span class="text-gray-400">→</span>
+                      <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">
+                        <%= get_status_label(@new_status) %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-              <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                <div class="flex items-center justify-center space-x-3 text-sm">
-                  <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
-                    <%= get_status_label(@current_status) %>
-                  </span>
-                  <span class="text-gray-400">→</span>
-                  <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">
-                    <%= get_status_label(@new_status) %>
-                  </span>
+                <div class="flex space-x-3">
+                  <button
+                    type="button"
+                    class="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    phx-click={@on_confirm}
+                  >
+                    Ya, Ubah Status
+                  </button>
+                  <button
+                    type="button"
+                    class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                    phx-click={@on_cancel}
+                  >
+                    Batal
+                  </button>
                 </div>
               </div>
-            </div>
-
-            <!-- Modal footer -->
-            <div class="px-6 py-4 border-t border-gray-200 flex space-x-3">
-              <button
-                type="button"
-                class="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
-                phx-click={@on_confirm}
-              >
-                Ya, Ubah Status
-              </button>
-              <button
-                type="button"
-                class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
-                phx-click={@on_cancel}
-              >
-                Batal
-              </button>
-            </div>
+            </.focus_wrap>
           </div>
         </div>
       </div>
+    </div>
     <% end %>
     """
   end

@@ -64,9 +64,12 @@
                 <button class="action-btn-small delete" title="Padam" onclick={"deleteApplication('#{application.id}')"}>
                   🗑️
                 </button>
-                <button class="action-btn-small more" title="Lain-lain" onclick={"showMoreOptions('#{application.id}')"}>
-                  ⋯
-                </button>
+                <.status_dropdown
+                  id={"status-dropdown-#{application.id}"}
+                  application_id={application.id}
+                  current_status={application.status}
+                  show={@open_dropdown_id == "status-dropdown-#{application.id}"}
+                />
               </div>
             </td>
           </tr>
@@ -240,7 +243,7 @@
                   <div class="document-item">
                     <div class="document-icon">📄</div>
                     <div class="document-info">
-                      <div class="document-name"><%= document.doc_type %></div>
+                      <div class="document-name"><%= get_document_label(document.doc_type) %></div>
                       <div class="document-date">Dimuat naik: <%= Calendar.strftime(document.inserted_at, "%d/%m/%Y %H:%M") %></div>
                     </div>
                     <div class="document-actions">
@@ -846,6 +849,17 @@
           mainContent.classList.toggle('sidebar-hidden');
         });
       }
-    });
-  </script>
+            });
+      </script>
+
+  <!-- Status Confirmation Modal -->
+  <.status_confirmation_modal
+    id="status-confirmation-modal"
+    show={@show_status_confirmation}
+    application_id={@status_change_application_id}
+    current_status={@status_change_current_status || "menunggu"}
+    new_status={@status_change_new_status}
+    on_confirm={JS.push("confirm-status-change")}
+    on_cancel={JS.push("cancel-status-change")}
+  />
 </.admin_layout> 

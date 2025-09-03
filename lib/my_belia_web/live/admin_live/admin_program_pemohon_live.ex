@@ -20,7 +20,12 @@ defmodule MyBeliaWeb.AdminLive.AdminProgramPemohonLive do
        selected_application: nil,
        user_documents: [],
        user_education: nil,
-       show_view_modal: false
+       show_view_modal: false,
+       show_status_confirmation: false,
+       status_change_application_id: nil,
+       status_change_new_status: nil,
+       status_change_current_status: nil,
+       open_dropdown_id: nil
      ),
      layout: false}
   end
@@ -135,6 +140,92 @@ defmodule MyBeliaWeb.AdminLive.AdminProgramPemohonLive do
      |> assign(:user_education, nil)
      |> assign(:user_educations, [])
      |> assign(:education_entries, [])}
+  end
+
+    def handle_event("toggle-status-dropdown", %{"dropdown_id" => dropdown_id}, socket) do
+    # Toggle the dropdown visibility
+    current_open = socket.assigns.open_dropdown_id
+
+    if current_open == dropdown_id do
+      # Close the current dropdown
+      {:noreply, assign(socket, :open_dropdown_id, nil)}
+    else
+      # Open the new dropdown (close any other open dropdown)
+      {:noreply, assign(socket, :open_dropdown_id, dropdown_id)}
+    end
+  end
+
+  def handle_event("select-new-status", %{"application_id" => application_id, "new_status" => new_status}, socket) do
+    # Find the current application to get its current status
+    current_application = Enum.find(socket.assigns.program_applications, &(&1.id == application_id))
+    current_status = if current_application, do: current_application.status, else: "menunggu"
+
+    {:noreply,
+     socket
+     |> assign(:status_change_application_id, application_id)
+     |> assign(:status_change_new_status, new_status)
+     |> assign(:status_change_current_status, current_status)
+     |> assign(:show_status_confirmation, true)}
+  end
+
+  def handle_event("confirm-status-change", _params, socket) do
+    application_id = socket.assigns.status_change_application_id
+    new_status = socket.assigns.status_change_new_status
+    current_user = socket.assigns.current_user
+
+    case ProgramApplications.update_application_status(application_id, new_status, current_user.id, nil) do
+      {:ok, _application} ->
+        # Close the modal and clear status change data
+        socket = socket
+        |> assign(:show_status_confirmation, false)
+        |> assign(:status_change_application_id, nil)
+        |> assign(:status_change_new_status, nil)
+        |> assign(:status_change_current_status, nil)
+        |> assign(:open_dropdown_id, nil)  # Close any open dropdowns
+
+        # Refresh the applications list based on current filter
+        program_id = socket.assigns.program.id
+        program_applications = case socket.assigns.current_filter do
+          "all" -> ProgramApplications.get_program_applications_with_details(program_id)
+          status when status in ["menunggu", "diluluskan", "ditolak", "tidak_lengkap"] ->
+            # If we're on a specific status tab, filter by that status
+            ProgramApplications.get_program_applications_by_status(program_id, status)
+          _ -> ProgramApplications.get_program_applications_with_details(program_id)
+        end
+
+        status_text = case new_status do
+          "diluluskan" -> "Lulus"
+          "ditolak" -> "Tolak"
+          "tidak_lengkap" -> "Tidak Lengkap"
+          "menunggu" -> "Menunggu"
+          _ -> new_status
+        end
+
+        # Update the applications list
+        socket = assign(socket, :program_applications, program_applications)
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Status permohonan telah berjaya diubah kepada #{status_text}. Sekarang anda boleh lihat permohonan ini dalam tab '#{status_text}'.")}
+
+      {:error, _changeset} ->
+        {:noreply,
+         socket
+         |> assign(:show_status_confirmation, false)
+         |> assign(:status_change_application_id, nil)
+         |> assign(:status_change_new_status, nil)
+         |> assign(:status_change_current_status, nil)
+         |> put_flash(:error, "Ralat semasa mengemas kini status permohonan.")}
+    end
+  end
+
+  def handle_event("cancel-status-change", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(:show_status_confirmation, false)
+     |> assign(:status_change_application_id, nil)
+     |> assign(:status_change_new_status, nil)
+     |> assign(:status_change_current_status, nil)}
   end
 
   defp rank_level(nil), do: 99
