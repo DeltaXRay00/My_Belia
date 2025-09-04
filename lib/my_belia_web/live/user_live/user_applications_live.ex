@@ -4,19 +4,28 @@ defmodule MyBeliaWeb.UserLive.UserApplicationsLive do
   alias MyBelia.CourseApplications
 
   def mount(_params, session, socket) do
-    user_id = session["user_id"]
+    session_user_id = session["user_id"]
+    socket_user_id = case Map.fetch(socket.assigns, :current_user) do
+      {:ok, %{id: id}} -> id
+      _ -> nil
+    end
+
+    user_id = session_user_id || socket_user_id
     current_user = if user_id, do: MyBelia.Accounts.get_user!(user_id)
 
     if current_user do
-      # Get user's program and course applications
-      program_applications = ProgramApplications.get_user_program_applications(current_user.id)
-      course_applications = CourseApplications.get_user_course_applications(current_user.id)
+      # Unfiltered totals for stable counters
+      all_programs = ProgramApplications.get_user_program_applications(current_user.id)
+      all_courses = CourseApplications.get_user_course_applications(current_user.id)
 
       {:ok,
        assign(socket,
          current_user: current_user,
-         program_applications: program_applications,
-         course_applications: course_applications,
+         program_applications: all_programs,
+         course_applications: all_courses,
+         total_program_applications: length(all_programs),
+         total_course_applications: length(all_courses),
+         current_filter: "all",
          page_title: "Permohonan Saya"
        ),
        layout: false}
@@ -32,27 +41,29 @@ defmodule MyBeliaWeb.UserLive.UserApplicationsLive do
   def handle_event("filter-applications", %{"filter" => filter}, socket) do
     user_id = socket.assigns.current_user.id
 
-    case filter do
-      "all" ->
-        program_applications = ProgramApplications.get_user_program_applications(user_id)
-        course_applications = CourseApplications.get_user_course_applications(user_id)
-        {:noreply, assign(socket, program_applications: program_applications, course_applications: course_applications)}
+    all_programs = ProgramApplications.get_user_program_applications(user_id)
+    all_courses = CourseApplications.get_user_course_applications(user_id)
 
-      "programs" ->
-        program_applications = ProgramApplications.get_user_program_applications(user_id)
-        {:noreply, assign(socket, program_applications: program_applications, course_applications: [])}
+    {program_applications, course_applications} =
+      case filter do
+        "all" -> {all_programs, all_courses}
+        "programs" -> {all_programs, []}
+        "courses" -> {[], all_courses}
+        status when status in ["menunggu", "diluluskan", "ditolak", "tidak_lengkap"] ->
+          {
+            Enum.filter(all_programs, &(&1.status == status)),
+            Enum.filter(all_courses, &(&1.status == status))
+          }
+        _ -> {socket.assigns.program_applications, socket.assigns.course_applications}
+      end
 
-      "courses" ->
-        course_applications = CourseApplications.get_user_course_applications(user_id)
-        {:noreply, assign(socket, program_applications: [], course_applications: course_applications)}
-
-      status when status in ["menunggu", "diluluskan", "ditolak", "tidak_lengkap"] ->
-        program_applications = ProgramApplications.get_user_program_applications_by_status(user_id, status)
-        course_applications = CourseApplications.get_user_course_applications_by_status(user_id, status)
-        {:noreply, assign(socket, program_applications: program_applications, course_applications: course_applications)}
-
-      _ ->
-        {:noreply, socket}
-    end
+    {:noreply,
+     assign(socket,
+       program_applications: program_applications,
+       course_applications: course_applications,
+       total_program_applications: length(all_programs),
+       total_course_applications: length(all_courses),
+       current_filter: filter
+     )}
   end
 end

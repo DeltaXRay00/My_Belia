@@ -1450,3 +1450,39 @@ body {
   font-weight: 500;
   color: #374151;
 } 
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+
+.status-badge--menunggu {
+  background-color: #f3f4f6; /* gray-100 */
+  color: #374151; /* gray-700 */
+  border-color: #e5e7eb; /* gray-200 */
+}
+
+.status-badge--diluluskan {
+  background-color: #ecfdf5; /* emerald-50 */
+  color: #065f46; /* emerald-800 */
+  border-color: #a7f3d0; /* emerald-200 */
+}
+
+.status-badge--ditolak {
+  background-color: #fef2f2; /* red-50 */
+  color: #991b1b; /* red-800 */
+  border-color: #fecaca; /* red-200 */
+}
+
+.status-badge--tidak_lengkap {
+  background-color: #fffbeb; /* amber-50 */
+  color: #92400e; /* amber-800 */
+  border-color: #fde68a; /* amber-300 */
+} 

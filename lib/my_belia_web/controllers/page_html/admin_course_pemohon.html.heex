@@ -45,6 +45,7 @@
           <th>Daerah</th>
           <th>Umur</th>
           <th>Tarikh Permohonan</th>
+          <th>Status</th>
           <th>Tindakan</th>
         </tr>
       </thead>
@@ -56,6 +57,11 @@
             <td><%= application.user.daerah %></td>
             <td><%= Date.diff(Date.utc_today(), application.user.birth_date) |> div(365) %></td>
             <td><%= Date.to_string(application.application_date) %></td>
+            <td>
+              <span class={"status-badge status-badge--" <> application.status}>
+                <%= get_status_label(application.status) %>
+              </span>
+            </td>
             <td>
               <div class="action-buttons-small">
                 <button class="action-btn-small view" title="Lihat" phx-click="view-application" phx-value-application_id={application.id}>

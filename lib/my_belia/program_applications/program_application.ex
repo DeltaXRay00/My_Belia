@@ -22,7 +22,7 @@ defmodule MyBelia.ProgramApplications.ProgramApplication do
     program_application
     |> cast(attrs, [:user_id, :program_id, :user_documents_id, :user_education_id, :application_date, :status, :reviewed_by_id, :review_date, :review_notes])
     |> validate_required([:user_id, :program_id, :application_date, :status])
-    |> validate_inclusion(:status, ["menunggu", "diluluskan", "ditolak", "tidak lengkap"])
+    |> validate_inclusion(:status, ["menunggu", "diluluskan", "ditolak", "tidak_lengkap"])
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:program_id)
     |> foreign_key_constraint(:user_documents_id)

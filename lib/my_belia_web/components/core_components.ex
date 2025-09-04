@@ -83,7 +83,7 @@ defmodule MyBeliaWeb.CoreComponents do
         type="button"
         class="action-btn-small more"
         title="Lain-lain"
-        phx-click={JS.push("toggle-status-dropdown", value: %{dropdown_id: @id})}
+        phx-click={JS.toggle(to: "##{@id}")}
       >
         ⋯
       </button>

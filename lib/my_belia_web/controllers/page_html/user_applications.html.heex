@@ -52,27 +52,27 @@
     <!-- Filter Section -->
     <div class="filter-section">
       <div class="filter-tabs">
-        <button class="filter-tab active" phx-click="filter-applications" phx-value-filter="all">
-          Semua (<%= length(@program_applications) + length(@course_applications) %>)
+        <button class={"filter-tab #{if @current_filter == "all", do: "active"}"} phx-click="filter-applications" phx-value-filter="all">
+          Semua (<%= @total_program_applications + @total_course_applications %>)
         </button>
-        <button class="filter-tab" phx-click="filter-applications" phx-value-filter="programs">
-          Program (<%= length(@program_applications) %>)
+        <button class={"filter-tab #{if @current_filter == "programs", do: "active"}"} phx-click="filter-applications" phx-value-filter="programs">
+          Program (<%= @total_program_applications %>)
         </button>
-        <button class="filter-tab" phx-click="filter-applications" phx-value-filter="courses">
-          Kursus (<%= length(@course_applications) %>)
+        <button class={"filter-tab #{if @current_filter == "courses", do: "active"}"} phx-click="filter-applications" phx-value-filter="courses">
+          Kursus (<%= @total_course_applications %>)
         </button>
-        <button class="filter-tab" phx-click="filter-applications" phx-value-filter="menunggu">
-          Menunggu
-        </button>
-        <button class="filter-tab" phx-click="filter-applications" phx-value-filter="diluluskan">
-          Diluluskan
-        </button>
-        <button class="filter-tab" phx-click="filter-applications" phx-value-filter="ditolak">
-          Ditolak
-        </button>
-        <button class="filter-tab" phx-click="filter-applications" phx-value-filter="tidak_lengkap">
-          Tidak Lengkap
-        </button>
+
+        <div class="dropdown-filter">
+          <button class="filter-tab dropdown-toggle" id="status-filter-btn" type="button">
+            Status ▼
+          </button>
+          <div class="dropdown-menu" id="status-filter-menu">
+            <button class="dropdown-item" phx-click="filter-applications" phx-value-filter="menunggu">Menunggu</button>
+            <button class="dropdown-item" phx-click="filter-applications" phx-value-filter="diluluskan">Diluluskan</button>
+            <button class="dropdown-item" phx-click="filter-applications" phx-value-filter="ditolak">Ditolak</button>
+            <button class="dropdown-item" phx-click="filter-applications" phx-value-filter="tidak_lengkap">Tidak Lengkap</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -93,44 +93,35 @@
         <%= if length(@program_applications) > 0 do %>
           <div class="applications-section">
             <h2 class="section-title">Permohonan Program</h2>
-            <div class="applications-grid">
-              <%= for application <- @program_applications do %>
-                <div class="application-card">
-                                     <div class="application-header">
-                     <div class="application-type program">Program</div>
-                     <div class={"application-status #{application.status}"}>
-                       <%= case application.status do
-                         "menunggu" -> "Menunggu"
-                         "diluluskan" -> "Diluluskan"
-                         "ditolak" -> "Ditolak"
-                         "tidak_lengkap" -> "Tidak Lengkap"
-                         _ -> application.status
-                       end %>
-                     </div>
-                   </div>
-                  <div class="application-content">
-                    <h3 class="application-title"><%= application.program.name %></h3>
-                    <div class="application-details">
-                      <div class="detail-item">
-                        <span class="detail-label">Tarikh Permohonan:</span>
-                        <span class="detail-value"><%= Date.to_string(application.application_date) %></span>
-                      </div>
-                      <%= if application.review_date do %>
-                        <div class="detail-item">
-                          <span class="detail-label">Tarikh Semakan:</span>
-                          <span class="detail-value"><%= Date.to_string(application.review_date) %></span>
-                        </div>
-                      <% end %>
-                      <%= if application.review_notes and application.review_notes != "" do %>
-                        <div class="detail-item">
-                          <span class="detail-label">Nota Semakan:</span>
-                          <span class="detail-value"><%= application.review_notes %></span>
-                        </div>
-                      <% end %>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
+            <div class="apps-table-wrap">
+              <table class="apps-table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Program</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <%= for {application, idx} <- Enum.with_index(@program_applications, 1) do %>
+                    <tr>
+                      <td><%= idx %></td>
+                      <td><%= application.program.name %></td>
+                      <td>
+                        <span class={"application-status " <> application.status}>
+                          <%= case application.status do
+                            "menunggu" -> "Menunggu"
+                            "diluluskan" -> "Diluluskan"
+                            "ditolak" -> "Ditolak"
+                            "tidak_lengkap" -> "Tidak Lengkap"
+                            _ -> application.status
+                          end %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
             </div>
           </div>
         <% end %>
@@ -139,44 +130,35 @@
         <%= if length(@course_applications) > 0 do %>
           <div class="applications-section">
             <h2 class="section-title">Permohonan Kursus</h2>
-            <div class="applications-grid">
-              <%= for application <- @course_applications do %>
-                <div class="application-card">
-                                     <div class="application-header">
-                     <div class="application-type course">Kursus</div>
-                     <div class={"application-status #{application.status}"}>
-                       <%= case application.status do
-                         "menunggu" -> "Menunggu"
-                         "diluluskan" -> "Diluluskan"
-                         "ditolak" -> "Ditolak"
-                         "tidak_lengkap" -> "Tidak Lengkap"
-                         _ -> application.status
-                       end %>
-                     </div>
-                   </div>
-                  <div class="application-content">
-                    <h3 class="application-title"><%= application.course.name %></h3>
-                    <div class="application-details">
-                      <div class="detail-item">
-                        <span class="detail-label">Tarikh Permohonan:</span>
-                        <span class="detail-value"><%= Date.to_string(application.application_date) %></span>
-                      </div>
-                      <%= if application.review_date do %>
-                        <div class="detail-item">
-                          <span class="detail-label">Tarikh Semakan:</span>
-                          <span class="detail-value"><%= Date.to_string(application.review_date) %></span>
-                        </div>
-                      <% end %>
-                      <%= if application.review_notes and application.review_notes != "" do %>
-                        <div class="detail-item">
-                          <span class="detail-label">Nota Semakan:</span>
-                          <span class="detail-value"><%= application.review_notes %></span>
-                        </div>
-                      <% end %>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
+            <div class="apps-table-wrap">
+              <table class="apps-table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Kursus</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <%= for {application, idx} <- Enum.with_index(@course_applications, 1) do %>
+                    <tr>
+                      <td><%= idx %></td>
+                      <td><%= application.course.name %></td>
+                      <td>
+                        <span class={"application-status " <> application.status}>
+                          <%= case application.status do
+                            "menunggu" -> "Menunggu"
+                            "diluluskan" -> "Diluluskan"
+                            "ditolak" -> "Ditolak"
+                            "tidak_lengkap" -> "Tidak Lengkap"
+                            _ -> application.status
+                          end %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
             </div>
           </div>
         <% end %>
@@ -285,7 +267,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: #1e293b;
+    color: #000000 !important;
   }
 
   .applications-grid {
@@ -361,39 +343,74 @@
     color: #7c3aed;
   }
 
-  .application-content {
-    padding: 1.5rem;
+  /* Table styles */
+  .apps-table-wrap { overflow-x: auto; }
+  .apps-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
   }
-
-  .application-title {
-    font-size: 1.125rem;
+  .apps-table thead th {
+    text-align: left;
+    padding: 0.75rem 1rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    color: #475569;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .apps-table tbody td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
     color: #1e293b;
   }
+  .apps-table tbody tr:hover { background: #f9fafb; }
 
-  .application-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  .dropdown-filter { position: relative; }
+  .dropdown-toggle { position: relative; }
+  .dropdown-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    min-width: 180px;
+    display: none;
+    z-index: 10;
   }
+  .dropdown-menu.show { display: block; }
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    background: white;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+  .dropdown-item:hover { background: #f8fafc; }
 
-  .detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-  }
+  /* small JS hook */
+  #status-filter-btn { cursor: pointer; }
+</style>
 
-  .detail-label {
-    font-weight: 500;
-    color: #64748b;
-    min-width: 120px;
-  }
-
-  .detail-value {
-    color: #1e293b;
-    text-align: right;
-    flex: 1;
-  }
-</style> 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('status-filter-btn');
+    const menu = document.getElementById('status-filter-menu');
+    if (btn && menu) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        menu.classList.toggle('show');
+      });
+      document.addEventListener('click', function() {
+        menu.classList.remove('show');
+      });
+    }
+  });
+</script> 
