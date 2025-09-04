@@ -67,7 +67,7 @@
                 <button class="action-btn-small view" title="Lihat" phx-click="view-application" phx-value-application_id={application.id}>
                   👁️
                 </button>
-                <button class="action-btn-small delete" title="Padam" onclick={"deleteApplication('#{application.id}')"}>
+                <button class="action-btn-small delete" title="Padam" phx-click="delete-application" phx-value-application_id={application.id}>
                   🗑️
                 </button>
                 <.status_dropdown

@@ -228,6 +228,29 @@ defmodule MyBeliaWeb.AdminLive.AdminCoursePemohonLive do
      |> assign(:status_change_current_status, nil)}
   end
 
+  def handle_event("delete-application", %{"application_id" => application_id}, socket) do
+    application = CourseApplications.get_course_application!(application_id)
+
+    case CourseApplications.delete_course_application(application) do
+      {:ok, _} ->
+        course_id = socket.assigns.course.id
+        course_applications = case socket.assigns.current_filter do
+          "all" -> CourseApplications.get_course_applications_with_details(course_id)
+          status when status in ["menunggu", "diluluskan", "ditolak", "tidak_lengkap"] ->
+            CourseApplications.get_course_applications_by_status(course_id, status)
+          _ -> CourseApplications.get_course_applications_with_details(course_id)
+        end
+
+        {:noreply,
+         socket
+         |> assign(:course_applications, course_applications)
+         |> put_flash(:info, "Permohonan berjaya dipadam")}
+
+      {:error, _} ->
+        {:noreply, put_flash(socket, :error, "Ralat semasa memadam permohonan.")}
+    end
+  end
+
   defp rank_level(nil), do: 99
   defp rank_level(level) when is_binary(level) do
     case String.downcase(String.trim(level)) do
