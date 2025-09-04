@@ -7,7 +7,6 @@ defmodule MyBelia.Accounts.User do
     field :email, :string
     field :password_hash, :string
     field :full_name, :string
-    field :name, :string
     field :daerah, :string
     field :role, :string, default: "user"
     field :status, :string, default: "active"
@@ -45,7 +44,7 @@ defmodule MyBelia.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [
-      :email, :password, :password_confirmation, :full_name, :name, :daerah,
+      :email, :password, :password_confirmation, :full_name, :daerah,
       :role, :status, :last_login, :jawatan, :unit_bahagian,
       :ic_number, :birth_date, :birth_place, :gender, :phone_number,
       :religion, :race, :residential_address, :mailing_address,

@@ -98,6 +98,10 @@ defmodule MyBeliaWeb.Router do
     live "/pengesahan_permohonan", UserLive.PengesahanPermohonanLive
     live "/pengesahan-permohonan", UserLive.PengesahanPermohonanLive
     live "/application-confirmation", UserLive.PengesahanPermohonanLive
+
+    # User Applications and Log (LiveView)
+    live "/permohonan", UserLive.UserApplicationsLive
+    live "/log", UserLive.UserLogLive
   end
 
   scope "/", MyBeliaWeb do
@@ -114,6 +118,8 @@ defmodule MyBeliaWeb.Router do
     live "/admin/program", AdminLive.AdminPermohonanProgramLive
     live "/admin/programs", AdminLive.AdminPermohonanProgramLive
     live "/admin/permohonan-program", AdminLive.AdminPermohonanProgramLive
+    live "/admin/program/:id/pemohon", AdminLive.AdminProgramPemohonLive
+    live "/admin/course/:id/pemohon", AdminLive.AdminCoursePemohonLive
 
     # Admin Course Management (LiveView)
     live "/admin/permohonan_kursus", AdminLive.AdminPermohonanKursusLive

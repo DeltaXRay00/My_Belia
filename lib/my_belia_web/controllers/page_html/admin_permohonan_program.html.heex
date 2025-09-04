@@ -47,6 +47,182 @@
     #quill-editor-container {
       margin-bottom: 10px;
     }
+
+    /* Applications Table Styles */
+    .applications-section {
+      margin-top: 2rem;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      padding: 0.5rem 1rem;
+      border: 1px solid #e2e8f0;
+      background: white;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.875rem;
+    }
+
+    .filter-tab:hover {
+      background: #f8fafc;
+    }
+
+    .filter-tab.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+
+    .applications-table {
+      background: white;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .applications-table-content {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .applications-table-content th,
+    .applications-table-content td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .applications-table-content th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .applications-table-content tr:hover {
+      background: #f9fafb;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-badge.menunggu {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge.diluluskan {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-badge.ditolak {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-badge.tidak_lengkap {
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .action-btn {
+      padding: 0.25rem 0.5rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .action-btn.view-btn {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .action-btn.approve-btn {
+      background: #10b981;
+      color: white;
+    }
+
+    .action-btn.reject-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .action-btn.incomplete-btn {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .action-btn:hover {
+      opacity: 0.8;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6b7280;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+
+    .review-form {
+      padding: 1rem;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
@@ -178,7 +354,7 @@
         <!-- Display existing programs -->
         <%= for program <- @programs do %>
           <div class="program-card" data-program-id={program.id}>
-            <div class="program-card-content" onclick={"window.location.href='/pemohon'"}>
+            <div class="program-card-content" onclick={"window.location.href='/admin/program/#{program.id}/pemohon'"}>
               <div class="program-image">
                 <img src={program.image_data} alt={program.name} style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0;">
               </div>
@@ -188,6 +364,9 @@
                 <div class="program-dates">
                   <small>Mula: <%= Date.to_string(program.start_date) %></small><br>
                   <small>Tamat: <%= Date.to_string(program.end_date) %></small>
+                </div>
+                <div class="program-applications-count">
+                  <small>Pemohon: <%= @program_applications_counts[program.id] || 0 %></small>
                 </div>
               </div>
             </div>
@@ -1306,6 +1485,25 @@ function submitStatusToServer(statusData, programId) {
     console.error('Error updating program status:', error);
     alert('Ralat: Tidak dapat menukar status program');
   });
+}
+
+
+
+// Application review functions
+function reviewApplication(applicationId, status) {
+  document.getElementById('review-application-id').value = applicationId;
+  document.getElementById('review-status').value = status;
+  document.getElementById('review-modal').classList.add('show');
+}
+
+function viewApplication(applicationId) {
+  // For now, just show an alert. You can implement a detailed view modal later
+  alert('Lihat permohonan ID: ' + applicationId);
+}
+
+function closeReviewModal() {
+  document.getElementById('review-modal').classList.remove('show');
+  document.getElementById('review-notes').value = '';
 }
 </script>
 </body>
