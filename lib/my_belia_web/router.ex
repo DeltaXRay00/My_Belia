@@ -99,6 +99,11 @@ defmodule MyBeliaWeb.Router do
     live "/pengesahan-permohonan", UserLive.PengesahanPermohonanLive
     live "/application-confirmation", UserLive.PengesahanPermohonanLive
 
+    # Application Success Page (LiveView)
+    live "/permohonan_selesai", UserLive.PermohonanSelesaiLive
+    live "/permohonan-selesai", UserLive.PermohonanSelesaiLive
+    live "/application-success", UserLive.PermohonanSelesaiLive
+
     # User Applications and Log (LiveView)
     live "/permohonan", UserLive.UserApplicationsLive
     live "/log", UserLive.UserLogLive

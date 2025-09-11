@@ -28,13 +28,13 @@
     <div class="form-section">
       <h3 class="form-instruction">Sila lengkapkan maklumat berikut:</h3>
 
-      <.form :let={f} for={@form} phx-submit="save-profile-data">
+      <.form :let={f} for={:profile} phx-submit="save-profile-data">
         <!-- Organization Information -->
         <div class="form-section-title">Maklumat Organisasi</div>
 
         <div class="form-group">
           <label class="form-label required">Nama Organisasi <span class="required-mark">*</span></label>
-          <%= text_input f, :organization_name, class: "form-input", placeholder: "Masukkan nama organisasi", required: true %>
+          <.input field={f[:organization_name]} type="text" class="form-input" placeholder="Masukkan nama organisasi" required />
         </div>
 
         <div class="form-group">

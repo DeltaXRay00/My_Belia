@@ -1,0 +1,125 @@
+<%= user_topbar(assigns) %>
+
+<!-- Main Content Area -->
+<div class="grant-container">
+  <!-- Page Title -->
+  <div class="page-title-section">
+    <h1 class="page-title">PERMOHONAN GERAN</h1>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation" translate="no">
+    <div class="tab" phx-click={JS.navigate(~p"/permohonan_geran")}>
+      <span class="tab-text" translate="no">Profil</span>
+    </div>
+    <div class="tab" phx-click={JS.navigate(~p"/skim_geran")}>
+      <span class="tab-text" translate="no">Skim&#10;Geran</span>
+    </div>
+    <div class="tab active">
+      <span class="tab-text" translate="no">Dokumen&#10;Sokongan</span>
+    </div>
+    <div class="tab">
+      <span class="tab-text" translate="no">Pengesahan&#10;Permohonan</span>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <div class="form-container" translate="no">
+    <div class="form-section">
+      <h3 class="form-instruction" translate="no">Sila Muat Naik Dokumen Sokongan Anda:</h3>
+      
+      <!-- Start LiveView Form -->
+      <form phx-submit="save-documents">
+        <!-- Document Uploads -->
+        <div class="form-section-title">Dokumen Wajib</div>
+
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Surat Sokongan <span class="required-mark">*</span></span>
+            <span class="document-hint">Surat sokongan dari pihak berwajib atau agensi berkaitan</span>
+          </div>
+          <.live_file_input upload={@uploads.documents} class="file-input" accept=".pdf" />
+        </div>
+
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Profil Organisasi <span class="required-mark">*</span></span>
+            <span class="document-hint">Dokumen profil lengkap organisasi pemohon</span>
+          </div>
+          <.live_file_input upload={@uploads.documents} class="file-input" accept=".pdf" />
+        </div>
+
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Surat Kebenaran Penggunaan Fasiliti / Lokasi <span class="required-mark">*</span></span>
+            <span class="document-hint">Surat kebenaran untuk menggunakan fasiliti atau lokasi projek</span>
+          </div>
+          <.live_file_input upload={@uploads.documents} class="file-input" accept=".pdf" />
+        </div>
+
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Rancangan Atur Cara Program <span class="required-mark">*</span></span>
+            <span class="document-hint">Jadual dan atur cara program yang akan dilaksanakan</span>
+          </div>
+          <.live_file_input upload={@uploads.documents} class="file-input" accept=".pdf" />
+        </div>
+
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Lesen Organisasi <span class="required-mark">*</span></span>
+            <span class="document-hint">Lesen pendaftaran organisasi yang sah</span>
+          </div>
+          <.live_file_input upload={@uploads.documents} class="file-input" accept=".pdf" />
+        </div>
+
+        <!-- Additional Documents -->
+        <div class="form-section-title">Dokumen Tambahan (Jika Ada)</div>
+
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label">Sijil-sijil Pengiktirafan</span>
+            <span class="document-hint">Sijil pengiktirafan atau anugerah yang diterima</span>
+          </div>
+          <.live_file_input upload={@uploads.documents} class="file-input" accept=".pdf,.jpg,.jpeg,.png" />
+        </div>
+
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label">Surat Rujukan</span>
+            <span class="document-hint">Surat rujukan dari pihak ketiga</span>
+          </div>
+          <.live_file_input upload={@uploads.documents} class="file-input" accept=".pdf" />
+        </div>
+
+        <!-- Upload Guidelines -->
+        <div class="guidelines-section">
+          <div class="form-section-title">Garis Panduan Muat Naik</div>
+          <div class="guidelines-content">
+            <div class="guideline-item"><span class="guideline-icon">📄</span><span class="guideline-text">Format yang diterima: PDF, JPG, PNG</span></div>
+            <div class="guideline-item"><span class="guideline-icon">📏</span><span class="guideline-text">Saiz maksimum fail: 10MB setiap fail</span></div>
+            <div class="guideline-item"><span class="guideline-icon">🔒</span><span class="guideline-text">Semua dokumen akan dirahsiakan dan hanya digunakan untuk tujuan penilaian</span></div>
+            <div class="guideline-item"><span class="guideline-icon">✅</span><span class="guideline-text">Pastikan semua dokumen wajib dimuat naik sebelum meneruskan</span></div>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="button-container">
+          <button type="button" class="back-button" phx-click={JS.navigate(~p"/skim_geran")}>Kembali</button>
+          <button type="submit" class="next-button">Seterusnya</button>
+        </div>
+      </form>
+      <!-- End LiveView Form -->
+
+      <!-- Show uploaded files -->
+      <h3>Fail yang dipilih:</h3>
+      <ul>
+        <%= for entry <- @uploads.documents.entries do %>
+          <li><%= entry.client_name %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<%= user_footer(assigns) %>

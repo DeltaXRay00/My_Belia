@@ -28,7 +28,7 @@
     <div class="form-section">
       <h3 class="form-instruction">Sila lengkapkan maklumat berikut:</h3>
 
-      <.form :let={f} for={@form} phx-submit="save-profile-data">
+      <.form :let={f} for={:profile} phx-submit="save-profile-data">
         <!-- Organization Information -->
         <div class="form-section-title">Maklumat Organisasi</div>
 

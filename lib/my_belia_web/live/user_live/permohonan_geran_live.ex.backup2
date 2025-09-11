@@ -12,8 +12,8 @@ defmodule MyBeliaWeb.UserLive.PermohonanGeranLive do
     # Retrieve any existing form data if user navigates back
     form_data = GrantFormState.get_form_data(session_id)
 
-    # Create the form using existing form data or empty map
-    form = to_form(form_data || %{}, as: :profile)
+    # Create the form using to_form/2
+    form = to_form(%{}, as: :profile)
 
     {:ok,
      assign(socket,

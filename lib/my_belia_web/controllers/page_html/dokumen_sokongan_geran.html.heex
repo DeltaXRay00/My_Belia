@@ -9,16 +9,16 @@
 
   <!-- Tab Navigation -->
   <div class="tab-navigation" translate="no">
-    <div class="tab" onclick="window.location.href='/permohonan_geran'">
+    <div class="tab" phx-click={JS.navigate(~p"/permohonan_geran")}>
       <span class="tab-text" translate="no">Profil</span>
     </div>
-    <div class="tab" onclick="window.location.href='/skim_geran'">
+    <div class="tab" phx-click={JS.navigate(~p"/skim_geran")}>
       <span class="tab-text" translate="no">Skim&#10;Geran</span>
     </div>
-    <div class="tab active" onclick="window.location.href='/dokumen_sokongan_geran'">
+    <div class="tab active">
       <span class="tab-text" translate="no">Dokumen&#10;Sokongan</span>
     </div>
-    <div class="tab" onclick="window.location.href='/pengesahan_permohonan'">
+    <div class="tab">
       <span class="tab-text" translate="no">Pengesahan&#10;Permohonan</span>
     </div>
   </div>
@@ -28,141 +28,379 @@
     <div class="form-section">
       <h3 class="form-instruction" translate="no">Sila Muat Naik Dokumen Sokongan Anda:</h3>
       
-      <!-- Required Documents Section -->
-      <div class="form-section-title">Dokumen Wajib</div>
-      
-      <!-- Document Item 1 -->
-      <div class="document-item">
-        <div class="document-info">
-          <span class="document-label required">Surat Sokongan <span class="required-mark">*</span></span>
-          <span class="document-hint">Surat sokongan dari pihak berwajib atau agensi berkaitan</span>
-        </div>
-                 <div class="upload-button-container">
-           <input type="file" class="file-input" accept=".pdf" required>
-           <button class="upload-button">
-             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
-           </button>
-         </div>
-      </div>
+      <!-- Start LiveView Form -->
+      <form phx-submit="save-documents">
+        <!-- Document Uploads -->
+        <div class="form-section-title">Dokumen Wajib</div>
 
-      <!-- Document Item 2 -->
-      <div class="document-item">
-        <div class="document-info">
-          <span class="document-label required">Profil Organisasi <span class="required-mark">*</span></span>
-          <span class="document-hint">Dokumen profil lengkap organisasi pemohon</span>
-        </div>
-                 <div class="upload-button-container">
-           <input type="file" class="file-input" accept=".pdf" required>
-           <button class="upload-button">
-             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
-           </button>
-         </div>
-      </div>
-
-      <!-- Document Item 4 -->
-      <div class="document-item">
-        <div class="document-info">
-          <span class="document-label required">Surat Kebenaran Penggunaan Fasiliti / Lokasi <span class="required-mark">*</span></span>
-          <span class="document-hint">Surat kebenaran untuk menggunakan fasiliti atau lokasi projek</span>
-        </div>
-                 <div class="upload-button-container">
-           <input type="file" class="file-input" accept=".pdf" required>
-           <button class="upload-button">
-             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
-           </button>
-         </div>
-      </div>
-
-      <!-- Document Item 5 -->
-      <div class="document-item">
-        <div class="document-info">
-          <span class="document-label required">Rancangan Atur Cara Program <span class="required-mark">*</span></span>
-          <span class="document-hint">Jadual dan atur cara program yang akan dilaksanakan</span>
-        </div>
-                 <div class="upload-button-container">
-           <input type="file" class="file-input" accept=".pdf" required>
-           <button class="upload-button">
-             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
-           </button>
-         </div>
-      </div>
-
-      <!-- Document Item 6 -->
-      <div class="document-item">
-        <div class="document-info">
-          <span class="document-label required">Lesen Organisasi <span class="required-mark">*</span></span>
-          <span class="document-hint">Lesen pendaftaran organisasi yang sah</span>
-        </div>
-                 <div class="upload-button-container">
-           <input type="file" class="file-input" accept=".pdf" required>
-           <button class="upload-button">
-             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
-           </button>
-         </div>
-      </div>
-
-      <!-- Additional Documents Section -->
-      <div class="form-section-title">Dokumen Tambahan (Jika Ada)</div>
-      
-      <!-- Additional Document Item 1 -->
-      <div class="document-item">
-        <div class="document-info">
-          <span class="document-label">Sijil-sijil Pengiktirafan</span>
-          <span class="document-hint">Sijil pengiktirafan atau anugerah yang diterima</span>
-        </div>
-                 <div class="upload-button-container">
-           <input type="file" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
-           <button class="upload-button">
-             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
-           </button>
-         </div>
-      </div>
-
-      <!-- Additional Document Item 3 -->
-      <div class="document-item">
-        <div class="document-info">
-          <span class="document-label">Surat Rujukan</span>
-          <span class="document-hint">Surat rujukan dari pihak ketiga</span>
-        </div>
-                 <div class="upload-button-container">
-           <input type="file" class="file-input" accept=".pdf">
-           <button class="upload-button">
-             <img src={~p"/images/upload-document-1-40.png"} alt="Upload" class="upload-icon" />
-           </button>
-         </div>
-      </div>
-
-      <!-- Document Upload Guidelines -->
-      <div class="guidelines-section">
-        <div class="form-section-title">Garis Panduan Muat Naik</div>
-        
-        <div class="guidelines-content">
-          <div class="guideline-item">
-            <span class="guideline-icon">📄</span>
-            <span class="guideline-text">Format yang diterima: PDF, JPG, PNG</span>
+        <!-- Surat Sokongan -->
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Surat Sokongan <span class="required-mark">*</span></span>
+            <span class="document-hint">Surat sokongan dari pihak berwajib atau agensi berkaitan</span>
           </div>
-          <div class="guideline-item">
-            <span class="guideline-icon">📏</span>
-            <span class="guideline-text">Saiz maksimum fail: 10MB setiap fail</span>
-          </div>
-          <div class="guideline-item">
-            <span class="guideline-icon">🔒</span>
-            <span class="guideline-text">Semua dokumen akan dirahsiakan dan hanya digunakan untuk tujuan penilaian</span>
-          </div>
-          <div class="guideline-item">
-            <span class="guideline-icon">✅</span>
-            <span class="guideline-text">Pastikan semua dokumen wajib dimuat naik sebelum meneruskan</span>
+          <div class="upload-container">
+            <div class="file-upload-wrapper">
+              <.live_file_input upload={@uploads.surat_sokongan} class="file-input" accept=".pdf" />
+              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="surat_sokongan">
+                <span class="upload-icon"></span>
+                <span class="upload-text">Pilih Fail</span>
+              </button>
+            </div>
+            <!-- Show selected file indicator -->
+            <%= if @uploads.surat_sokongan.entries != [] do %>
+              <%= for entry <- @uploads.surat_sokongan.entries do %>
+                <div class="selected-file-display">
+                  <span class="file-icon"></span>
+                  <span class="file-name text-green"><%= entry.client_name %></span>
+                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_sokongan"></button>
+                </div>
+              <% end %>
+            <% end %>
+            <!-- Show already staged files -->
+            <%= if @uploaded_documents["surat_sokongan"] do %>
+              <div class="selected-file-display">
+                <span class="file-icon"></span>
+                <span class="file-name text-green"><%= @uploaded_documents["surat_sokongan"]["original_name"] %></span>
+                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="surat_sokongan"></button>
+              </div>
+            <% end %>
           </div>
         </div>
-      </div>
 
-      <!-- Navigation Buttons -->
-      <div class="button-container">
-        <button class="back-button" onclick="window.location.href='/skim_geran'">Kembali</button>
-        <button class="next-button" onclick="window.location.href='/pengesahan_permohonan'">Seterusnya</button>
-      </div>
+        <!-- Profil Organisasi -->
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Profil Organisasi <span class="required-mark">*</span></span>
+            <span class="document-hint">Dokumen profil lengkap organisasi pemohon</span>
+          </div>
+          <div class="upload-container">
+            <div class="file-upload-wrapper">
+              <.live_file_input upload={@uploads.profil_organisasi} class="file-input" accept=".pdf" />
+              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="profil_organisasi">
+                <span class="upload-icon"></span>
+                <span class="upload-text">Pilih Fail</span>
+              </button>
+            </div>
+            <%= if @uploads.profil_organisasi.entries != [] do %>
+              <%= for entry <- @uploads.profil_organisasi.entries do %>
+                <div class="selected-file-display">
+                  <span class="file-icon"></span>
+                  <span class="file-name text-green"><%= entry.client_name %></span>
+                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="profil_organisasi"></button>
+                </div>
+              <% end %>
+            <% end %>
+            <%= if @uploaded_documents["profil_organisasi"] do %>
+              <div class="selected-file-display">
+                <span class="file-icon"></span>
+                <span class="file-name text-green"><%= @uploaded_documents["profil_organisasi"]["original_name"] %></span>
+                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="profil_organisasi"></button>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Surat Kebenaran Penggunaan Fasiliti / Lokasi -->
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Surat Kebenaran Penggunaan Fasiliti / Lokasi <span class="required-mark">*</span></span>
+            <span class="document-hint">Surat kebenaran untuk menggunakan fasiliti atau lokasi projek</span>
+          </div>
+          <div class="upload-container">
+            <div class="file-upload-wrapper">
+              <.live_file_input upload={@uploads.surat_kebenaran} class="file-input" accept=".pdf" />
+              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="surat_kebenaran">
+                <span class="upload-icon"></span>
+                <span class="upload-text">Pilih Fail</span>
+              </button>
+            </div>
+            <%= if @uploads.surat_kebenaran.entries != [] do %>
+              <%= for entry <- @uploads.surat_kebenaran.entries do %>
+                <div class="selected-file-display">
+                  <span class="file-icon"></span>
+                  <span class="file-name text-green"><%= entry.client_name %></span>
+                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_kebenaran"></button>
+                </div>
+              <% end %>
+            <% end %>
+            <%= if @uploaded_documents["surat_kebenaran"] do %>
+              <div class="selected-file-display">
+                <span class="file-icon"></span>
+                <span class="file-name text-green"><%= @uploaded_documents["surat_kebenaran"]["original_name"] %></span>
+                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="surat_kebenaran"></button>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Rancangan Atur Cara Program -->
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Rancangan Atur Cara Program <span class="required-mark">*</span></span>
+            <span class="document-hint">Jadual dan atur cara program yang akan dilaksanakan</span>
+          </div>
+          <div class="upload-container">
+            <div class="file-upload-wrapper">
+              <.live_file_input upload={@uploads.rancangan_atur_cara} class="file-input" accept=".pdf" />
+              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="rancangan_atur_cara">
+                <span class="upload-icon"></span>
+                <span class="upload-text">Pilih Fail</span>
+              </button>
+            </div>
+            <%= if @uploads.rancangan_atur_cara.entries != [] do %>
+              <%= for entry <- @uploads.rancangan_atur_cara.entries do %>
+                <div class="selected-file-display">
+                  <span class="file-icon"></span>
+                  <span class="file-name text-green"><%= entry.client_name %></span>
+                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="rancangan_atur_cara"></button>
+                </div>
+              <% end %>
+            <% end %>
+            <%= if @uploaded_documents["rancangan_atur_cara"] do %>
+              <div class="selected-file-display">
+                <span class="file-icon"></span>
+                <span class="file-name text-green"><%= @uploaded_documents["rancangan_atur_cara"]["original_name"] %></span>
+                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="rancangan_atur_cara"></button>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Lesen Organisasi -->
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label required">Lesen Organisasi <span class="required-mark">*</span></span>
+            <span class="document-hint">Lesen pendaftaran organisasi yang sah</span>
+          </div>
+          <div class="upload-container">
+            <div class="file-upload-wrapper">
+              <.live_file_input upload={@uploads.lesen_organisasi} class="file-input" accept=".pdf" />
+              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="lesen_organisasi">
+                <span class="upload-icon"></span>
+                <span class="upload-text">Pilih Fail</span>
+              </button>
+            </div>
+            <%= if @uploads.lesen_organisasi.entries != [] do %>
+              <%= for entry <- @uploads.lesen_organisasi.entries do %>
+                <div class="selected-file-display">
+                  <span class="file-icon"></span>
+                  <span class="file-name text-green"><%= entry.client_name %></span>
+                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="lesen_organisasi"></button>
+                </div>
+              <% end %>
+            <% end %>
+            <%= if @uploaded_documents["lesen_organisasi"] do %>
+              <div class="selected-file-display">
+                <span class="file-icon"></span>
+                <span class="file-name text-green"><%= @uploaded_documents["lesen_organisasi"]["original_name"] %></span>
+                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="lesen_organisasi"></button>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Additional Documents -->
+        <div class="form-section-title">Dokumen Tambahan (Jika Ada)</div>
+
+        <!-- Sijil-sijil Pengiktirafan -->
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label">Sijil-sijil Pengiktirafan</span>
+            <span class="document-hint">Sijil pengiktirafan atau anugerah yang diterima</span>
+          </div>
+          <div class="upload-container">
+            <div class="file-upload-wrapper">
+              <.live_file_input upload={@uploads.sijil_pengiktirafan} class="file-input" accept=".pdf,.jpg,.jpeg,.png" />
+              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="sijil_pengiktirafan">
+                <span class="upload-icon"></span>
+                <span class="upload-text">Pilih Fail</span>
+              </button>
+            </div>
+            <%= if @uploads.sijil_pengiktirafan.entries != [] do %>
+              <%= for entry <- @uploads.sijil_pengiktirafan.entries do %>
+                <div class="selected-file-display">
+                  <span class="file-icon"></span>
+                  <span class="file-name text-green"><%= entry.client_name %></span>
+                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="sijil_pengiktirafan"></button>
+                </div>
+              <% end %>
+            <% end %>
+            <%= if @uploaded_documents["sijil_pengiktirafan"] do %>
+              <%= for file <- @uploaded_documents["sijil_pengiktirafan"] do %>
+                <div class="selected-file-display">
+                  <span class="file-icon"></span>
+                  <span class="file-name text-green"><%= file["original_name"] %></span>
+                  <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="sijil_pengiktirafan"></button>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Surat Rujukan -->
+        <div class="document-item">
+          <div class="document-info">
+            <span class="document-label">Surat Rujukan</span>
+            <span class="document-hint">Surat rujukan dari pihak ketiga</span>
+          </div>
+          <div class="upload-container">
+            <div class="file-upload-wrapper">
+              <.live_file_input upload={@uploads.surat_rujukan} class="file-input" accept=".pdf" />
+              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="surat_rujukan">
+                <span class="upload-icon"></span>
+                <span class="upload-text">Pilih Fail</span>
+              </button>
+            </div>
+            <%= if @uploads.surat_rujukan.entries != [] do %>
+              <%= for entry <- @uploads.surat_rujukan.entries do %>
+                <div class="selected-file-display">
+                  <span class="file-icon"></span>
+                  <span class="file-name text-green"><%= entry.client_name %></span>
+                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_rujukan"></button>
+                </div>
+              <% end %>
+            <% end %>
+            <%= if @uploaded_documents["surat_rujukan"] do %>
+              <div class="selected-file-display">
+                <span class="file-icon"></span>
+                <span class="file-name text-green"><%= @uploaded_documents["surat_rujukan"]["original_name"] %></span>
+                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="surat_rujukan"></button>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Upload Guidelines -->
+        <div class="guidelines-section">
+          <div class="form-section-title">Garis Panduan Muat Naik</div>
+          <div class="guidelines-content">
+            <div class="guideline-item"><span class="guideline-icon"></span><span class="guideline-text">Format yang diterima: PDF, JPG, PNG</span></div>
+            <div class="guideline-item"><span class="guideline-icon"></span><span class="guideline-text">Saiz maksimum fail: 10MB setiap fail</span></div>
+            <div class="guideline-item"><span class="guideline-icon"></span><span class="guideline-text">Semua dokumen akan dirahsiakan dan hanya digunakan untuk tujuan penilaian</span></div>
+            <div class="guideline-item"><span class="guideline-icon"></span><span class="guideline-text">Pastikan semua dokumen wajib dimuat naik sebelum meneruskan</span></div>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="button-container">
+          <button type="button" class="back-button" phx-click={JS.navigate(~p"/skim_geran")}>Kembali</button>
+          <button type="submit" class="next-button">Seterusnya</button>
+        </div>
+      </form>
+      <!-- End LiveView Form -->
     </div>
   </div>
 </div>
 
-<%= user_footer(assigns) %> 
+<%= user_footer(assigns) %>
+
+<script>
+window.addEventListener("phx:trigger-file-input", (e) => {
+  const upload = e.detail.upload;
+  const fileInput = document.querySelector(`input[data-phx-upload="${upload}"]`);
+  if (fileInput) {
+    fileInput.click();
+  }
+});
+</script>
+
+<style>
+.upload-container {
+  margin-top: 10px;
+}
+
+.file-upload-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+}
+
+.upload-button:hover {
+  background: #34495e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3);
+}
+
+.upload-button.uploaded {
+  background: #27ae60;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.2);
+}
+
+.upload-button.uploaded:hover {
+  background: #229954;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.upload-icon {
+  font-size: 16px;
+  color: white;
+}
+
+.upload-text {
+  font-weight: 600;
+  color: white;
+}
+
+.selected-file-display {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-icon {
+  font-size: 16px;
+  color: #666;
+}
+
+.text-green {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333;
+}
+</style>

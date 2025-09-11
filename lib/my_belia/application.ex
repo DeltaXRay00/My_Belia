@@ -14,8 +14,8 @@ defmodule MyBelia.Application do
       {Phoenix.PubSub, name: MyBelia.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: MyBelia.Finch},
-      # Start a worker by calling: MyBelia.Worker.start_link(arg)
-      # {MyBelia.Worker, arg},
+      # Add the GrantFormState Agent here
+      MyBelia.GrantFormState,
       # Start to serve requests, typically the last entry
       MyBeliaWeb.Endpoint
     ]
