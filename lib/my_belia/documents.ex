@@ -39,7 +39,10 @@ defmodule MyBelia.Documents do
   end
 
   def upsert_user_document(attrs) do
-    case get_user_document_by(attrs.user_id, attrs.doc_type) do
+    user_id = Map.get(attrs, :user_id) || Map.get(attrs, "user_id")
+    doc_type = Map.get(attrs, :doc_type) || Map.get(attrs, "doc_type")
+
+    case get_user_document_by(user_id, doc_type) do
       nil ->
         create_user_document(attrs)
       %UserDocument{} = doc ->

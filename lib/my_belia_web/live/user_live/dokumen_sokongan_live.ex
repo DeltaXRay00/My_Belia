@@ -9,7 +9,7 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganGeranLive do
     session_id = "grant_form_#{user_id || "anon"}"
     form_data = GrantFormState.get_form_data(session_id) || %{}
 
-    socket = 
+    socket =
       socket
       |> assign(
         current_user: current_user,
@@ -38,7 +38,7 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganGeranLive do
   end
 
   def handle_event("trigger-upload", %{"upload" => upload}, socket) do
-    upload_atom = String.to_existing_atom(upload)
+    _upload_atom = String.to_existing_atom(upload)
     {:noreply, push_event(socket, "trigger-file-input", %{upload: upload})}
   end
 
@@ -50,70 +50,105 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganGeranLive do
   def handle_event("save-documents", _params, socket) do
     session_id = socket.assigns.session_id
 
-    # Stage files (don't save to permanent storage yet)
-    staged_documents = %{
-      "surat_sokongan" => stage_upload(socket, :surat_sokongan),
-      "profil_organisasi" => stage_upload(socket, :profil_organisasi),
-      "surat_kebenaran" => stage_upload(socket, :surat_kebenaran),
-      "rancangan_atur_cara" => stage_upload(socket, :rancangan_atur_cara),
-      "lesen_organisasi" => stage_upload(socket, :lesen_organisasi),
-      "sijil_pengiktirafan" => stage_upload(socket, :sijil_pengiktirafan),
-      "surat_rujukan" => stage_upload(socket, :surat_rujukan)
-    }
+    staged_documents = stage_all_documents(socket)
 
-    # Merge with existing staged documents
-    existing_documents = socket.assigns.uploaded_documents || %{}
-    all_documents = Map.merge(existing_documents, staged_documents)
-
-    # Update form data with staged file references
     existing_data = socket.assigns.form_data || %{}
-    updated_data = Map.put(existing_data, "supporting_documents", all_documents)
+    existing_documents = existing_data["supporting_documents"] || %{}
+    merged_documents = Map.merge(existing_documents, staged_documents)
+    updated_data = Map.put(existing_data, "supporting_documents", merged_documents)
     GrantFormState.store_form_data(session_id, updated_data)
 
-    # Update socket with staged documents
-    socket = assign(socket, uploaded_documents: all_documents)
-
-    {:noreply, 
+    {:noreply,
      socket
-     |> put_flash(:info, "Dokumen telah dipilih dan akan disimpan selepas pengesahan!")
+     |> assign(uploaded_documents: merged_documents, form_data: updated_data)
+     |> put_flash(:info, "Dokumen telah dipilih!")
      |> push_navigate(to: ~p"/pengesahan_permohonan")}
+  end
+
+  def handle_event("save-and-back", _params, socket) do
+    session_id = socket.assigns.session_id
+
+    staged_documents = stage_all_documents(socket)
+
+    existing_data = socket.assigns.form_data || %{}
+    existing_documents = existing_data["supporting_documents"] || %{}
+    merged_documents = Map.merge(existing_documents, staged_documents)
+    updated_data = Map.put(existing_data, "supporting_documents", merged_documents)
+    GrantFormState.store_form_data(session_id, updated_data)
+
+    {:noreply,
+     socket
+     |> assign(uploaded_documents: merged_documents, form_data: updated_data)
+     |> push_navigate(to: ~p"/skim_geran")}
   end
 
   def handle_event("remove-document", %{"document_type" => doc_type}, socket) do
     session_id = socket.assigns.session_id
     current_documents = socket.assigns.uploaded_documents || %{}
-    
-    # Remove document from the specific type
+
     updated_documents = Map.delete(current_documents, doc_type)
 
-    # Update form data
     existing_data = socket.assigns.form_data || %{}
     updated_data = Map.put(existing_data, "supporting_documents", updated_documents)
     GrantFormState.store_form_data(session_id, updated_data)
 
-    # Update socket
     socket = assign(socket, uploaded_documents: updated_documents)
 
-    {:noreply, 
+    {:noreply,
      socket
      |> put_flash(:info, "Dokumen berjaya dipadam!")}
   end
 
-  # Helper function to stage uploads (store file info without moving to permanent storage)
+  # Consume all upload slots and build a staged map with base64 data
+  defp stage_all_documents(socket) do
+    %{
+      "surat_sokongan" => stage_upload(socket, :surat_sokongan),
+      "profil_organisasi" => stage_upload(socket, :profil_organisasi),
+      "surat_kebenaran" => stage_upload(socket, :surat_kebenaran),
+      "rancangan_atur_cara" => stage_upload(socket, :rancangan_atur_cara),
+      "lesen_organisasi" => stage_upload(socket, :lesen_organisasi),
+      "sijil_pengiktirafan" => stage_upload_multi(socket, :sijil_pengiktirafan),
+      "surat_rujukan" => stage_upload(socket, :surat_rujukan)
+    }
+    |> Enum.reject(fn {_k, v} -> v in [nil, []] end)
+    |> Enum.into(%{})
+  end
+
+  # Single-file field
   defp stage_upload(socket, upload_type) do
+    case consume_uploaded_entries(socket, upload_type, fn %{path: tmp_path}, entry ->
+           with {:ok, bin} <- File.read(tmp_path) do
+             {:ok,
+              %{
+                "original_name" => entry.client_name,
+                "size" => entry.client_size,
+                "type" => entry.client_type,
+                "staged" => true,
+                "data" => "base64:" <> Base.encode64(bin)
+              }}
+           end
+         end) do
+      [file_map | _] -> file_map
+      [] -> nil
+    end
+  end
+
+  # Multi-file field
+  defp stage_upload_multi(socket, upload_type) do
     consume_uploaded_entries(socket, upload_type, fn %{path: tmp_path}, entry ->
-      # Store file info but don't move to permanent storage yet
-      {:ok, %{
-        "temp_path" => tmp_path,
-        "original_name" => entry.client_name,
-        "size" => entry.client_size,
-        "type" => entry.client_type,
-        "staged" => true
-      }}
+      with {:ok, bin} <- File.read(tmp_path) do
+        {:ok,
+         %{
+           "original_name" => entry.client_name,
+           "size" => entry.client_size,
+           "type" => entry.client_type,
+           "staged" => true,
+           "data" => "base64:" <> Base.encode64(bin)
+         }}
+      end
     end)
   end
 
-  # Helper function to format file sizes
   def format_file_size(bytes) when is_integer(bytes) do
     cond do
       bytes < 1024 -> "#{bytes} B"

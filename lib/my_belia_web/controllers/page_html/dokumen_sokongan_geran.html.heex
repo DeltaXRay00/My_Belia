@@ -29,7 +29,7 @@
       <h3 class="form-instruction" translate="no">Sila Muat Naik Dokumen Sokongan Anda:</h3>
       
       <!-- Start LiveView Form -->
-      <form phx-submit="save-documents">
+      <form phx-submit="save-documents" phx-change="validate">
         <!-- Document Uploads -->
         <div class="form-section-title">Dokumen Wajib</div>
 
@@ -284,7 +284,7 @@
 
         <!-- Navigation Buttons -->
         <div class="button-container">
-          <button type="button" class="back-button" phx-click={JS.navigate(~p"/skim_geran")}>Kembali</button>
+          <button type="button" class="back-button" phx-click="save-and-back">Kembali</button>
           <button type="submit" class="next-button">Seterusnya</button>
         </div>
       </form>
@@ -298,7 +298,7 @@
 <script>
 window.addEventListener("phx:trigger-file-input", (e) => {
   const upload = e.detail.upload;
-  const fileInput = document.querySelector(`input[data-phx-upload="${upload}"]`);
+  const fileInput = document.querySelector(`input[name="${upload}"], input[name="${upload}[]"]`);
   if (fileInput) {
     fileInput.click();
   }
