@@ -49,13 +49,22 @@ defmodule MyBeliaWeb.UserLive.UserApplicationsLive do
     all_courses = CourseApplications.get_user_course_applications(user_id)
     all_grants = GrantApplications.get_user_grant_applications(user_id)
 
+    normalized = case filter do
+      # normalize Malay statuses to internal values where needed
+      "menunggu" -> "menunggu"
+      "diluluskan" -> "diluluskan"
+      "ditolak" -> "ditolak"
+      "tidak_lengkap" -> "tidak_lengkap"
+      other -> other
+    end
+
     {program_applications, course_applications, grant_applications} =
-      case filter do
+      case normalized do
         "all" -> {all_programs, all_courses, all_grants}
         "programs" -> {all_programs, [], []}
         "courses" -> {[], all_courses, []}
         "grants" -> {[], [], all_grants}
-        status when status in ["pending", "approved", "rejected", "incomplete"] ->
+        status when status in ["menunggu", "diluluskan", "ditolak", "tidak_lengkap"] ->
           {
             Enum.filter(all_programs, &(&1.status == status)),
             Enum.filter(all_courses, &(&1.status == status)),

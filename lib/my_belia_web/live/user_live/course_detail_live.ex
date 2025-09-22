@@ -17,7 +17,7 @@ defmodule MyBeliaWeb.UserLive.CourseDetailLive do
 
     # Get user's documents and education if user exists
     user_documents = if current_user do
-      Documents.get_user_documents(current_user.id)
+      Documents.list_general_user_documents(current_user.id)
     else
       []
     end
@@ -31,7 +31,7 @@ defmodule MyBeliaWeb.UserLive.CourseDetailLive do
     # Check if user meets application requirements
     can_apply = if current_user do
       has_required_documents = length(user_documents) > 0
-      has_education = length(user_educations) > 0
+      has_education = length(user_educations) > 0 or (current_user.education_level != nil and current_user.education_level != "")
       not has_applied and has_required_documents and has_education
     else
       false

@@ -1,0 +1,210 @@
+﻿<!-- View Application Modal -->
+<%= if @show_view_modal and @selected_application do %>
+  <div class="modal-overlay show">
+    <div class="modal-content large">
+      <div class="modal-header">
+        <h3>Butiran Permohonan Geran: <%= @selected_application.organization_name %></h3>
+        <button class="modal-close" phx-click="close-view-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Application Information -->
+        <div class="info-section">
+          <h4>Maklumat Permohonan</h4>
+          <div class="profile-grid">
+            <div class="profile-item">
+              <label>Nama Organisasi:</label>
+              <span><%= @selected_application.organization_name || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Nombor Pendaftaran:</label>
+              <span><%= @selected_application.registration_number || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Jenis Organisasi:</label>
+              <span><%= @selected_application.organization_type || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Tarikh Ditubuhkan:</label>
+              <span><%= @selected_application.established_date || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Alamat:</label>
+              <span><%= @selected_application.address || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Poskod:</label>
+              <span><%= @selected_application.postcode || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Daerah:</label>
+              <span><%= @selected_application.district || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Telefon Pejabat:</label>
+              <span><%= @selected_application.office_phone || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Telefon Bimbit:</label>
+              <span><%= @selected_application.mobile_phone || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Email:</label>
+              <span><%= @selected_application.email || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Laman Web:</label>
+              <span><%= @selected_application.website || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Media Sosial:</label>
+              <span><%= @selected_application.social_media || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Jumlah Ahli:</label>
+              <span><%= @selected_application.total_members || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Ahli Belia:</label>
+              <span><%= @selected_application.youth_members || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Bidang Aktiviti:</label>
+              <span><%= @selected_application.activity_field || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Nama Bank:</label>
+              <span><%= @selected_application.bank_name || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Pemegang Akaun:</label>
+              <span><%= @selected_application.account_holder || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Nombor Akaun:</label>
+              <span><%= @selected_application.account_number || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Skim Geran:</label>
+              <span><%= @selected_application.grant_scheme || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Jumlah Geran:</label>
+              <span>RM <%= @selected_application.grant_amount || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Tempoh Projek:</label>
+              <span><%= @selected_application.project_duration || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Nama Projek:</label>
+              <span><%= @selected_application.project_name || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Objektif Projek:</label>
+              <span><%= @selected_application.project_objective || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Kumpulan Sasaran:</label>
+              <span><%= @selected_application.target_group || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Lokasi Projek:</label>
+              <span><%= @selected_application.project_location || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Tarikh Mula:</label>
+              <span><%= @selected_application.project_start_date || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Tarikh Tamat:</label>
+              <span><%= @selected_application.project_end_date || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Kos Peralatan:</label>
+              <span>RM <%= @selected_application.equipment_cost || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Kos Bahan:</label>
+              <span>RM <%= @selected_application.material_cost || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Kos Pengangkutan:</label>
+              <span>RM <%= @selected_application.transport_cost || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Kos Pentadbiran:</label>
+              <span>RM <%= @selected_application.admin_cost || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Kos Lain:</label>
+              <span>RM <%= @selected_application.other_cost || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Jumlah Bajet:</label>
+              <span>RM <%= @selected_application.total_budget || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Status:</label>
+              <span class={"status-badge status-#{@selected_application.status}"}>
+                <%= case @selected_application.status do %>
+                  <% "menunggu" -> %> Menunggu
+                  <% "diluluskan" -> %> Diluluskan
+                  <% "ditolak" -> %> Ditolak
+                  <% "tidak_lengkap" -> %> Tidak Lengkap
+                  <% _ -> %> <%= @selected_application.status %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Uploaded Files Section -->
+        <div class="uploaded-files-section">
+          <h4>Dokumen yang Dimuat Naik</h4>
+          <%= if @user_documents && length(@user_documents) > 0 do %>
+            <div class="files-grid">
+              <%= for document <- @user_documents do %>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div style="font-weight: 600; margin-bottom: 5px; color: #374151;">
+                      <%= case document.doc_type do %>
+                        <% "surat_sokongan" -> "Surat Sokongan" %>
+                        <% "profil_organisasi" -> "Profil Organisasi" %>
+                        <% "surat_kebenaran" -> "Surat Kebenaran" %>
+                        <% "rancangan_atur_cara" -> "Rancangan Atur Cara" %>
+                        <% "lesen_organisasi" -> "Lesen Organisasi" %>
+                        <% "sijil_pengiktirafan" -> "Sijil Pengiktirafan" %>
+                        <% "surat_rujukan" -> "Surat Rujukan" %>
+                        <% _ -> document.doc_type %>
+                      <% end %>
+                    </div>
+                    <div style="font-size: 14px; color: #6b7280; margin-bottom: 10px;">
+                      <%= document.original_name %>
+                    </div>
+                    <div style="font-size: 12px; color: #9ca3af;">
+                      Dimuat naik: <%= Calendar.strftime(document.inserted_at, "%d/%m/%Y %H:%M") %>
+                    </div>
+                  </div>
+                  <div class="file-actions">
+                    <a href={document.file_url} target="_blank" style="display: inline-block; background: #3b82f6; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: 500;">
+                      Lihat Fail
+                    </a>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div style="text-align: center; padding: 20px; color: #6b7280; background: #f9fafb; border-radius: 8px; border: 1px dashed #d1d5db;">
+              <p>Tiada dokumen dimuat naik</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" phx-click="close-view-modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -50,13 +50,23 @@ defmodule MyBelia.GrantApplications.GrantApplication do
     field :other_cost, :decimal, default: 0
     field :total_budget, :decimal, default: 0
 
-    # Files (we store identifiers)
+    # Document relationships
+    belongs_to :surat_sokongan, MyBelia.Documents.UserDocument
+    belongs_to :profil_organisasi, MyBelia.Documents.UserDocument
+    belongs_to :surat_kebenaran, MyBelia.Documents.UserDocument
+    belongs_to :rancangan_atur_cara, MyBelia.Documents.UserDocument
+    belongs_to :lesen_organisasi, MyBelia.Documents.UserDocument
+    belongs_to :sijil_pengiktirafan, MyBelia.Documents.UserDocument
+    belongs_to :surat_rujukan, MyBelia.Documents.UserDocument
+
+    # Legacy field (keep for backward compatibility)
     field :supporting_documents, {:array, :string}, default: []
 
     # Status
     field :status, :string, default: "pending"
 
     belongs_to :user, User
+    belongs_to :reviewed_by, User
 
     timestamps()
   end
@@ -81,9 +91,13 @@ defmodule MyBelia.GrantApplications.GrantApplication do
       :target_group, :project_location, :project_start_date, :project_end_date,
       # budget
       :equipment_cost, :material_cost, :transport_cost, :admin_cost, :other_cost, :total_budget,
+      # document relationships
+      :surat_sokongan_id, :profil_organisasi_id, :surat_kebenaran_id, :rancangan_atur_cara_id,
+      :lesen_organisasi_id, :sijil_pengiktirafan_id, :surat_rujukan_id,
       # files/status
       :supporting_documents, :status
     ])
     |> validate_required(@required)
   end
 end
+

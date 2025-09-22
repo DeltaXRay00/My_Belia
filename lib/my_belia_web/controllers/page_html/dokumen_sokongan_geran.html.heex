@@ -41,28 +41,17 @@
           </div>
           <div class="upload-container">
             <div class="file-upload-wrapper">
-              <.live_file_input upload={@uploads.surat_sokongan} class="file-input" accept=".pdf" />
-              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="surat_sokongan">
-                <span class="upload-icon"></span>
+              <label class="upload-button" title="Muat naik">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="upload-icon"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
                 <span class="upload-text">Pilih Fail</span>
-              </button>
+                <.live_file_input upload={@uploads.surat_sokongan} accept=".pdf" class="sr-only" />
+              </label>
             </div>
-            <!-- Show selected file indicator -->
-            <%= if @uploads.surat_sokongan.entries != [] do %>
-              <%= for entry <- @uploads.surat_sokongan.entries do %>
-                <div class="selected-file-display">
-                  <span class="file-icon"></span>
-                  <span class="file-name text-green"><%= entry.client_name %></span>
-                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_sokongan"></button>
-                </div>
-              <% end %>
-            <% end %>
-            <!-- Show already staged files -->
-            <%= if @uploaded_documents["surat_sokongan"] do %>
+            <%= for entry <- @uploads.surat_sokongan.entries do %>
               <div class="selected-file-display">
                 <span class="file-icon"></span>
-                <span class="file-name text-green"><%= @uploaded_documents["surat_sokongan"]["original_name"] %></span>
-                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="surat_sokongan"></button>
+                <span class="file-name text-green"><%= entry.client_name %></span>
+                <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_sokongan"></button>
               </div>
             <% end %>
           </div>
@@ -76,26 +65,17 @@
           </div>
           <div class="upload-container">
             <div class="file-upload-wrapper">
-              <.live_file_input upload={@uploads.profil_organisasi} class="file-input" accept=".pdf" />
-              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="profil_organisasi">
-                <span class="upload-icon"></span>
+              <label class="upload-button" title="Muat naik">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="upload-icon"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
                 <span class="upload-text">Pilih Fail</span>
-              </button>
+                <.live_file_input upload={@uploads.profil_organisasi} accept=".pdf" class="sr-only" />
+              </label>
             </div>
-            <%= if @uploads.profil_organisasi.entries != [] do %>
-              <%= for entry <- @uploads.profil_organisasi.entries do %>
-                <div class="selected-file-display">
-                  <span class="file-icon"></span>
-                  <span class="file-name text-green"><%= entry.client_name %></span>
-                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="profil_organisasi"></button>
-                </div>
-              <% end %>
-            <% end %>
-            <%= if @uploaded_documents["profil_organisasi"] do %>
+            <%= for entry <- @uploads.profil_organisasi.entries do %>
               <div class="selected-file-display">
                 <span class="file-icon"></span>
-                <span class="file-name text-green"><%= @uploaded_documents["profil_organisasi"]["original_name"] %></span>
-                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="profil_organisasi"></button>
+                <span class="file-name text-green"><%= entry.client_name %></span>
+                <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="profil_organisasi"></button>
               </div>
             <% end %>
           </div>
@@ -109,26 +89,17 @@
           </div>
           <div class="upload-container">
             <div class="file-upload-wrapper">
-              <.live_file_input upload={@uploads.surat_kebenaran} class="file-input" accept=".pdf" />
-              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="surat_kebenaran">
-                <span class="upload-icon"></span>
+              <label class="upload-button" title="Muat naik">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="upload-icon"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
                 <span class="upload-text">Pilih Fail</span>
-              </button>
+                <.live_file_input upload={@uploads.surat_kebenaran} accept=".pdf" class="sr-only" />
+              </label>
             </div>
-            <%= if @uploads.surat_kebenaran.entries != [] do %>
-              <%= for entry <- @uploads.surat_kebenaran.entries do %>
-                <div class="selected-file-display">
-                  <span class="file-icon"></span>
-                  <span class="file-name text-green"><%= entry.client_name %></span>
-                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_kebenaran"></button>
-                </div>
-              <% end %>
-            <% end %>
-            <%= if @uploaded_documents["surat_kebenaran"] do %>
+            <%= for entry <- @uploads.surat_kebenaran.entries do %>
               <div class="selected-file-display">
                 <span class="file-icon"></span>
-                <span class="file-name text-green"><%= @uploaded_documents["surat_kebenaran"]["original_name"] %></span>
-                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="surat_kebenaran"></button>
+                <span class="file-name text-green"><%= entry.client_name %></span>
+                <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_kebenaran"></button>
               </div>
             <% end %>
           </div>
@@ -142,59 +113,17 @@
           </div>
           <div class="upload-container">
             <div class="file-upload-wrapper">
-              <.live_file_input upload={@uploads.rancangan_atur_cara} class="file-input" accept=".pdf" />
-              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="rancangan_atur_cara">
-                <span class="upload-icon"></span>
+              <label class="upload-button" title="Muat naik">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="upload-icon"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
                 <span class="upload-text">Pilih Fail</span>
-              </button>
+                <.live_file_input upload={@uploads.rancangan_atur_cara} accept=".pdf" class="sr-only" />
+              </label>
             </div>
-            <%= if @uploads.rancangan_atur_cara.entries != [] do %>
-              <%= for entry <- @uploads.rancangan_atur_cara.entries do %>
-                <div class="selected-file-display">
-                  <span class="file-icon"></span>
-                  <span class="file-name text-green"><%= entry.client_name %></span>
-                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="rancangan_atur_cara"></button>
-                </div>
-              <% end %>
-            <% end %>
-            <%= if @uploaded_documents["rancangan_atur_cara"] do %>
+            <%= for entry <- @uploads.rancangan_atur_cara.entries do %>
               <div class="selected-file-display">
                 <span class="file-icon"></span>
-                <span class="file-name text-green"><%= @uploaded_documents["rancangan_atur_cara"]["original_name"] %></span>
-                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="rancangan_atur_cara"></button>
-              </div>
-            <% end %>
-          </div>
-        </div>
-
-        <!-- Lesen Organisasi -->
-        <div class="document-item">
-          <div class="document-info">
-            <span class="document-label required">Lesen Organisasi <span class="required-mark">*</span></span>
-            <span class="document-hint">Lesen pendaftaran organisasi yang sah</span>
-          </div>
-          <div class="upload-container">
-            <div class="file-upload-wrapper">
-              <.live_file_input upload={@uploads.lesen_organisasi} class="file-input" accept=".pdf" />
-              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="lesen_organisasi">
-                <span class="upload-icon"></span>
-                <span class="upload-text">Pilih Fail</span>
-              </button>
-            </div>
-            <%= if @uploads.lesen_organisasi.entries != [] do %>
-              <%= for entry <- @uploads.lesen_organisasi.entries do %>
-                <div class="selected-file-display">
-                  <span class="file-icon"></span>
-                  <span class="file-name text-green"><%= entry.client_name %></span>
-                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="lesen_organisasi"></button>
-                </div>
-              <% end %>
-            <% end %>
-            <%= if @uploaded_documents["lesen_organisasi"] do %>
-              <div class="selected-file-display">
-                <span class="file-icon"></span>
-                <span class="file-name text-green"><%= @uploaded_documents["lesen_organisasi"]["original_name"] %></span>
-                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="lesen_organisasi"></button>
+                <span class="file-name text-green"><%= entry.client_name %></span>
+                <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="rancangan_atur_cara"></button>
               </div>
             <% end %>
           </div>
@@ -211,29 +140,18 @@
           </div>
           <div class="upload-container">
             <div class="file-upload-wrapper">
-              <.live_file_input upload={@uploads.sijil_pengiktirafan} class="file-input" accept=".pdf,.jpg,.jpeg,.png" />
-              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="sijil_pengiktirafan">
-                <span class="upload-icon"></span>
+              <label class="upload-button" title="Muat naik">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="upload-icon"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
                 <span class="upload-text">Pilih Fail</span>
-              </button>
+                <.live_file_input upload={@uploads.sijil_pengiktirafan} accept=".pdf,.jpg,.jpeg,.png" class="sr-only" />
+              </label>
             </div>
-            <%= if @uploads.sijil_pengiktirafan.entries != [] do %>
-              <%= for entry <- @uploads.sijil_pengiktirafan.entries do %>
-                <div class="selected-file-display">
-                  <span class="file-icon"></span>
-                  <span class="file-name text-green"><%= entry.client_name %></span>
-                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="sijil_pengiktirafan"></button>
-                </div>
-              <% end %>
-            <% end %>
-            <%= if @uploaded_documents["sijil_pengiktirafan"] do %>
-              <%= for file <- @uploaded_documents["sijil_pengiktirafan"] do %>
-                <div class="selected-file-display">
-                  <span class="file-icon"></span>
-                  <span class="file-name text-green"><%= file["original_name"] %></span>
-                  <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="sijil_pengiktirafan"></button>
-                </div>
-              <% end %>
+            <%= for entry <- @uploads.sijil_pengiktirafan.entries do %>
+              <div class="selected-file-display">
+                <span class="file-icon"></span>
+                <span class="file-name text-green"><%= entry.client_name %></span>
+                <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="sijil_pengiktirafan"></button>
+              </div>
             <% end %>
           </div>
         </div>
@@ -246,26 +164,17 @@
           </div>
           <div class="upload-container">
             <div class="file-upload-wrapper">
-              <.live_file_input upload={@uploads.surat_rujukan} class="file-input" accept=".pdf" />
-              <button type="button" class="upload-button" phx-click="trigger-upload" phx-value-upload="surat_rujukan">
-                <span class="upload-icon"></span>
+              <label class="upload-button" title="Muat naik">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="upload-icon"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
                 <span class="upload-text">Pilih Fail</span>
-              </button>
+                <.live_file_input upload={@uploads.surat_rujukan} accept=".pdf" class="sr-only" />
+              </label>
             </div>
-            <%= if @uploads.surat_rujukan.entries != [] do %>
-              <%= for entry <- @uploads.surat_rujukan.entries do %>
-                <div class="selected-file-display">
-                  <span class="file-icon"></span>
-                  <span class="file-name text-green"><%= entry.client_name %></span>
-                  <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_rujukan"></button>
-                </div>
-              <% end %>
-            <% end %>
-            <%= if @uploaded_documents["surat_rujukan"] do %>
+            <%= for entry <- @uploads.surat_rujukan.entries do %>
               <div class="selected-file-display">
                 <span class="file-icon"></span>
-                <span class="file-name text-green"><%= @uploaded_documents["surat_rujukan"]["original_name"] %></span>
-                <button type="button" class="cancel-btn" phx-click="remove-document" phx-value-document_type="surat_rujukan"></button>
+                <span class="file-name text-green"><%= entry.client_name %></span>
+                <button type="button" class="cancel-btn" phx-click="cancel-upload" phx-value-ref={entry.ref} phx-value-upload="surat_rujukan"></button>
               </div>
             <% end %>
           </div>
@@ -315,11 +224,22 @@ window.addEventListener("phx:trigger-file-input", (e) => {
   display: inline-block;
 }
 
-.file-input {
-  display: none;
+.file-input { display: none; }
+
+/* Overlay input covers the visible button and captures the click */
+.file-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3; /* ensure it captures the click over the button */
 }
 
 .upload-button {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -353,15 +273,16 @@ window.addEventListener("phx:trigger-file-input", (e) => {
   box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
 }
 
-.upload-icon {
-  font-size: 16px;
-  color: white;
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
 }
 
-.upload-text {
-  font-weight: 600;
-  color: white;
-}
+.upload-icon { font-size: 16px; color: white; }
+.upload-text { font-weight: 600; color: white; }
 
 .selected-file-display {
   margin-top: 10px;
@@ -404,3 +325,19 @@ window.addEventListener("phx:trigger-file-input", (e) => {
   background-color: #c82333;
 }
 </style>
+
+<script>
+// Ensure clicking the visible button reliably opens the hidden file input
+window.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('label.upload-button[for]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      var forId = this.getAttribute('for');
+      var input = document.getElementById(forId);
+      if (input) {
+        e.preventDefault();
+        input.click();
+      }
+    });
+  });
+});
+</script>

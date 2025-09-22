@@ -6,7 +6,7 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
     user_id = session["user_id"]
     current_user = if user_id, do: MyBelia.Accounts.get_user!(user_id)
 
-    user_documents = if current_user, do: Documents.get_user_documents(current_user.id), else: []
+    user_documents = if current_user, do: Documents.list_general_user_documents(current_user.id), else: []
 
     # Calculate progress
     uploaded_count = length(user_documents)
@@ -19,6 +19,17 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
       upload_progress: upload_progress,
       selected_files: %{}  # Track selected files
     )
+
+    socket = socket
+    |> allow_upload(:ic_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
+    |> allow_upload(:birth_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
+    |> allow_upload(:father_ic_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
+    |> allow_upload(:mother_ic_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
+    |> allow_upload(:resume_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
+    |> allow_upload(:cover_letter_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
+    |> allow_upload(:support_letter_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
+    |> allow_upload(:education_cert_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
+    |> allow_upload(:activity_cert_file, accept: ~w(.pdf), max_entries: 1, max_file_size: 10_000_000, auto_upload: false)
 
     {:ok, socket, layout: false}
   end
@@ -71,7 +82,7 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
             })
 
             # Get updated documents for progress
-            user_documents = Documents.get_user_documents(user.id)
+            user_documents = Documents.list_general_user_documents(user.id)
             uploaded_count = length(user_documents)
             upload_progress = round((uploaded_count / 9) * 100)
 
@@ -130,7 +141,7 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
     case Map.get(params, "upload_file_data") do
       nil ->
         # No file data, just show status
-        user_documents = Documents.get_user_documents(user.id)
+        user_documents = Documents.list_general_user_documents(user.id)
         uploaded_count = length(user_documents)
         upload_progress = round((uploaded_count / 9) * 100)
 
@@ -188,7 +199,7 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
                 case result do
                   :ok ->
                     # File was successfully processed and saved
-                    user_documents = Documents.get_user_documents(user.id)
+                    user_documents = Documents.list_general_user_documents(user.id)
                     uploaded_count = length(user_documents)
                     upload_progress = round((uploaded_count / 9) * 100)
 

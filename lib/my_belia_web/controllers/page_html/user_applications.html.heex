@@ -53,7 +53,7 @@
     <div class="filter-section">
       <div class="filter-tabs">
         <button class={"filter-tab #{if @current_filter == "all", do: "active"}"} phx-click="filter-applications" phx-value-filter="all">
-          Semua (<%= @total_program_applications + @total_course_applications %>)
+          Semua (<%= @total_program_applications + @total_course_applications + @total_grant_applications %>)
         </button>
         <button class={"filter-tab #{if @current_filter == "programs", do: "active"}"} phx-click="filter-applications" phx-value-filter="programs">
           Program (<%= @total_program_applications %>)
@@ -61,10 +61,13 @@
         <button class={"filter-tab #{if @current_filter == "courses", do: "active"}"} phx-click="filter-applications" phx-value-filter="courses">
           Kursus (<%= @total_course_applications %>)
         </button>
+        <button class={"filter-tab #{if @current_filter == "grants", do: "active"}"} phx-click="filter-applications" phx-value-filter="grants">
+          Geran (<%= @total_grant_applications %>)
+        </button>
 
         <div class="dropdown-filter">
           <button class="filter-tab dropdown-toggle" id="status-filter-btn" type="button">
-            Status ▼
+            Status
           </button>
           <div class="dropdown-menu" id="status-filter-menu">
             <button class="dropdown-item" phx-click="filter-applications" phx-value-filter="menunggu">Menunggu</button>
@@ -78,7 +81,7 @@
 
     <!-- Applications List -->
     <div class="applications-container">
-      <%= if length(@program_applications) == 0 and length(@course_applications) == 0 do %>
+      <%= if length(@program_applications) == 0 and length(@course_applications) == 0 and length(@grant_applications) == 0 do %>
         <div class="empty-state">
           <div class="empty-icon">📋</div>
           <h3>Tiada Permohonan</h3>
@@ -147,6 +150,47 @@
                       <td>
                         <span class={"application-status " <> application.status}>
                           <%= case application.status do
+                            "menunggu" -> "Menunggu"
+                            "diluluskan" -> "Diluluskan"
+                            "ditolak" -> "Ditolak"
+                            "tidak_lengkap" -> "Tidak Lengkap"
+                            _ -> application.status
+                          end %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Grant Applications -->
+        <%= if length(@grant_applications) > 0 do %>
+          <div class="applications-section">
+            <h2 class="section-title">Permohonan Geran</h2>
+            <div class="apps-table-wrap">
+              <table class="apps-table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Skim/Nama Projek</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <%= for {application, idx} <- Enum.with_index(@grant_applications, 1) do %>
+                    <tr>
+                      <td><%= idx %></td>
+                      <td>
+                        <%= application.project_name || application.grant_scheme || "-" %>
+                      </td>
+                      <td>
+                        <span class={"application-status " <> (if application.status in [nil, "pending"], do: "menunggu", else: application.status)}>
+                          <%= case application.status do
+                            nil -> "Menunggu"
+                            "pending" -> "Menunggu"
                             "menunggu" -> "Menunggu"
                             "diluluskan" -> "Diluluskan"
                             "ditolak" -> "Ditolak"
@@ -368,7 +412,20 @@
   .apps-table tbody tr:hover { background: #f9fafb; }
 
   .dropdown-filter { position: relative; }
-  .dropdown-toggle { position: relative; }
+  .dropdown-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.75rem 0.5rem 1rem;
+    min-width: 110px;
+  }
+  .dropdown-toggle::after {
+    content: "\25BE"; /* ▼ */
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1;
+  }
   .dropdown-menu {
     position: absolute;
     top: 110%;

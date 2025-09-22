@@ -65,16 +65,16 @@
             <td>
               <div class="action-buttons-small">
                 <button class="action-btn-small view" title="Lihat" phx-click="view-application" phx-value-application_id={application.id}>
-                  👁️
+👁️
                 </button>
                 <button class="action-btn-small delete" title="Padam" phx-click="delete-application" phx-value-application_id={application.id}>
-                  🗑️
+🗑️
                 </button>
                 <.status_dropdown
-                  id={"status-dropdown-#{application.id}"}
-                  application_id={application.id}
-                  current_status={application.status}
-                  show={@open_dropdown_id == "status-dropdown-#{application.id}"}
+id={"status-dropdown-#{application.id}"}
+application_id={application.id}
+current_status={application.status}
+show={@open_dropdown_id == "status-dropdown-#{application.id}"}
                 />
               </div>
             </td>
@@ -185,54 +185,54 @@
               <% total_edu = length(@education_entries) %>
               <%= for {edu, idx} <- Enum.with_index(@education_entries) do %>
                 <div class={"profile-grid edu-block #{if idx > 0, do: "edu-block--with-separator", else: ""}"}>
-                  <div class="profile-item">
-                    <label>Peringkat Tertinggi:</label>
-                    <span><%= edu.education_level || @selected_application.user.education_level || "Tiada maklumat" %></span>
-                  </div>
-                  <div class="profile-item">
-                    <label>Bidang Pengajian:</label>
-                    <span><%= edu.field_of_study || @selected_application.user.field_of_study || "Tiada maklumat" %></span>
-                  </div>
-                  <div class="profile-item">
-                    <label>Kursus/Program:</label>
-                    <span><%= edu.course || @selected_application.user.course || "Tiada maklumat" %></span>
-                  </div>
-                  <div class="profile-item">
-                    <label>Institusi:</label>
-                    <span><%= edu.institution || @selected_application.user.institution || "Tiada maklumat" %></span>
-                  </div>
-                  <div class="profile-item">
-                    <label>Tahun Tamat:</label>
-                    <span><%= if edu.graduation_date, do: Calendar.strftime(edu.graduation_date, "%d/%m/%Y"), else: (if @selected_application.user.graduation_date, do: Calendar.strftime(@selected_application.user.graduation_date, "%d/%m/%Y"), else: "Tiada maklumat") %></span>
-                  </div>
+<div class="profile-item">
+  <label>Peringkat Tertinggi:</label>
+  <span><%= edu.education_level || @selected_application.user.education_level || "Tiada maklumat" %></span>
+</div>
+<div class="profile-item">
+  <label>Bidang Pengajian:</label>
+  <span><%= edu.field_of_study || @selected_application.user.field_of_study || "Tiada maklumat" %></span>
+</div>
+<div class="profile-item">
+  <label>Kursus/Program:</label>
+  <span><%= edu.course || @selected_application.user.course || "Tiada maklumat" %></span>
+</div>
+<div class="profile-item">
+  <label>Institusi:</label>
+  <span><%= edu.institution || @selected_application.user.institution || "Tiada maklumat" %></span>
+</div>
+<div class="profile-item">
+  <label>Tahun Tamat:</label>
+  <span><%= if edu.graduation_date, do: Calendar.strftime(edu.graduation_date, "%d/%m/%Y"), else: (if @selected_application.user.graduation_date, do: Calendar.strftime(@selected_application.user.graduation_date, "%d/%m/%Y"), else: "Tiada maklumat") %></span>
+</div>
                 </div>
                 <%= if idx < total_edu - 1 do %>
-                  <div class="edu-divider"></div>
+<div class="edu-divider"></div>
                 <% end %>
               <% end %>
             <% else %>
               <%= if @selected_application.user.education_level || @selected_application.user.field_of_study || @selected_application.user.course || @selected_application.user.institution || @selected_application.user.graduation_date do %>
                 <div class="profile-grid edu-block">
-                  <div class="profile-item">
-                    <label>Peringkat Tertinggi:</label>
-                    <span><%= @selected_application.user.education_level || "Tiada maklumat" %></span>
-                  </div>
-                  <div class="profile-item">
-                    <label>Bidang Pengajian:</label>
-                    <span><%= @selected_application.user.field_of_study || "Tiada maklumat" %></span>
-                  </div>
-                  <div class="profile-item">
-                    <label>Kursus/Program:</label>
-                    <span><%= @selected_application.user.course || "Tiada maklumat" %></span>
-                  </div>
-                  <div class="profile-item">
-                    <label>Institusi:</label>
-                    <span><%= @selected_application.user.institution || "Tiada maklumat" %></span>
-                  </div>
-                  <div class="profile-item">
-                    <label>Tahun Tamat:</label>
-                    <span><%= if @selected_application.user.graduation_date, do: Calendar.strftime(@selected_application.user.graduation_date, "%d/%m/%Y"), else: "Tiada maklumat" %></span>
-                  </div>
+<div class="profile-item">
+  <label>Peringkat Tertinggi:</label>
+  <span><%= @selected_application.user.education_level || "Tiada maklumat" %></span>
+</div>
+<div class="profile-item">
+  <label>Bidang Pengajian:</label>
+  <span><%= @selected_application.user.field_of_study || "Tiada maklumat" %></span>
+</div>
+<div class="profile-item">
+  <label>Kursus/Program:</label>
+  <span><%= @selected_application.user.course || "Tiada maklumat" %></span>
+</div>
+<div class="profile-item">
+  <label>Institusi:</label>
+  <span><%= @selected_application.user.institution || "Tiada maklumat" %></span>
+</div>
+<div class="profile-item">
+  <label>Tahun Tamat:</label>
+  <span><%= if @selected_application.user.graduation_date, do: Calendar.strftime(@selected_application.user.graduation_date, "%d/%m/%Y"), else: "Tiada maklumat" %></span>
+</div>
                 </div>
               <% else %>
               <p class="no-documents">Tiada maklumat pendidikan.</p>
@@ -245,19 +245,26 @@
             <div class="info-section">
               <h4>Dokumen Yang Telah Dimuat Naik</h4>
               <div class="documents-grid">
-                <%= for document <- @user_documents do %>
-                  <div class="document-item">
-                    <div class="document-icon">📄</div>
-                    <div class="document-info">
-                      <div class="document-name"><%= get_document_label(document.doc_type) %></div>
-                      <div class="document-date">Dimuat naik: <%= Calendar.strftime(document.inserted_at, "%d/%m/%Y %H:%M") %></div>
-                    </div>
-                    <div class="document-actions">
-                      <button class="btn btn-small btn-primary" onclick={"window.open('#{document.file_url}', '_blank')"}>
-                        Lihat
-                      </button>
-                    </div>
-                  </div>
+<% docs = @user_documents
+|> Enum.filter(fn d -> d.doc_type in [
+  "ic","birth","father_ic","mother_ic","resume","cover_letter",
+  "support_letter","education_cert","activity_cert"
+] end)
+
+                %>
+                <%= for document <- docs do %>
+<div class="document-item">
+  <div class="document-icon">📄</div>
+  <div class="document-info">
+    <div class="document-name"><%= get_document_label(document.doc_type) %></div>
+    <div class="document-date">Dimuat naik: <%= Calendar.strftime(document.inserted_at, "%d/%m/%Y %H:%M") %></div>
+  </div>
+  <div class="document-actions">
+    <a href={~p"/admin/documents/#{document.id}/#{document.file_name}"} target="_blank" class="btn btn-small btn-primary" rel="noopener noreferrer">
+      Lihat
+    </a>
+  </div>
+</div>
                 <% end %>
               </div>
             </div>
@@ -279,19 +286,19 @@
               <div class="profile-item">
                 <label>Status:</label>
                 <span class={"status-badge status-#{@selected_application.status}"}>
-                  <%= case @selected_application.status do %>
-                    <% "menunggu" -> %> Menunggu
-                    <% "diluluskan" -> %> Diluluskan
-                    <% "ditolak" -> %> Ditolak
-                    <% "tidak_lengkap" -> %> Tidak Lengkap
-                    <% _ -> %> <%= @selected_application.status %>
-                  <% end %>
+<%= case @selected_application.status do %>
+  <% "menunggu" -> %> Menunggu
+  <% "diluluskan" -> %> Diluluskan
+  <% "ditolak" -> %> Ditolak
+  <% "tidak_lengkap" -> %> Tidak Lengkap
+  <% _ -> %> <%= @selected_application.status %>
+<% end %>
                 </span>
               </div>
               <%= if @selected_application.review_notes do %>
                 <div class="profile-item full-width">
-                  <label>Nota Semakan:</label>
-                  <span><%= @selected_application.review_notes %></span>
+<label>Nota Semakan:</label>
+<span><%= @selected_application.review_notes %></span>
                 </div>
               <% end %>
             </div>

@@ -30,6 +30,7 @@ defmodule MyBeliaWeb.CoreComponents do
   """
   def get_document_label(doc_type) do
     case doc_type do
+      # General docs
       "ic" -> "Salinan Kad Pengenalan"
       "birth" -> "Salinan Surat Beranak"
       "father_ic" -> "Salinan Kad Pengenalan Bapa"
@@ -39,6 +40,15 @@ defmodule MyBeliaWeb.CoreComponents do
       "support_letter" -> "Surat Iringan Sokongan"
       "education_cert" -> "Sijil-sijil Pendidikan"
       "activity_cert" -> "Sijil-sijil Aktiviti Luar"
+      # Grant docs
+      "lesen_organisasi" -> "Lesen Organisasi"
+      "profil_organisasi" -> "Profil Organisasi"
+      "surat_kebenaran" -> "Surat Kebenaran"
+      "rancangan_atur_cara" -> "Rancangan Atur Cara"
+      "sijil_pengiktirafan" -> "Sijil Pengiktirafan"
+      "surat_rujukan" -> "Surat Rujukan"
+      "surat_sokongan" -> "Surat Sokongan"
+      "proposal" -> "Proposal"
       _ -> doc_type
     end
   end
@@ -61,9 +71,11 @@ defmodule MyBeliaWeb.CoreComponents do
   def get_status_label(status) do
     case status do
       "menunggu" -> "Menunggu"
+      "pending" -> "Menunggu"
       "diluluskan" -> "Lulus"
       "ditolak" -> "Tolak"
       "tidak_lengkap" -> "Tidak Lengkap"
+      nil -> "Menunggu"
       _ -> status
     end
   end

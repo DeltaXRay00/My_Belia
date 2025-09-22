@@ -84,7 +84,7 @@ defmodule MyBeliaWeb.UserLive.PengesahanPermohonanLive do
   end
 
   defp move_to_permanent_storage(file_data) do
-    temp_path = file_data["temp_path"]
+    _temp_path = file_data["temp_path"]
     original_name = file_data["original_name"]
 
     # No disk copy: just return a struct with encoded data still referenced
