@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Permohonan Geran - MyBelia</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href={~p"/assets/admin.css"}>
+</head>
+<body>
+<.admin_layout current_page="permohonan_geran" page_title="Permohonan Geran">
+
+    <!-- Grant Application Management Content -->
+    <div class="grant-management-content">
+      <!-- Top Navigation Tabs -->
+      <div class="top-nav-tabs">
+        <div class="nav-tab active" onclick="window.location.href='/admin/permohonan_geran'">
+          <span>Utama</span>
+        </div>
+        <div class="nav-tab" onclick="window.location.href='/admin/permohonan_geran/lulus'">
+          <span>Lulus</span>
+        </div>
+        <div class="nav-tab" onclick="window.location.href='/admin/permohonan_geran/tolak'">
+          <span>Tolak</span>
+        </div>
+        <div class="nav-tab" onclick="window.location.href='/admin/permohonan_geran/tidak_lengkap'">
+          <span>Tidak Lengkap</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons centered">
+        <button class="action-btn new-grant-btn">Skim Geran Baru</button>
+        <button class="action-btn update-btn">Kemas Kini</button>
+        <button class="action-btn status-btn">Hantar Status</button>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <h3 class="filter-title">Tapisan</h3>
+        </div>
+        <div class="filter-controls">
+          <div class="search-box">
+            <input type="text" placeholder="Carian..." class="search-input" />
+          </div>
+          <div class="filter-dropdowns">
+            <div class="filter-item">
+              <label class="filter-label">Status</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Daerah</label>
+              <div class="filter-dropdown"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Applications Table -->
+      <div class="applications-table">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Organisasi</th>
+              <th>Skim Geran</th>
+              <th>Daerah</th>
+              <th>Tindakan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= if assigns[:grant_applications] && length(@grant_applications) > 0 do %>
+              <%= for {application, index} <- Enum.with_index(@grant_applications, 1) do %>
+                <tr>
+                  <td><%= index %></td>
+                  <td><%= application.organization_name || "Tiada Maklumat" %></td>
+                  <td><%= application.grant_scheme || "Tiada Maklumat" %></td>
+                  <td><%= application.district || "Tiada Maklumat" %></td>
+                  <td>
+                    <div class="action-icons">
+                      <button class="action-icon view-btn" title="Lihat Butiran" 
+                              phx-click="view-application" 
+                              phx-value-application_id={application.id}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                          <path d="M12 9a3 3 0 0 1 0 6"></path>
+                          <path d="M12 9a3 3 0 0 0 0 6"></path>
+                        </svg>
+                      </button>
+                      <button class="action-icon delete-btn" title="Padam"
+                              phx-click="delete-application"
+                              phx-value-application_id={application.id}
+                              data-confirm="Adakah anda pasti untuk memadam permohonan ini?">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3,6 5,6 21,6"></polyline>
+                          <path d="M19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                          <line x1="10" y1="11" x2="10" y2="17"></line>
+                          <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                      </button>
+                      <div class="more-options-container">
+                        <button class="action-icon more-btn" title="Lebih Banyak" 
+                                phx-click="toggle-status-dropdown" 
+                                phx-value-dropdown_id={application.id}>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 6,11 6,13"></polyline>
+                            <polyline points="12,9 12,11 12,13"></polyline>
+                            <polyline points="18,9 18,11 18,13"></polyline>
+                          </svg>
+                        </button>
+                        <div class={"more-options-dropdown #{if @open_dropdown_id == application.id, do: "show", else: ""}"}>
+                          <div class="option-item" 
+                               phx-click="select-new-status" 
+                               phx-value-application_id={application.id} 
+                               phx-value-new_status="menunggu">
+                            <span>Menunggu</span>
+                          </div>
+                          <div class="option-item" 
+                               phx-click="select-new-status" 
+                               phx-value-application_id={application.id} 
+                               phx-value-new_status="diluluskan">
+                            <span>Lulus</span>
+                          </div>
+                          <div class="option-item" 
+                               phx-click="select-new-status" 
+                               phx-value-application_id={application.id} 
+                               phx-value-new_status="menunggu">
+                            <span>Menunggu</span>
+                          </div>
+                          <div class="option-item" 
+                               phx-click="select-new-status" 
+                               phx-value-application_id={application.id} 
+                               phx-value-new_status="ditolak">
+                            <span>Tolak</span>
+                          </div>
+                          <div class="option-item" 
+                               phx-click="select-new-status" 
+                               phx-value-application_id={application.id} 
+                               phx-value-new_status="menunggu">
+                            <span>Menunggu</span>
+                          </div>
+                          <div class="option-item" 
+                               phx-click="select-new-status" 
+                               phx-value-application_id={application.id} 
+                               phx-value-new_status="tidak_lengkap">
+                            <span>Tidak Lengkap</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="5" class="text-center">Tiada permohonan geran dijumpai</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Summary Footer -->
+      <div class="summary-footer">
+        <span class="total-applicants">Jumlah Pemohon: <%= if assigns[:grant_applications], do: length(@grant_applications), else: 0 %></span>
+      </div>
+    </div>
+</.admin_layout>
+
+
+<!-- View Application Modal -->
+<%= if @show_view_modal and @selected_application do %>
+  <div class="modal-overlay show">
+    <div class="modal-content large">
+      <div class="modal-header">
+        <h3>Butiran Permohonan Geran: <%= @selected_application.organization_name %></h3>
+        <button class="modal-close" phx-click="close-view-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="info-section">
+          <h4>Maklumat Permohonan</h4>
+          <div class="profile-grid">
+            <div class="profile-item">
+              <label>Nama Organisasi:</label>
+              <span><%= @selected_application.organization_name || "Tiada maklumat" %></span>
+            </div>
+            <div class="profile-item">
+              <label>No. Pendaftaran:</label>
+              <span><%= @selected_application.registration_number || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Jenis Organisasi:</label>
+              <span><%= @selected_application.organization_type || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Tarikh Ditubuhkan:</label>
+              <span><%= if @selected_application.established_date, do: Calendar.strftime(@selected_application.established_date, "%d/%m/%Y"), else: "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Alamat:</label>
+              <span><%= @selected_application.address || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Poskod:</label>
+              <span><%= @selected_application.postcode || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Daerah:</label>
+              <span><%= @selected_application.district || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>No. Telefon Pejabat:</label>
+              <span><%= @selected_application.office_phone || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>No. Telefon:</label>
+              <span><%= @selected_application.mobile_phone || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Email:</label>
+              <span><%= @selected_application.email || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Laman Web:</label>
+              <span><%= @selected_application.website || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Media Sosial:</label>
+              <span><%= @selected_application.social_media || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Jumlah Ahli:</label>
+              <span><%= @selected_application.total_members || 0 %></span>
+            </div>
+            <div class="profile-item">
+              <label>Ahli Belia:</label>
+              <span><%= @selected_application.youth_members || 0 %></span>
+            </div>
+            <div class="profile-item">
+              <label>Bidang Aktiviti:</label>
+              <span><%= @selected_application.activity_field || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Skim Geran:</label>
+              <span><%= @selected_application.grant_scheme || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Amaun Dimohon:</label>
+              <span><%= @selected_application.grant_amount || 0 %></span>
+            </div>
+            <div class="profile-item">
+              <label>Tempoh Projek:</label>
+              <span><%= @selected_application.project_duration || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Nama Projek:</label>
+              <span><%= @selected_application.project_name || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Objektif Projek:</label>
+              <span><%= @selected_application.project_objective || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Kumpulan Sasaran:</label>
+              <span><%= @selected_application.target_group || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Lokasi Projek:</label>
+              <span><%= @selected_application.project_location || "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Tarikh Mula:</label>
+              <span><%= if @selected_application.project_start_date, do: Calendar.strftime(@selected_application.project_start_date, "%d/%m/%Y"), else: "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Tarikh Tamat:</label>
+              <span><%= if @selected_application.project_end_date, do: Calendar.strftime(@selected_application.project_end_date, "%d/%m/%Y"), else: "-" %></span>
+            </div>
+            <div class="profile-item">
+              <label>Jumlah Bajet:</label>
+              <span><%= @selected_application.total_budget || 0 %></span>
+            </div>
+            <div class="profile-item">
+              <label>Status:</label>
+              <span><%= @selected_application.status %></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="uploaded-files-section">
+          <h4>Dokumen yang Dimuat Naik</h4>
+                    <%= if @grant_supporting_documents && length(@grant_supporting_documents) > 0 do %>
+            <div class="files-grid">
+                             <%= for doc <- @grant_supporting_documents do %>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div style="font-weight: 600; margin-bottom: 5px; color: #374151;">
+                      <%= doc.label %>
+                    </div>
+                    <div style="font-size: 14px; color: #6b7280; margin-bottom: 10px;">
+                      <%= doc.file_name %>
+                    </div>
+                  </div>
+                  <div class="file-actions">
+                    <a href={~p"/admin/grant-docs/user/#{@selected_application.user_id}/#{doc.file_name}"} target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #3b82f6; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: 500;">
+                      Lihat Fail
+                    </a>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div style="text-align: center; padding: 20px; color: #6b7280; background: #f9fafb; border-radius: 8px; border: 1px dashed #d1d5db;">
+              <p>Tiada dokumen dimuat naik</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" phx-click="close-view-modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<!-- Status Change Confirmation Modal -->
+<%= if @show_status_confirmation do %>
+  <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99999; display: flex; align-items: center; justify-content: center;">
+    <div class="modal-content" style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+      <div class="modal-header" style="margin-bottom: 20px;">
+        <h3>Pengesahan Perubahan Status</h3>
+      </div>
+      
+      <div class="modal-body">
+        <p>Adakah anda pasti untuk menukar status permohonan kepada <strong><%= @status_change_new_status %></strong>?</p>
+      </div>
+      
+      <div class="modal-footer" style="margin-top: 20px; text-align: right; display: flex; gap: 10px; justify-content: flex-end;">
+        <button phx-click="cancel-status-change" style="background: #6b7280; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Batal</button>
+        <button phx-click="confirm-status-change" style="background: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Sahkan</button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  // Add click event listeners to dropdown toggles
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const dropdownId = this.getAttribute('data-dropdown');
+      const dropdownMenu = document.getElementById(dropdownId);
+      
+      // Toggle active class on the toggle
+      this.classList.toggle('active');
+      
+      // Toggle show class on the dropdown menu
+      dropdownMenu.classList.toggle('show');
+    });
+  });
+
+  // Mobile menu toggle
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('hidden');
+    mainContent.classList.toggle('sidebar-hidden');
+  });
+
+  // Tab navigation
+  const navTabs = document.querySelectorAll('.nav-tab');
+  navTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      // Remove active class from all tabs
+      navTabs.forEach(t => t.classList.remove('active'));
+      // Add active class to clicked tab
+      this.classList.add('active');
+    });
+  });
+
+  // Action button handlers
+  const newGrantBtn = document.querySelector('.new-grant-btn');
+  const updateBtn = document.querySelector('.update-btn');
+  const statusBtn = document.querySelector('.status-btn');
+
+  newGrantBtn.addEventListener('click', function() {
+    alert('Fungsi Skim Geran Baru akan dibangunkan');
+  });
+
+  updateBtn.addEventListener('click', function() {
+    alert('Fungsi Kemas Kini akan dibangunkan');
+  });
+
+  statusBtn.addEventListener('click', function() {
+    alert('Fungsi Hantar Status akan dibangunkan');
+  });
+
+  // Action icon handlers
+  const viewBtns = document.querySelectorAll('.view-btn');
+  const deleteBtns = document.querySelectorAll('.delete-btn');
+  const moreBtns = document.querySelectorAll('.more-btn');
+
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Removed - using LiveView event instead
+    });
+  });
+
+  deleteBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (confirm('Adakah anda pasti mahu memadamkan permohonan ini?')) {
+        alert('Permohonan telah dipadamkan');
+      }
+    });
+  });
+
+  // Remove the old event listeners for more buttons since we now use onclick
+  // moreBtns.forEach(btn => {
+  //   btn.addEventListener('click', function() {
+  //     alert('Menu Lebih Banyak akan dibangunkan');
+  //   });
+  // });
+});
+
+// More options dropdown functionality
+function toggleMoreOptions(button) {
+  // Prevent event bubbling
+  event.stopPropagation();
+  
+  // Close all other dropdowns first
+  const allDropdowns = document.querySelectorAll('.more-options-dropdown');
+  allDropdowns.forEach(dropdown => {
+    if (dropdown !== button.nextElementSibling) {
+      dropdown.classList.remove('show');
+    }
+  });
+  
+  // Toggle current dropdown
+  const dropdown = button.nextElementSibling;
+  if (dropdown) {
+    dropdown.classList.toggle('show');
+  }
+}
+
+function changeStatus(status, organizationName, event) {
+  // Prevent event bubbling
+  if (event) {
+    event.stopPropagation();
+  }
+  
+  // Close the dropdown
+  const dropdown = event ? event.target.closest('.more-options-dropdown') : null;
+  if (dropdown) {
+    dropdown.classList.remove('show');
+  }
+  
+  // Show confirmation message
+  const statusText = status === 'lulus' ? 'Lulus' : status === 'tolak' ? 'Tolak' : 'Tidak Lengkap';
+  const confirmed = confirm(`Adakah anda pasti mahu menukar status "${organizationName}" kepada "${statusText}"?`);
+  
+  if (confirmed) {
+    // Find the table row containing this organization
+    const tableRows = document.querySelectorAll('.data-table tbody tr');
+    let targetRow = null;
+    
+    for (let row of tableRows) {
+      const orgCell = row.querySelector('td:nth-child(2)'); // Organization column
+      if (orgCell && orgCell.textContent.trim() === organizationName) {
+        targetRow = row;
+        break;
+      }
+    }
+    
+    if (targetRow) {
+      // Get the organization data from the row
+      const rowData = {
+        no: targetRow.querySelector('td:nth-child(1)').textContent,
+        organization: targetRow.querySelector('td:nth-child(2)').textContent,
+        grantScheme: targetRow.querySelector('td:nth-child(3)').textContent,
+        district: targetRow.querySelector('td:nth-child(4)').textContent,
+        status: status
+      };
+      
+      // Store the moved organization data
+      storeMovedOrganization(rowData);
+      
+      // Remove the row from the current table
+      targetRow.remove();
+      
+      // Update the total count
+      updateTotalCount();
+      
+      // Show success message
+      alert(`Status "${organizationName}" telah berjaya ditukar kepada "${statusText}"`);
+      
+      // Navigate to the appropriate page based on status
+      switch(status) {
+        case 'lulus':
+          window.location.href = '/admin/permohonan_geran/lulus';
+          break;
+        case 'tolak':
+          window.location.href = '/admin/permohonan_geran/tolak';
+          break;
+        case 'tidak_lengkap':
+          window.location.href = '/admin/permohonan_geran/tidak_lengkap';
+          break;
+      }
+    }
+  }
+}
+
+function updateTotalCount() {
+  const tableRows = document.querySelectorAll('.data-table tbody tr');
+  const totalCount = tableRows.length;
+  const totalElement = document.querySelector('.total-applicants');
+  if (totalElement) {
+    totalElement.textContent = `Jumlah Pemohon: ${totalCount}`;
+  }
+}
+
+function storeMovedOrganization(organizationData) {
+  // Get existing moved organizations or initialize empty array
+  let movedOrganizations = JSON.parse(localStorage.getItem('movedOrganizations') || '[]');
+  
+  // Add the new organization
+  movedOrganizations.push(organizationData);
+  
+  // Store back to localStorage
+  localStorage.setItem('movedOrganizations', JSON.stringify(movedOrganizations));
+  
+  // Debug: Log the stored data
+  console.log('Stored organization:', organizationData);
+  console.log('All moved organizations:', movedOrganizations);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+  const dropdowns = document.querySelectorAll('.more-options-dropdown');
+  dropdowns.forEach(dropdown => {
+    if (!dropdown.contains(event.target) && !event.target.closest('.more-btn')) {
+      dropdown.classList.remove('show');
+    }
+  });
+});
+</script>
+
+<style>
+/* Modal styles - same as program pemohon page */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-overlay.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 0.75rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content.large {
+  max-width: 800px;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  font-weight: 600;
+  color: #374151;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.info-section {
+  margin-bottom: 2rem;
+}
+
+.info-section h4 {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.profile-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-item label {
+  font-weight: 500;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.profile-item span {
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-secondary {
+  background-color: #6b7280;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #4b5563;
+}
+
+.uploaded-files-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.file-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+}
+
+.file-info {
+  margin-bottom: 0.75rem;
+}
+
+.file-actions a {
+  display: inline-block;
+  background: #3b82f6;
+  color: white;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.file-actions a:hover {
+  background: #2563eb;
+}
+</style>
+</body>
+</html> 
+
+
+

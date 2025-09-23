@@ -241,32 +241,35 @@
           </div>
 
           <!-- Documents Information -->
-          <%= if length(@user_documents) > 0 do %>
-            <div class="info-section">
-              <h4>Dokumen Yang Telah Dimuat Naik</h4>
-              <div class="documents-grid">
-                <%= for document <- @user_documents do %>
-                  <div class="document-item">
-                    <div class="document-icon">📄</div>
-                    <div class="document-info">
-                      <div class="document-name"><%= get_document_label(document.doc_type) %></div>
-                      <div class="document-date">Dimuat naik: <%= Calendar.strftime(document.inserted_at, "%d/%m/%Y %H:%M") %></div>
-                    </div>
-                    <div class="document-actions">
-                      <button class="btn btn-small btn-primary" onclick={"window.open('#{document.file_url}', '_blank')"}>
-                        Lihat
-                      </button>
+          <div class="info-section">
+            <h4>Dokumen Yang Telah Dimuat Naik</h4>
+            <div class="documents-grid">
+              <% types = ["ic","birth","father_ic","mother_ic","resume","cover_letter","support_letter","education_cert","activity_cert"] %>
+              <%= for type <- types do %>
+                <% doc = Enum.find(@user_documents, &(&1.doc_type == type)) %>
+                <div class="document-item">
+                  <div class="document-icon">📄</div>
+                  <div class="document-info">
+                    <div class="document-name"><%= get_document_label(type) %></div>
+                    <div class="document-date">
+                      <%= if doc do %>
+                        Dimuat naik: <%= Calendar.strftime(doc.inserted_at, "%d/%m/%Y %H:%M") %>
+                      <% else %>
+                        Belum dimuat naik
+                      <% end %>
                     </div>
                   </div>
-                <% end %>
-              </div>
+                  <div class="document-actions">
+                    <%= if doc do %>
+                      <a href={~p"/admin/documents/#{doc.id}/#{doc.file_name}"} target="_blank" class="btn btn-small btn-primary" rel="noopener noreferrer">
+                        Lihat
+                      </a>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
             </div>
-          <% else %>
-            <div class="info-section">
-              <h4>Dokumen Yang Telah Dimuat Naik</h4>
-              <p class="no-documents">Tiada dokumen yang telah dimuat naik.</p>
-            </div>
-          <% end %>
+          </div>
 
           <!-- Application Information -->
           <div class="info-section">

@@ -1,14 +1,45 @@
 defmodule MyBeliaWeb.UserLive.PermohonanGeranLive do
   use MyBeliaWeb, :live_view
+  alias MyBelia.GrantFormState
 
   def mount(_params, session, socket) do
     user_id = session["user_id"]
     current_user = if user_id, do: MyBelia.Accounts.get_user!(user_id)
 
-    {:ok, assign(socket, current_user: current_user, page_title: "Permohonan Geran"), layout: false}
+    # Generate a session-specific key for the grant application
+    session_id = "grant_form_#{user_id}"
+
+    # Retrieve any existing form data if user navigates back
+    form_data = GrantFormState.get_form_data(session_id)
+
+    # Create the form using existing form data or empty map
+    form = to_form(form_data || %{}, as: :profile)
+
+    {:ok,
+     assign(socket,
+       current_user: current_user,
+       page_title: "Permohonan Geran",
+       session_id: session_id,
+       form_data: form_data,
+       form: form
+     ), layout: false}
   end
 
   def render(assigns) do
     MyBeliaWeb.PageHTML.permohonan_geran(assigns)
+  end
+
+  # Handle profile form submission
+  def handle_event("save-profile-data", %{"profile" => profile_params}, socket) do
+    session_id = socket.assigns.session_id
+
+    # Merge new profile params with any existing form data
+    updated_form_data = Map.merge(socket.assigns.form_data || %{}, profile_params)
+
+    # Store in GrantFormState
+    GrantFormState.store_form_data(session_id, updated_form_data)
+
+    # Move to the next step: Skim Geran
+    {:noreply, push_navigate(socket, to: ~p"/skim_geran")}
   end
 end

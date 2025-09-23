@@ -46,6 +46,10 @@ defmodule MyBeliaWeb.Router do
     live "/user-home", UserLive.UserHomeLive
     live "/dashboard", UserLive.UserHomeLive
 
+    # Add document viewing route
+    get "/documents/:id", DocumentController, :show
+    get "/documents/user/:user_id/:doc_type", DocumentController, :show_by_type
+
     # User Profile (LiveView)
     live "/profil_pengguna", UserLive.UserProfileLive
     live "/user-profile", UserLive.UserProfileLive
@@ -98,6 +102,11 @@ defmodule MyBeliaWeb.Router do
     live "/pengesahan_permohonan", UserLive.PengesahanPermohonanLive
     live "/pengesahan-permohonan", UserLive.PengesahanPermohonanLive
     live "/application-confirmation", UserLive.PengesahanPermohonanLive
+
+    # Application Success Page (LiveView)
+    live "/permohonan_selesai", UserLive.PermohonanSelesaiLive
+    live "/permohonan-selesai", UserLive.PermohonanSelesaiLive
+    live "/application-success", UserLive.PermohonanSelesaiLive
 
     # User Applications and Log (LiveView)
     live "/permohonan", UserLive.UserApplicationsLive
@@ -167,6 +176,13 @@ defmodule MyBeliaWeb.Router do
     live "/kursus_pemohon/lulus", AdminLive.KursusPemohonLulusLive
     live "/kursus_pemohon/tolak", AdminLive.KursusPemohonTolakLive
     live "/kursus_pemohon/tidak_lengkap", AdminLive.KursusPemohonTidakLengkapLive
+
+    # Admin access to document viewing
+    get "/admin/documents/:id", DocumentController, :show
+    get "/admin/documents/:id/:filename", DocumentController, :show
+    get "/admin/documents/user/:user_id/:doc_type", DocumentController, :show_by_type
+    get "/admin/grant-docs/user/:user_id/:filename", DocumentController, :show_by_filename
+    get "/admin/grant-docs/user/:user_id/type/:doc_type", DocumentController, :show_grant_by_type
   end
 
   # API endpoints for admin CRUD operations

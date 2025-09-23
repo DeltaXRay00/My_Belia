@@ -76,13 +76,13 @@ defmodule MyBeliaWeb.AdminLive.AdminProgramPemohonLive do
     end
   end
 
-    def handle_event("view-application", %{"application_id" => application_id}, socket) do
+  def handle_event("view-application", %{"application_id" => application_id}, socket) do
     try do
-            application = ProgramApplications.get_program_application!(application_id)
+      application = ProgramApplications.get_program_application!(application_id)
       application = MyBelia.Repo.preload(application, [:user])
 
-      # Get user documents and education details
-      user_documents = MyBelia.Documents.get_user_documents(application.user_id)
+      # Get ONLY general user documents (exclude grant-step docs)
+      user_documents = MyBelia.Documents.list_general_user_documents(application.user_id)
       user_educations = MyBelia.Accounts.get_user_educations(application.user_id)
 
       # Build combined education entries: explicit records + user-level fallback
@@ -142,7 +142,7 @@ defmodule MyBeliaWeb.AdminLive.AdminProgramPemohonLive do
      |> assign(:education_entries, [])}
   end
 
-    def handle_event("toggle-status-dropdown", %{"dropdown_id" => dropdown_id}, socket) do
+  def handle_event("toggle-status-dropdown", %{"dropdown_id" => dropdown_id}, socket) do
     # Toggle the dropdown visibility
     current_open = socket.assigns.open_dropdown_id
 
