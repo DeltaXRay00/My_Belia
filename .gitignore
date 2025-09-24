@@ -38,3 +38,9 @@ npm-debug.log
 
 # Ignore uploaded files
 /priv/static/uploads/
+
+# Ignore generated static images and digested artifacts
+/priv/static/images/
+/priv/static/*.gz
+/priv/static/manifest*.json
+/priv/static/robots-*.txt
