@@ -8,8 +8,8 @@ defmodule MyBeliaWeb.UserComponents do
     statics: MyBeliaWeb.static_paths()
 
   def user_topbar(assigns, opts \\ []) do
-    brand_logo_width = Keyword.get(opts, :brand_logo_width, "auto")
-    brand_logo_height = Keyword.get(opts, :brand_logo_height, "auto")
+    brand_logo_width = Keyword.get(opts, :brand_logo_width, "170px")
+    brand_logo_height = Keyword.get(opts, :brand_logo_height, "170px")
     profile_image_width = Keyword.get(opts, :profile_image_width, "auto")
     profile_image_height = Keyword.get(opts, :profile_image_height, "auto")
 
@@ -118,8 +118,8 @@ defmodule MyBeliaWeb.UserComponents do
   end
 
   def public_topbar(assigns, opts \\ []) do
-    brand_logo_width = Keyword.get(opts, :brand_logo_width, "auto")
-    brand_logo_height = Keyword.get(opts, :brand_logo_height, "auto")
+    brand_logo_width = Keyword.get(opts, :brand_logo_width, "170px")
+    brand_logo_height = Keyword.get(opts, :brand_logo_height, "170px")
 
     assigns = Map.merge(assigns, %{
       brand_logo_width: brand_logo_width,

@@ -1,4 +1,4 @@
-// If you want to use Phoenix channels, run `mix help phx.gen.channel`
+﻿// If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
 // import "./user_socket.js"
 
@@ -73,14 +73,14 @@ function initializeFileUploads() {
             // Update status to show selected file
             statusElement.innerHTML = `
               <span class="status-selected">
-                <span class="status-icon">📎</span>
+                <span class="status-icon">ðŸ“Ž</span>
                 ${file.name}
               </span>
             `;
             
             // Update button text
             uploadButton.innerHTML = `
-              <span class="upload-icon">✅</span>
+              <span class="upload-icon">âœ…</span>
               <span class="upload-text">Fail Dipilih</span>
             `;
             uploadButton.style.background = '#28a745';
@@ -439,3 +439,98 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+
+
+// Enhanced dropdown functionality with debugging
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("Dropdown script loaded");
+  
+  const dropdowns = document.querySelectorAll(".dropdown");
+  console.log("Found dropdowns:", dropdowns.length);
+  
+  dropdowns.forEach((dropdown, index) => {
+    const dropdownContent = dropdown.querySelector(".dropdown-content");
+    const dropdownTrigger = dropdown.querySelector("span");
+    
+    console.log(`Dropdown ${index}:`, dropdown, dropdownContent, dropdownTrigger);
+    
+    if (dropdownTrigger) {
+      dropdownTrigger.addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Dropdown clicked");
+        
+        // Close all other dropdowns
+        dropdowns.forEach(otherDropdown => {
+          if (otherDropdown !== dropdown) {
+            otherDropdown.classList.remove("active");
+          }
+        });
+        
+        // Toggle current dropdown
+        dropdown.classList.toggle("active");
+        console.log("Dropdown active:", dropdown.classList.contains("active"));
+      });
+    }
+    
+    // Close dropdown when clicking on a link
+    if (dropdownContent) {
+      const dropdownLinks = dropdownContent.querySelectorAll("a");
+      dropdownLinks.forEach(link => {
+        link.addEventListener("click", function() {
+          dropdown.classList.remove("active");
+        });
+      });
+    }
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function(e) {
+    if (!e.target.closest(".dropdown")) {
+      dropdowns.forEach(dropdown => {
+        dropdown.classList.remove("active");
+      });
+    }
+  });
+});
+
+
+// Simple dropdown functionality
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("Dropdown script loaded");
+  
+  const dropdowns = document.querySelectorAll(".dropdown");
+  console.log("Found dropdowns:", dropdowns.length);
+  
+  dropdowns.forEach((dropdown, index) => {
+    const dropdownTrigger = dropdown.querySelector("span");
+    
+    if (dropdownTrigger) {
+      dropdownTrigger.addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Dropdown clicked");
+        
+        // Close all other dropdowns
+        dropdowns.forEach(otherDropdown => {
+          if (otherDropdown !== dropdown) {
+            otherDropdown.classList.remove("active");
+          }
+        });
+        
+        // Toggle current dropdown
+        dropdown.classList.toggle("active");
+        console.log("Dropdown active:", dropdown.classList.contains("active"));
+      });
+    }
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function(e) {
+    if (!e.target.closest(".dropdown")) {
+      dropdowns.forEach(dropdown => {
+        dropdown.classList.remove("active");
+      });
+    }
+  });
+});

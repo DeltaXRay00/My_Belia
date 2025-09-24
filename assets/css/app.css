@@ -1,4 +1,4 @@
-@import "tailwindcss/base";
+﻿@import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 @import "./landing.css";
@@ -144,11 +144,14 @@
   min-height: 100vh;
   background-color: #f5f7fa;
   padding: 2rem 0;
+  margin-top: 80px;
 }
 
 .page-title-section {
   text-align: center;
   margin-bottom: 2rem;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .page-title {
@@ -812,12 +815,14 @@ textarea.form-input {
   background-color: #f5f7fa;
   padding: 3rem 0 2rem 0;
   text-align: center;
+  margin-top: 80px;
 }
 
 .senarai-program-section {
   background-color: #f5f7fa;
   min-height: 100vh;
   padding: 2rem 0 4rem 0;
+  margin-top: 0;
 }
 
 .section-title {
@@ -986,10 +991,24 @@ textarea.form-input {
   }
   
   .senarai-program-hero {
-    padding: 2rem 0 1.5rem 0;
-  }
+  background-color: #f5f7fa;
+  padding: 3rem 0 2rem 0;
+  text-align: center;
+  margin-top: 80px;
+}
   
   .senarai-program-section {
-    padding: 1.5rem 0 3rem 0;
-  }
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  padding: 2rem 0 4rem 0;
+  margin-top: 0;
 }
+}
+
+
+
+
+
+
+
+
