@@ -20,8 +20,7 @@ defmodule MyBeliaWeb.AdminLive.AdminPermohonanProgramLive do
        programs: programs,
        program_applications_counts: program_applications_counts,
        page_title: "Admin Permohonan Program"
-     ),
-     layout: false}
+     ), layout: false}
   end
 
   def render(assigns) do

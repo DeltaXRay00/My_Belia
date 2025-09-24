@@ -20,8 +20,7 @@ defmodule MyBeliaWeb.AdminLive.AdminPermohonanKursusLive do
        courses: courses,
        course_applications_counts: course_applications_counts,
        page_title: "Admin Permohonan Kursus"
-     ),
-     layout: false}
+     ), layout: false}
   end
 
   def render(assigns) do

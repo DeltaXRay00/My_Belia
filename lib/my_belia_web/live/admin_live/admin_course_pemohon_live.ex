@@ -26,8 +26,7 @@ defmodule MyBeliaWeb.AdminLive.AdminCoursePemohonLive do
        status_change_new_status: nil,
        status_change_current_status: nil,
        open_dropdown_id: nil
-     ),
-     layout: false}
+     ), layout: false}
   end
 
   def render(assigns) do
@@ -201,11 +200,9 @@ defmodule MyBeliaWeb.AdminLive.AdminCoursePemohonLive do
           _ -> new_status
         end
 
-        # Update the applications list
-        socket = assign(socket, :course_applications, course_applications)
-
         {:noreply,
          socket
+         |> assign(:course_applications, course_applications)
          |> put_flash(:info, "Status permohonan telah berjaya diubah kepada #{status_text}. Sekarang anda boleh lihat permohonan ini dalam tab '#{status_text}'.")}
 
       {:error, _changeset} ->
@@ -251,22 +248,14 @@ defmodule MyBeliaWeb.AdminLive.AdminCoursePemohonLive do
     end
   end
 
-  defp rank_level(nil), do: 99
-  defp rank_level(level) when is_binary(level) do
-    case String.downcase(String.trim(level)) do
-      "phd" -> 0
-      "doktor falsafah" -> 0
-      "sarjana" -> 1
-      "master" -> 1
-      "sarjana muda" -> 2
-      "ijazah sarjana muda" -> 2
-      "ijazah" -> 2
-      "bachelor" -> 2
-      "diploma" -> 3
-      "stpm" -> 4
-      "matrikulasi" -> 4
-      "spm" -> 5
-      _ -> 50
+  defp rank_level(level) do
+    case String.downcase(level || "") do
+      "phd" -> 5
+      "masters" -> 4
+      "degree" -> 3
+      "diploma" -> 2
+      "spm" -> 1
+      _ -> 0
     end
   end
 end

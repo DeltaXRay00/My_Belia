@@ -38,7 +38,7 @@ defmodule MyBeliaWeb.UserComponents do
           </div>
           <a href="/dokumen_sokongan" class="nav-link">PROFIL &amp;<br>MAKLUMAT</a>
           <span>GALERI</span>
-          <span class="multi-line">HUBUNGI<br>KAMI</span>
+          <a href="/hubungi_kami" class="nav-link multi-line">HUBUNGI<br>KAMI</a>
         </nav>
         <div class="topnav-right">
           <%= if @current_user && (@current_user.role == "admin" || @current_user.role == "superadmin") do %>
@@ -136,7 +136,7 @@ defmodule MyBeliaWeb.UserComponents do
           <a href="/" class="nav-link">UTAMA</a>
           <span class="multi-line">PROFIL &amp;<br>MAKLUMAT</span>
           <span>GALERI</span>
-          <span class="multi-line">HUBUNGI<br>KAMI</span>
+          <a href="/hubungi_kami" class="nav-link multi-line">HUBUNGI<br>KAMI</a>
         </nav>
         <div class="topnav-right">
           <a href="/log-masuk" class="login-link">LOG MASUK</a>

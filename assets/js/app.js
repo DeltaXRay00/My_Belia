@@ -46,9 +46,93 @@ liveSocket.connect()
 window.liveSocket = liveSocket
 
 // File upload handling
-document.addEventListener('DOMContentLoaded', function() {
+function initializeAdminSidebar() {
+  try {
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+    const menuToggle = document.getElementById('menu-toggle');
+
+    console.info('[AdminSidebar] init', {
+      sidebar: !!sidebar,
+      mainContent: !!mainContent,
+      menuToggle: !!menuToggle,
+      url: window.location.pathname
+    });
+
+    // Restore persisted state
+    const persisted = localStorage.getItem('adminSidebarHidden');
+    if (persisted === 'true' && sidebar && mainContent) {
+      sidebar.classList.add('hidden');
+      mainContent.classList.add('sidebar-hidden');
+    }
+
+    if (menuToggle && sidebar && mainContent) {
+      menuToggle.onclick = function () {
+        sidebar.classList.toggle('hidden');
+        mainContent.classList.toggle('sidebar-hidden');
+        // Fallback inline style to ensure movement even if CSS is overridden
+        const isHidden = sidebar.classList.contains('hidden');
+        if (isHidden) {
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.width = '0px';
+          mainContent.style.marginLeft = '0px';
+        } else {
+          sidebar.style.transform = '';
+          sidebar.style.width = '';
+          // Explicit fallback to sidebar width
+          mainContent.style.marginLeft = '280px';
+        }
+        localStorage.setItem('adminSidebarHidden', isHidden);
+      };
+    }
+
+    // Sidebar dropdowns that use .dropdown-toggle + data-dropdown id
+    const toggles = document.querySelectorAll('.dropdown-toggle');
+    console.info('[AdminSidebar] dropdown toggles found:', toggles.length);
+    toggles.forEach((toggle) => {
+      toggle.onclick = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const targetId = this.getAttribute('data-dropdown');
+        const menu = document.getElementById(targetId);
+        console.info('[AdminSidebar] dropdown click', { targetId, menuExists: !!menu });
+        if (!menu) return;
+        // Close other open menus
+        document.querySelectorAll('.dropdown-menu.show').forEach((el) => {
+          if (el !== menu) el.classList.remove('show');
+        });
+        this.classList.toggle('active');
+        menu.classList.toggle('show');
+        // Inline fallback for visibility
+        if (menu.classList.contains('show')) {
+          menu.style.display = 'block';
+        } else {
+          menu.style.display = '';
+        }
+      };
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.sidebar')) {
+        document.querySelectorAll('.dropdown-menu.show').forEach((el) => el.classList.remove('show'));
+        document.querySelectorAll('.dropdown-toggle.active').forEach((el) => el.classList.remove('active'));
+      }
+    });
+  } catch (err) {
+    console.error('initializeAdminSidebar error', err);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
   initializeFileUploads();
   initializeWysiwygEditors();
+  initializeAdminSidebar();
+});
+
+window.addEventListener('phx:page-loading-stop', function () {
+  // Re-bind after LV patches
+  initializeAdminSidebar();
 });
 
 // Initialize file upload functionality

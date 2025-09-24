@@ -149,23 +149,30 @@ body {
 .dropdown-toggle {
   cursor: pointer;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.dropdown-toggle::after {
-  content: "";
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
+/* Remove any pseudo-element arrows if present */
+.dropdown-toggle::after { content: none !important; }
+
+/* Caret element inside the link */
+.dropdown-toggle .caret {
+  display: inline-block;
   width: 0;
   height: 0;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-top: 6px solid #ffffff;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
   transition: transform 0.2s ease;
 }
 
-.dropdown-toggle.active::after {
+.dropdown-toggle.active .caret {
   transform: translateY(-50%) rotate(180deg);
 }
 

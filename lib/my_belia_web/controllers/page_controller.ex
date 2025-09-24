@@ -15,6 +15,10 @@ defmodule MyBeliaWeb.PageController do
     render(conn, :login, layout: false)
   end
 
+  def contact(conn, _params) do
+    render(conn, :contact, layout: false)
+  end
+
   def login_post(conn, %{"user" => user_params}) do
     case Accounts.authenticate_user(user_params["email"], user_params["password"]) do
       {:ok, user} ->
@@ -560,3 +564,4 @@ defmodule MyBeliaWeb.PageController do
     end
   end
 end
+

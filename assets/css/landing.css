@@ -2543,3 +2543,214 @@ body { margin: 0; padding-top: 80px; font-family: 'Inter', sans-serif; color: va
 
 
 
+
+
+/* Contact Page Styles */
+.contact-page {
+  background-color: #f5f7fa;
+  padding: 104px 0 4rem 0; /* include header clearance inside section */
+  margin-top: 0; /* avoid white bar from margin area */
+  min-height: calc(100vh - 80px);
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr; /* form on top, grid below */
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.contact-form-section {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* New details grid below the form */
+.contact-details-grid {
+  display: grid;
+  grid-template-columns: 520px 1fr; /* slimmer left card to balance with form */
+  gap: 2rem;
+}
+
+.contact-info-card,
+.contact-map-card {
+  align-self: start;
+}
+
+/* Existing blocks (kept) */
+.form-header {
+  margin-bottom: 2rem;
+}
+
+.form-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+}
+
+.form-subtitle {
+  font-size: 1rem;
+  color: #4a5568;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.contact-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.company-info {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.map-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contact-details-grid {
+    grid-template-columns: 1fr; /* stack info and map */
+  }
+  .contact-content {
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+  .contact-form-section,
+  .company-info,
+  .map-section {
+    padding: 1.5rem;
+  }
+  .form-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Contact Page - Enhanced Styles */
+.contact-page .page-header {
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto 1rem auto;
+  padding: 0 2rem;
+}
+
+.contact-page .page-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1.1;
+  color: #0f172a;
+  margin: 0 0 0.25rem 0;
+  text-transform: uppercase;
+}
+
+.contact-page .page-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #475569;
+  margin: 0 0 1rem 0;
+}
+
+.company-info .company-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+
+.company-info .company-name::after {
+  content: "";
+  display: block;
+  flex: 1 1 auto;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0,81,255,.5), rgba(0,81,255,0));
+  margin-left: 12px;
+  border-radius: 1px;
+}
+
+.company-info .registration-number {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 16px 0;
+}
+
+.address-title, .contact-title, .map-title {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.map-section .map-placeholder iframe {
+  height: 380px; /* taller map */
+}
+
+/* success/alert */
+.alert-success {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+  .contact-page .page-title { font-size: 28px; }
+  .map-section .map-placeholder iframe { height: 280px; }
+}
+
+.submit-btn {
+  background-color: #0051ff;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 16px rgba(0, 81, 255, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0046db;
+  box-shadow: 0 8px 22px rgba(0, 81, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 81, 255, 0.25);
+}
+
+.submit-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 81, 255, 0.25);
+}
+
