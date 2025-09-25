@@ -66,6 +66,22 @@ defmodule MyBelia.Documents do
     |> where([ud], ud.doc_type not in ^general)
     |> Repo.all()
   end
+  # Return ONLY the 6 specific grant documents for admin view
+  def list_grant_admin_documents(user_id) do
+    admin_grant_types = [
+      "profil_organisasi",
+      "rancangan_atur_cara",
+      "sijil_pengiktirafan",
+      "surat_kebenaran",
+      "surat_sokongan",
+      "surat_rujukan"
+    ]
+
+    UserDocument
+    |> where(user_id: ^user_id)
+    |> where([ud], ud.doc_type in ^admin_grant_types)
+    |> Repo.all()
+  end
 
   def create_user_document(attrs) do
     %UserDocument{}

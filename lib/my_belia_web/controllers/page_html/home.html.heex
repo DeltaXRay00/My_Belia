@@ -1,17 +1,8 @@
-<%= public_topbar(assigns) %>
+﻿<%= public_topbar(assigns) %>
 
 <section class="hero">
 	<div class="container hero-inner">
 		<img class="hero-logo" src={~p"/images/node-6.png"} alt="MyBelia" />
-		<form class="search" action="/search" method="GET">
-			<input type="text" name="q" placeholder="Carian program, kursus, atau geran..." class="search-input" required />
-			<button type="submit" class="search-button" aria-label="Cari">
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<circle cx="11" cy="11" r="8"></circle>
-					<path d="m21 21-4.35-4.35"></path>
-				</svg>
-			</button>
-		</form>
 	</div>
 </section>
 
@@ -43,7 +34,7 @@
 			<div class="tile"></div>
 			<div class="tile"></div>
 		</div>
-        </div>
+		</div>
 </section>
 
 <%= user_footer(assigns) %>

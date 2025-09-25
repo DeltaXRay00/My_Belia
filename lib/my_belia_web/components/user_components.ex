@@ -1,5 +1,6 @@
 defmodule MyBeliaWeb.UserComponents do
   use Phoenix.Component
+  alias Phoenix.LiveView.JS
 
   # Routes generation with the ~p sigil
   use Phoenix.VerifiedRoutes,
@@ -8,17 +9,44 @@ defmodule MyBeliaWeb.UserComponents do
     statics: MyBeliaWeb.static_paths()
 
   def user_topbar(assigns, opts \\ []) do
-    brand_logo_width = Keyword.get(opts, :brand_logo_width, "auto")
-    brand_logo_height = Keyword.get(opts, :brand_logo_height, "auto")
+    brand_logo_width = Keyword.get(opts, :brand_logo_width, "170px")
+    brand_logo_height = Keyword.get(opts, :brand_logo_height, "170px")
     profile_image_width = Keyword.get(opts, :profile_image_width, "auto")
     profile_image_height = Keyword.get(opts, :profile_image_height, "auto")
 
-    assigns = Map.merge(assigns, %{
-      brand_logo_width: brand_logo_width,
-      brand_logo_height: brand_logo_height,
-      profile_image_width: profile_image_width,
-      profile_image_height: profile_image_height
-    })
+    # Fetch notifications if current_user present
+    assigns =
+      if Map.get(assigns, :current_user) do
+        current_user = assigns.current_user
+
+        {notifications, unread_count} =
+          try do
+            {
+              MyBelia.Notifications.list_user_notifications(current_user.id),
+              MyBelia.Notifications.get_unread_count(current_user.id)
+            }
+          rescue
+            _ -> {[], 0}
+          end
+
+        Map.merge(assigns, %{
+          brand_logo_width: brand_logo_width,
+          brand_logo_height: brand_logo_height,
+          profile_image_width: profile_image_width,
+          profile_image_height: profile_image_height,
+          notifications: notifications,
+          unread_count: unread_count
+        })
+      else
+        Map.merge(assigns, %{
+          brand_logo_width: brand_logo_width,
+          brand_logo_height: brand_logo_height,
+          profile_image_width: profile_image_width,
+          profile_image_height: profile_image_height,
+          notifications: [],
+          unread_count: 0
+        })
+      end
 
     ~H"""
     <div class="topbar">
@@ -38,11 +66,66 @@ defmodule MyBeliaWeb.UserComponents do
           </div>
           <a href="/dokumen_sokongan" class="nav-link">PROFIL &amp;<br>MAKLUMAT</a>
           <span>GALERI</span>
-          <span class="multi-line">HUBUNGI<br>KAMI</span>
+          <a href="/hubungi_kami" class="nav-link multi-line">HUBUNGI<br>KAMI</a>
         </nav>
-        <div class="topnav-right">
+        <div class="topnav-right" style="position: relative; display: flex; align-items: center; gap: 0;">
           <%= if @current_user && (@current_user.role == "admin" || @current_user.role == "superadmin") do %>
             <a href="/admin" class="admin-link">Admin</a>
+          <% end %>
+          <%= if @current_user do %>
+            <% dropdown_id = "notification-dropdown" %>
+            <button type="button"
+                    class="notification-icon"
+                    aria-label="Notifikasi"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    style="background: none; border: 0; cursor: pointer; margin-right: 12px; position: relative;"
+                    phx-click={JS.show(to: "##{dropdown_id}", display: "block")}>
+              🔔
+              <%= if @unread_count && @unread_count > 0 do %>
+                <span style="position:absolute; top:-4px; right:0; background:#ef4444; color:#fff; font-size:10px; line-height:1; padding:2px 5px; border-radius:9999px;">{@unread_count}</span>
+              <% end %>
+            </button>
+
+            <div id={dropdown_id}
+                 role="menu"
+                 aria-label="Senarai Notifikasi"
+                 phx-click-away={JS.hide(to: "##{dropdown_id}")}
+                 phx-window-keydown={JS.hide(to: "##{dropdown_id}")}
+                 phx-key="escape"
+                 style="display:none; position:absolute; right:0; top:36px; width:340px; max-height:420px; overflow:auto; background:#fff; border:1px solid #e5e7eb; box-shadow:0 12px 32px rgba(0,0,0,.15); border-radius:10px; z-index:1000;">
+              <div style="position:absolute; top:-8px; right:16px; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-bottom:8px solid #e5e7eb;"></div>
+              <div style="position:absolute; top:-7px; right:16px; width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:7px solid #ffffff;"></div>
+
+              <div style="padding:10px 12px; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; align-items:center; border-top-left-radius:10px; border-top-right-radius:10px;">
+                <strong>Notifikasi</strong>
+                <a href="/notifikasi" style="font-size:12px; color:#2563eb; text-decoration:none;">Lihat Semua</a>
+              </div>
+              <div>
+                <%= if @notifications && length(@notifications) > 0 do %>
+                  <%= for n <- @notifications do %>
+                    <div role="menuitem"
+                         tabindex="0"
+                         style="padding:10px 12px; border-bottom:1px solid #f9fafb; display:flex; gap:8px; outline:none;"
+                         onmouseover="this.style.background='#f9fafb'"
+                         onmouseout="this.style.background='transparent'">
+                      <div style="flex:1;">
+                        <div style="font-weight:600; font-size:13px; color:#111827;">{n.title}</div>
+                        <div style="font-size:12px; color:#374151; margin-top:2px;">{n.message}</div>
+                        <div style="font-size:11px; color:#6b7280; margin-top:4px;">
+                          <%= Calendar.strftime(n.inserted_at, "%d/%m/%Y %I:%M %p") %>
+                        </div>
+                      </div>
+                      <%= if is_nil(n.read_at) do %>
+                        <div style="min-width:8px; height:8px; background:#10b981; border-radius:9999px; margin-top:6px;"></div>
+                      <% end %>
+                    </div>
+                  <% end %>
+                <% else %>
+                  <div style="padding:16px; font-size:13px; color:#6b7280;">Tiada notifikasi</div>
+                <% end %>
+              </div>
+            </div>
           <% end %>
           <a href="/profil_pengguna" class="profile-icon">
             <img src={~p"/images/0b9a9b81d3a113f1a70cb1cdc85b2d2d.jpg"} alt="Profile" style={"width: #{@profile_image_width}; height: #{@profile_image_height};"} />
@@ -118,8 +201,8 @@ defmodule MyBeliaWeb.UserComponents do
   end
 
   def public_topbar(assigns, opts \\ []) do
-    brand_logo_width = Keyword.get(opts, :brand_logo_width, "auto")
-    brand_logo_height = Keyword.get(opts, :brand_logo_height, "auto")
+    brand_logo_width = Keyword.get(opts, :brand_logo_width, "170px")
+    brand_logo_height = Keyword.get(opts, :brand_logo_height, "170px")
 
     assigns = Map.merge(assigns, %{
       brand_logo_width: brand_logo_width,
@@ -136,7 +219,7 @@ defmodule MyBeliaWeb.UserComponents do
           <a href="/" class="nav-link">UTAMA</a>
           <span class="multi-line">PROFIL &amp;<br>MAKLUMAT</span>
           <span>GALERI</span>
-          <span class="multi-line">HUBUNGI<br>KAMI</span>
+          <a href="/hubungi_kami" class="nav-link multi-line">HUBUNGI<br>KAMI</a>
         </nav>
         <div class="topnav-right">
           <a href="/log-masuk" class="login-link">LOG MASUK</a>

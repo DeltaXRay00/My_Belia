@@ -32,15 +32,14 @@ config :my_belia, MyBeliaWeb.Endpoint,
 config :my_belia, MyBelia.Mailer,
   adapter: Swoosh.Adapters.SMTP,
   relay: "smtp.gmail.com",
-  username: "mykemudahan@gmail.com",
-  password: "hfrj sevc oywl inlm",
-  ssl: false,
+  username: "mark.kevinfred@gmail.com",
+  password: "hwzq ynzw chqs mqvk",
+  ssl: true,
   tls: :always,
   auth: :always,
-  port: 587,
+  port: 1025,
   retries: 2,
-  no_mx_lookups: false,
-  tls_options: [verify: :verify_none]
+  no_mx_lookups: false
 
 
 # Configure esbuild (the version is required)
@@ -81,3 +80,5 @@ config :my_belia, MyBelia.Guardian,
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+

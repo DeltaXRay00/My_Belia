@@ -660,38 +660,7 @@ show={@open_dropdown_id == "status-dropdown-#{application.id}"}
           document.getElementById('review-notes').value = '';
         }
 
-        // Sidebar dropdown functionality
-        document.addEventListener('DOMContentLoaded', function() {
-          const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-          
-          dropdownToggles.forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              
-              const dropdownId = this.getAttribute('data-dropdown');
-              const dropdownMenu = document.getElementById(dropdownId);
-              
-              // Toggle active class on the toggle button
-              this.classList.toggle('active');
-              
-              // Toggle show class on the dropdown menu
-              dropdownMenu.classList.toggle('show');
-            });
-          });
-
-          // Hamburger menu toggle functionality
-          const menuToggle = document.getElementById('menu-toggle');
-          const sidebar = document.querySelector('.sidebar');
-          const mainContent = document.querySelector('.main-content');
-          
-          if (menuToggle && sidebar && mainContent) {
-            menuToggle.addEventListener('click', function() {
-              sidebar.classList.toggle('hidden');
-              mainContent.classList.toggle('sidebar-hidden');
-            });
-          }
-        });
+        // Sidebar dropdown and burger handled globally in app.js
       </script>
 
   <!-- Status Confirmation Modal -->

@@ -1058,14 +1058,14 @@ defmodule MyBeliaWeb.CoreComponents do
         <h3 class="section-title">UTAMA</h3>
         <ul class="nav-list">
           <li><a href="/admin" class={"nav-link #{if @current_page == "dashboard", do: "active"}"}>Dashboard</a></li>
-          <li><a href="/senarai_admin" class={"nav-link #{if @current_page == "admin", do: "active"}"}>Admin</a></li>
-          <li><a href="/admin" class={"nav-link #{if @current_page == "tetapan", do: "active"}"}>Tetapan</a></li>
+                      <li><a href="/senarai_admin" class={"nav-link #{if @current_page == "admin", do: "active"}"}>Admin</a></li>
+                      <li><a href="/admin" class={"nav-link #{if @current_page == "tetapan", do: "active"}"}>Tetapan</a></li>
           <li class="dropdown-item">
-            <a href="#" class="nav-link dropdown-toggle" data-dropdown="permohonan-utama">Permohonan</a>
+            <a href="#" class="nav-link dropdown-toggle" data-dropdown="permohonan-utama">Permohonan <span class="caret"></span></a>
             <ul class="dropdown-menu" id="permohonan-utama">
               <li><a href="/admin/permohonan_program" class={"nav-link #{if @current_page == "permohonan_program", do: "active"}"}>Program</a></li>
-              <li><a href="/admin/permohonan_kursus" class={"nav-link #{if @current_page == "permohonan_kursus", do: "active"}"}>Kursus</a></li>
-              <li><a href="/admin/permohonan_geran" class={"nav-link #{if @current_page == "permohonan_geran", do: "active"}"}>Geran</a></li>
+                              <li><a href="/admin/permohonan_kursus" class={"nav-link #{if @current_page == "permohonan_kursus", do: "active"}"}>Kursus</a></li>
+                              <li><a href="/admin/permohonan_geran" class={"nav-link #{if @current_page == "permohonan_geran", do: "active"}"}>Geran</a></li>
             </ul>
           </li>
           <li><a href="/admin" class={"nav-link #{if @current_page == "galeri", do: "active"}"}>Galeri</a></li>
@@ -1075,16 +1075,16 @@ defmodule MyBeliaWeb.CoreComponents do
       <div class="sidebar-section">
         <h3 class="section-title">SISTEM</h3>
         <ul class="nav-list">
-                <li class="dropdown-item">
-        <a href="#" class={"nav-link dropdown-toggle #{if @current_page == "laporan_program" or @current_page == "laporan_kursus", do: "active"}"} data-dropdown="laporan-sistem">Laporan</a>
-        <ul class={"dropdown-menu #{if @current_page == "laporan_program" or @current_page == "laporan_kursus", do: "show"}"} id="laporan-sistem">
-          <li><a href="/laporan_program" class={"nav-link #{if @current_page == "laporan_program", do: "active"}"}>Program</a></li>
-          <li><a href="/laporan_kursus" class={"nav-link #{if @current_page == "laporan_kursus", do: "active"}"}>Kursus</a></li>
-          <li><a href="/admin" class="nav-link">Geran</a></li>
-        </ul>
-      </li>
+          <li class="dropdown-item">
+            <a href="#" class={"nav-link dropdown-toggle #{if @current_page == "laporan_program" or @current_page == "laporan_kursus", do: "active"}"} data-dropdown="laporan-sistem">Laporan <span class="caret"></span></a>
+            <ul class={"dropdown-menu #{if @current_page == "laporan_program" or @current_page == "laporan_kursus", do: "show"}"} id="laporan-sistem">
+              <li><a href="/laporan_program" class={"nav-link #{if @current_page == "laporan_program", do: "active"}"}>Program</a></li>
+              <li><a href="/laporan_kursus" class={"nav-link #{if @current_page == "laporan_kursus", do: "active"}"}>Kursus</a></li>
+              <li><a href="/admin" class="nav-link">Geran</a></li>
+            </ul>
+          </li>
 
-          <li><a href="/admin" class={"nav-link #{if @current_page == "khidmat", do: "active"}"}>Khidmat Pengguna</a></li>
+          <li><a href="/admin/khidmat_pengguna" class={"nav-link #{if @current_page == "khidmat", do: "active"}"}>Khidmat Pengguna</a></li>
         </ul>
       </div>
 
@@ -1142,6 +1142,13 @@ defmodule MyBeliaWeb.CoreComponents do
   def admin_layout(assigns) do
     ~H"""
     <div class="admin-container">
+      <style>
+        /* Force dropdowns to display when .show is present */
+        .sidebar .dropdown-menu.show { display: block !important; }
+        /* Ensure burger toggle always moves layout */
+        .sidebar.hidden { transform: translateX(-100%) !important; width: 0 !important; }
+        .main-content.sidebar-hidden { margin-left: 0 !important; }
+      </style>
       <.admin_sidebar current_page={@current_page} />
 
       <div class="main-content">

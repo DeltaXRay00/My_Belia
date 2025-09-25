@@ -76,7 +76,7 @@ defmodule MyBeliaWeb.AdminLive.AdminPermohonanGeranLive do
     try do
       application = GrantApplications.get_grant_application!(application_id)
       application = MyBelia.Repo.preload(application, [:user])
-      grant_docs = Documents.list_grant_user_documents(application.user_id)
+      grant_docs = Documents.list_grant_admin_documents(application.user_id)
 
       {:noreply,
        socket

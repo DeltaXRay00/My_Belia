@@ -29,6 +29,7 @@ defmodule MyBeliaWeb.Router do
     live "/", PageLive.HomeLive
     live "/home", PageLive.HomeLive
     live "/laman-utama", PageLive.HomeLive
+    live "/hubungi_kami", PageLive.ContactLive
 
     # Authentication Pages (LiveView for display, Controller for actions)
     live "/log-masuk", PageLive.LoginLive
@@ -111,6 +112,12 @@ defmodule MyBeliaWeb.Router do
     # User Applications and Log (LiveView)
     live "/permohonan", UserLive.UserApplicationsLive
     live "/log", UserLive.UserLogLive
+
+    # Notifications (LiveView)
+    live "/notifikasi", UserLive.NotificationLive
+
+    # Contact Page (Controller)
+
   end
 
   scope "/", MyBeliaWeb do
@@ -121,6 +128,9 @@ defmodule MyBeliaWeb.Router do
     live "/admin-dashboard", AdminLive.AdminLive
     live "/admin-panel", AdminLive.AdminLive
     live "/admin-home", AdminLive.AdminLive
+
+    # Admin Messages (LiveView)
+    live "/admin/khidmat_pengguna", AdminLive.AdminContactMessagesLive
 
     # Admin Program Management (LiveView)
     live "/admin/permohonan_program", AdminLive.AdminPermohonanProgramLive
