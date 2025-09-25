@@ -163,23 +163,14 @@ defmodule MyBeliaWeb.AdminLive.AdminContactMessagesLive do
     # Create email content
     email_content = create_admin_response_email(contact_message)
 
-    # Send email using MyBelia.Mailer with logging
-    case MyBelia.Mailer.deliver(email_content) do
-      {:ok, response} ->
-        require Logger
-        Logger.info("Email sent OK: #{inspect(response)}")
-        :ok
-      {:error, reason} ->
-        require Logger
-        Logger.error("Email send failed: #{inspect(reason)}")
-        :error
-    end
+    # Send email using MyBelia.Mailer
+    MyBelia.Mailer.deliver(email_content)
   end
 
   defp create_admin_response_email(contact_message) do
     %Swoosh.Email{
-      to: [{contact_message.name, contact_message.email}],
-      from: {"MyBelia System", "mark.kevinfred@gmail.com"},
+      to: contact_message.email,
+      from: {"MyBelia System", "noreply@mybelia.com"},
       subject: "[MyBelia] Balasan untuk mesej anda",
       html_body: create_email_html_body(contact_message),
       text_body: create_email_text_body(contact_message)

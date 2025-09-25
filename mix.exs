@@ -52,6 +52,7 @@ defmodule MyBelia.MixProject do
        compile: false,
        depth: 1},
       {:swoosh, "~> 1.5"},
+      {:gen_smtp, "~> 1.0"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
@@ -60,7 +61,7 @@ defmodule MyBelia.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:guardian, "~> 2.0"}
-    ]
+   ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

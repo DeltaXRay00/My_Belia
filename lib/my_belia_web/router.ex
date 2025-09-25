@@ -113,6 +113,9 @@ defmodule MyBeliaWeb.Router do
     live "/permohonan", UserLive.UserApplicationsLive
     live "/log", UserLive.UserLogLive
 
+    # Notifications (LiveView)
+    live "/notifikasi", UserLive.NotificationLive
+
     # Contact Page (Controller)
 
   end
