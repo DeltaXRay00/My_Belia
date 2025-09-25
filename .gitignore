@@ -44,3 +44,5 @@ npm-debug.log
 /priv/static/*.gz
 /priv/static/manifest*.json
 /priv/static/robots-*.txt
+
+!priv/static/images/**
