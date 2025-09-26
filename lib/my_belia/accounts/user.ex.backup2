@@ -43,29 +43,46 @@ defmodule MyBelia.Accounts.User do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :password_confirmation, :full_name, :daerah, :role, :status, :jawatan, :unit_bahagian, :ic_number, :birth_date, :birth_place, :gender, :phone_number, :religion, :race, :residential_address, :mailing_address, :education_level, :institution, :field_of_study, :course, :graduation_date, :avatar_url])
-    |> validate_required([:email, :password, :password_confirmation, :full_name])
-    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
-    |> validate_length(:email, max: 160)
-    |> validate_length(:password, min: 6, max: 100)
-    |> validate_confirmation(:password, message: "does not match password")
+    |> cast(attrs, [
+      :email, :password, :password_confirmation, :full_name, :daerah,
+      :role, :status, :last_login, :jawatan, :unit_bahagian,
+      :ic_number, :birth_date, :birth_place, :gender, :phone_number,
+      :religion, :race, :residential_address, :mailing_address,
+      :education_level, :institution, :field_of_study, :course, :graduation_date,
+      :avatar_url
+    ])
+    |> validate_required([:email, :full_name])
+    |> validate_format(:email, ~r/@/)
+    |> validate_password()
     |> unique_constraint(:email)
-    |> hash_password()
+    |> put_password_hash()
   end
 
-  @doc """
-  Verifies a password against the stored hash.
-  """
-  def verify_password(password, hash) do
-    Pbkdf2.verify_pass(password, hash)
-  end
-
-  defp hash_password(changeset) do
-    case changeset do
-      %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
-        put_change(changeset, :password_hash, Pbkdf2.hash_pwd_salt(password))
-      _ ->
+    defp validate_password(changeset) do
+    case get_change(changeset, :password) do
+      nil ->
+        # No password change, skip password validation
         changeset
+      _password ->
+        # Password is being changed, validate it
+        changeset
+        |> validate_length(:password, min: 6)
+        |> validate_confirmation(:password)
     end
+  end
+
+  defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, password_hash: hash_password(password))
+  end
+
+  defp put_password_hash(changeset), do: changeset
+
+  defp hash_password(password) do
+    :crypto.hash(:sha256, password)
+    |> Base.encode16()
+  end
+
+  def verify_password(password, password_hash) do
+    hash_password(password) == password_hash
   end
 end

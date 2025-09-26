@@ -45,59 +45,40 @@ defmodule MyBelia.ContactMessages do
   end
 
   @spec change_contact_message(ContactMessage.t(), map) :: Ecto.Changeset.t()
-  def change_contact_message(%ContactMessage{} = contact_message, attrs \\ %{}) do
-    ContactMessage.changeset(contact_message, attrs)
+  def change_contact_message(%ContactMessage{} = msg, attrs \\ %{}) do
+    ContactMessage.changeset(msg, attrs)
+  end
+
+  @spec list_contact_messages(keyword) :: [ContactMessage.t()]
+  def list_contact_messages(opts \\ []) do
+    status = Keyword.get(opts, :status)
+    search = Keyword.get(opts, :search)
+
+    ContactMessage
+    |> maybe_filter_status(status)
+    |> maybe_search(search)
+    |> order_by([m], desc: m.inserted_at)
+    |> Repo.all()
+  end
+
+  defp maybe_filter_status(query, nil), do: query
+  defp maybe_filter_status(query, "semua"), do: query
+  defp maybe_filter_status(query, status) when is_binary(status), do: where(query, [m], m.status == ^status)
+
+  defp maybe_search(query, nil), do: query
+  defp maybe_search(query, ""), do: query
+  defp maybe_search(query, term) do
+    ilike_term = "%" <> term <> "%"
+    where(query, [m], ilike(m.name, ^ilike_term) or ilike(m.email, ^ilike_term) or ilike(m.subject, ^ilike_term))
   end
 
   @spec get_contact_message!(integer) :: ContactMessage.t()
   def get_contact_message!(id), do: Repo.get!(ContactMessage, id)
 
-  @spec list_contact_messages() :: [ContactMessage.t()]
-  def list_contact_messages do
-    Repo.all(ContactMessage)
-  end
-
-  @spec list_contact_messages(keyword) :: [ContactMessage.t()]
-  def list_contact_messages(opts) do
-    status = Keyword.get(opts, :status, "semua")
-    search = Keyword.get(opts, :search, "")
-
-    query = ContactMessage
-    |> order_by([c], desc: c.inserted_at)
-
-    query = if status != "semua" do
-      where(query, [c], c.status == ^status)
-    else
-      query
-    end
-
-    query = if search != "" do
-      search_term = "%#{search}%"
-      where(query, [c], ilike(c.name, ^search_term) or ilike(c.email, ^search_term) or ilike(c.subject, ^search_term))
-    else
-      query
-    end
-
-    Repo.all(query)
-  end
-
-  @spec list_contact_messages_by_status(String.t()) :: [ContactMessage.t()]
-  def list_contact_messages_by_status(status) do
-    ContactMessage
-    |> where([c], c.status == ^status)
-    |> order_by([c], desc: c.inserted_at)
-    |> Repo.all()
-  end
-
   @spec update_contact_message(ContactMessage.t(), map) :: {:ok, ContactMessage.t()} | {:error, Ecto.Changeset.t()}
-  def update_contact_message(%ContactMessage{} = contact_message, attrs) do
-    contact_message
+  def update_contact_message(%ContactMessage{} = msg, attrs) do
+    msg
     |> ContactMessage.changeset(attrs)
     |> Repo.update()
-  end
-
-  @spec delete_contact_message(ContactMessage.t()) :: {:ok, ContactMessage.t()}
-  def delete_contact_message(%ContactMessage{} = contact_message) do
-    Repo.delete(contact_message)
   end
 end

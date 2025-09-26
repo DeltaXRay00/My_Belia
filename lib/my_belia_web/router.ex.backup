@@ -98,7 +98,6 @@ defmodule MyBeliaWeb.Router do
     # Support Documents Step (LiveView)
     live "/dokumen_sokongan_geran", UserLive.DokumenSokonganGeranLive
     live "/dokumen-sokongan-geran", UserLive.DokumenSokonganGeranLive
-    live "/grant-support-documents", UserLive.DokumenSokonganGeranLive
 
     # Application Confirmation Step (LiveView)
     live "/pengesahan_permohonan", UserLive.PengesahanPermohonanLive
@@ -200,44 +199,38 @@ defmodule MyBeliaWeb.Router do
   scope "/admin", MyBeliaWeb do
     pipe_through [:browser, :admin_auth]
 
-    # Admin CRUD operations for programs
-    get "/programs", PageController, :admin_programs
-    get "/programs/new", PageController, :new_program
-    post "/programs", PageController, :create_program
-    get "/programs/:id/edit", PageController, :edit_program
-    put "/programs/:id", PageController, :update_program
-    delete "/programs/:id", PageController, :delete_program
+    # Course CRUD operations
+    get "/courses/:id", AdminController, :get_course
+    put "/courses/:id", AdminController, :update_course
+    post "/courses", AdminController, :create_course
+    delete "/courses/:id", AdminController, :delete_course
 
-    # Admin CRUD operations for courses
-    get "/courses", PageController, :admin_courses
-    get "/courses/new", PageController, :new_course
-    post "/courses", PageController, :create_course
-    get "/courses/:id/edit", PageController, :edit_course
-    put "/courses/:id", PageController, :update_course
-    delete "/courses/:id", PageController, :delete_course
+    # Program CRUD operations
+    get "/programs/:id", AdminController, :get_program
+    put "/programs/:id", AdminController, :update_program
+    post "/programs", AdminController, :create_program
+    delete "/programs/:id", AdminController, :delete_program
   end
 
-  # API endpoints for user CRUD operations
-  scope "/user", MyBeliaWeb do
-    pipe_through [:browser, :auth]
+  # Other scopes may use custom stacks.
+  # scope "/api", MyBeliaWeb do
+  #   pipe_through :api
+  # end
 
-    # User CRUD operations for applications
-    get "/applications", PageController, :user_applications
-    get "/applications/new", PageController, :new_application
-    post "/applications", PageController, :create_application
-    get "/applications/:id/edit", PageController, :edit_application
-    put "/applications/:id", PageController, :update_application
-    delete "/applications/:id", PageController, :delete_application
-  end
+  # Enable LiveDashboard and Swoosh mailbox preview in development
+  if Application.compile_env(:my_belia, :dev_routes) do
+    # If you want to use the LiveDashboard in production, you should put
+    # it behind authentication and allow only admins to access it.
+    # If your application does not have an admins-only section yet,
+    # you can use Plug.BasicAuth to set up some basic authentication
+    # as long as you are also using SSL (which you should anyway).
+    import Phoenix.LiveDashboard.Router
 
-  # API endpoints for public access
-  scope "/api", MyBeliaWeb do
-    pipe_through :api
+    scope "/dev" do
+      pipe_through :browser
 
-    # Public API endpoints
-    get "/programs", PageController, :api_programs
-    get "/courses", PageController, :api_courses
-    get "/programs/:id", PageController, :api_program
-    get "/courses/:id", PageController, :api_course
+      live_dashboard "/dashboard", metrics: MyBeliaWeb.Telemetry
+      forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
   end
 end
