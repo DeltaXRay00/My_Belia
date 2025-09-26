@@ -44,7 +44,7 @@ defmodule MyBelia.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:email, :password, :password_confirmation, :full_name, :daerah, :role, :status, :jawatan, :unit_bahagian, :ic_number, :birth_date, :birth_place, :gender, :phone_number, :religion, :race, :residential_address, :mailing_address, :education_level, :institution, :field_of_study, :course, :graduation_date, :avatar_url])
-    |> validate_required([:email, :password, :password_confirmation, :full_name, :daerah])
+    |> validate_required([:email, :password, :password_confirmation, :full_name])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
     |> validate_length(:password, min: 6, max: 100)
@@ -53,10 +53,17 @@ defmodule MyBelia.Accounts.User do
     |> hash_password()
   end
 
+  @doc """
+  Verifies a password against the stored hash.
+  """
+  def verify_password(password, hash) do
+    Pbkdf2.verify_pass(password, hash)
+  end
+
   defp hash_password(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
-        put_change(changeset, :password_hash, Bcrypt.hash_pwd_salt(password))
+        put_change(changeset, :password_hash, Pbkdf2.hash_pwd_salt(password))
       _ ->
         changeset
     end
