@@ -38,7 +38,7 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
     # Start a transaction to handle both user update and education records
     Repo.transaction(fn ->
       # Update user profile
-      case Accounts.update_user(socket.assigns.current_user, user_params_with_avatar) do
+      case Accounts.update_user_profile(socket.assigns.current_user, user_params_with_avatar) do
         {:ok, updated_user} ->
           # Delete existing education records
           Accounts.delete_user_educations(updated_user.id)
@@ -85,7 +85,7 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
       user_params
     end
 
-    case Accounts.update_user(socket.assigns.current_user, user_params_with_avatar) do
+    case Accounts.update_user_profile(socket.assigns.current_user, user_params_with_avatar) do
       {:ok, updated_user} ->
         {:noreply,
          socket
@@ -112,7 +112,7 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
       user_params
     end
 
-    case Accounts.update_user(socket.assigns.current_user, user_params_with_avatar) do
+    case Accounts.update_user_profile(socket.assigns.current_user, user_params_with_avatar) do
       {:ok, updated_user} ->
         {:noreply,
          socket
@@ -132,7 +132,7 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
     # Process avatar upload if any
     user_params_with_avatar = process_avatar_upload(socket, user_params)
 
-    case Accounts.update_user(socket.assigns.current_user, user_params_with_avatar) do
+    case Accounts.update_user_profile(socket.assigns.current_user, user_params_with_avatar) do
       {:ok, updated_user} ->
         {:noreply,
          socket
@@ -171,7 +171,7 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
         case consume_and_store_avatar(socket) do
           {:ok, avatar_url} ->
             IO.inspect("Avatar stored successfully: #{avatar_url}", label: "AVATAR UPLOAD DEBUG")
-            case Accounts.update_user(socket.assigns.current_user, %{avatar_url: avatar_url}) do
+            case Accounts.update_user_profile(socket.assigns.current_user, %{avatar_url: avatar_url}) do
               {:ok, updated_user} ->
                 user_with_educations = Accounts.get_user_with_educations!(updated_user.id)
                 {:noreply,

@@ -51,15 +51,19 @@
       </thead>
       <tbody>
         <%= for {application, index} <- Enum.with_index(@grant_applications, 1) do %>
+          <% user = application.user || %{} %>
           <tr>
             <td><%= index %></td>
-            <td><%= application.organization_name || application.user.full_name %></td>
-            <td><%= application.user.daerah %></td>
-            <td><%= Date.diff(Date.utc_today(), application.user.birth_date) |> div(365) %></td>
+            <td><%= application.organization_name || user.full_name || "-" %></td>
+            <td><%= Map.get(user, :daerah) || "-" %></td>
+            <td><%= case Map.get(user, :birth_date) do
+              %Date{} = d -> Date.diff(Date.utc_today(), d) |> div(365)
+              _ -> "-"
+            end %></td>
             <td><%= Date.to_string(application.inserted_at) %></td>
             <td>
-                             <span class={"status-badge status-badge--" <> (if application.status in [nil, "pending"], do: "menunggu", else: application.status)}>
-               <%= get_status_label(application.status) %>
+              <span class={"status-badge status-badge--" <> (if application.status in [nil, "pending"], do: "menunggu", else: application.status)}>
+                <%= get_status_label(application.status) %>
               </span>
             </td>
             <td>
