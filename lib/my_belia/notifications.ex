@@ -135,7 +135,7 @@ defmodule MyBelia.Notifications do
   Creates a notification for admin response.
   """
   def create_admin_response_notification(user_id, contact_message) do
-    expires_at = DateTime.add(DateTime.utc_now(), 30, :day)
+    expires_at = DateTime.add(DateTime.utc_now(), 7, :day)
 
     create_notification(%{
       user_id: user_id,
