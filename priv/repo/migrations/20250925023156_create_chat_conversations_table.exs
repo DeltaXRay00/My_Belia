@@ -10,7 +10,6 @@ defmodule MyBelia.Repo.Migrations.CreateChatConversationsTable do
       timestamps()
     end
 
-    create index(:chat_conversations, [:contact_message_id])
     create index(:chat_conversations, [:user_id])
     create index(:chat_conversations, [:admin_id])
     create unique_index(:chat_conversations, [:contact_message_id])
