@@ -171,6 +171,9 @@ defmodule MyBeliaWeb.Router do
     get "/senarai_admin/:id/edit", PageController, :edit_admin
     put "/senarai_admin/:id", PageController, :update_admin
 
+    # Admin Grant Listing (LiveView)
+    live "/admin/senarai_geran", AdminLive.AdminSenaraiGeranLive
+
     # Admin Grant Status Pages (LiveView)
     live "/admin/permohonan_geran/lulus", AdminLive.AdminPermohonanGeranLulusLive
     live "/admin/permohonan_geran/tolak", AdminLive.AdminPermohonanGeranTolakLive

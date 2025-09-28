@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senarai Geran - MyBelia</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href={~p"/assets/admin.css"}>
+  <style>
+    /* Geran Grid Styles */
+    .geran-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem;
+    }
+
+    .geran-card {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 2px dashed #d1d5db;
+      min-height: 200px;
+      transition: all 0.2s;
+    }
+
+    .geran-card:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .geran-card.placeholder {
+      border: 2px dashed #9ca3af;
+      background: #f9fafb;
+    }
+
+    .geran-card-content {
+      padding: 1.5rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .geran-management-content {
+      padding: 1rem;
+    }
+
+    .filter-section {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-header {
+      margin-bottom: 1rem;
+    }
+
+    .filter-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #374151;
+      margin: 0;
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .search-button {
+      padding: 0.75rem;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .filter-dropdowns {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .filter-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .action-section {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1.5rem;
+    }
+
+    .new-skim-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .new-skim-btn:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .new-skim-btn:active {
+      transform: translateY(0);
+    }
+
+    .filter-dropdown {
+      padding: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      background: white;
+      min-width: 120px;
+    }
+  </style>
+</head>
+<body>
+<.admin_layout current_page="senarai_geran" page_title="Senarai Geran">
+
+    <!-- Geran Management Content -->
+      <!-- Action Button -->
+      <div class="action-section">
+        <button class="new-skim-btn" id="new-skim-btn">Skim Baru</button>
+      </div>
+    <div class="geran-management-content">
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <h3 class="filter-title">Tapisan</h3>
+        </div>
+        <div class="filter-controls">
+          <form class="search-box" action="/admin/senarai_geran" method="GET">
+            <input type="text" name="q" placeholder="Carian geran..." class="search-input" />
+            <button type="submit" class="search-button" aria-label="Cari">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+            </button>
+          </form>
+          <div class="filter-dropdowns">
+            <div class="filter-item">
+              <label class="filter-label">Status</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Daerah</label>
+              <div class="filter-dropdown"></div>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Tarikh</label>
+              <div class="filter-dropdown"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Geran Applications Grid -->
+      <div class="geran-grid">
+        <!-- Display blank placeholder cards -->
+        <%= for _i <- 1..9 do %>
+          <div class="geran-card placeholder">
+            <div class="geran-card-content">
+              <!-- Blank card content -->
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+</.admin_layout>
+
+<script>
+// Skim Baru button handler
+document.addEventListener("DOMContentLoaded", function() {
+  const newSkimBtn = document.getElementById("new-skim-btn");
+  if (newSkimBtn) {
+    newSkimBtn.addEventListener("click", function() {
+      // Handle Skim Baru button click
+      alert("Fungsi Skim Baru akan dibangunkan");
+      // You can add navigation or modal opening logic here
+    });
+  }
+});
+
+// Application action functions
+function viewApplication(id) {
+  window.location.href = /admin/geran/;
+}
+
+function approveApplication(id) {
+  if (confirm("Adakah anda pasti untuk meluluskan permohonan ini?")) {
+    // Handle approval
+    console.log("Approve application", id);
+  }
+}
+
+function rejectApplication(id) {
+  if (confirm("Adakah anda pasti untuk menolak permohonan ini?")) {
+    // Handle rejection
+    console.log("Reject application", id);
+  }
+}
+</script>
+</body>
+</html>
