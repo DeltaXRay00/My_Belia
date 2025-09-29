@@ -191,14 +191,19 @@ defmodule MyBeliaWeb.AdminController do
   def create_skim(conn, %{"skim" => skim_params}) do
     # Map frontend field names to database field names
     mapped_params = %{
-      "nama_skim" => skim_params["name"],
-      "diskripsi" => skim_params["description"] || "",
-      "tujuan" => skim_params["purpose"] || "",
-      "syarat_syarat" => skim_params["requirements"] || "",
-      "skop_pembiayaan" => skim_params["scope"] || "",
-      "had_pembiayaan" => skim_params["limit"] || "",
-      "tempoh_pembiayaan" => skim_params["duration"] || "",
-      "image_data" => skim_params["image_data"]
+      "name" => skim_params["name"],
+      "description" => skim_params["description"] || "",
+      "purpose" => skim_params["purpose"] || "",
+      "requirements" => skim_params["requirements"] || "",
+      "funding_scope" => skim_params["scope"] || "",
+      "funding_limit" => skim_params["limit"] || "",
+      "funding_period" => skim_params["duration"] || "",
+      "image_data" => skim_params["image_data"],
+      "start_date" => skim_params["start_date"],
+      "end_date" => skim_params["end_date"],
+      "start_time" => skim_params["start_time"],
+      "end_time" => skim_params["end_time"],
+      "created_by_id" => get_current_user_id(conn)
     }
 
     case Grants.create_grant(mapped_params) do
@@ -213,6 +218,16 @@ defmodule MyBeliaWeb.AdminController do
         |> json(%{success: false, errors: format_changeset_errors(changeset)})
     end
   end
+  # Helper function to get current user ID
+  defp get_current_user_id(conn) do
+    # This is a placeholder - you may need to implement this based on your authentication system
+    # For now, we will use a default admin user ID or nil
+    case conn.assigns[:current_user] do
+      %{id: user_id} -> user_id
+      _ -> 1  # Default admin user ID - you should replace this with proper auth
+    end
+  end
+
   # Helper function to format changeset errors
   defp format_changeset_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
