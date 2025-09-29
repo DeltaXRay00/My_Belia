@@ -424,11 +424,6 @@
       border-radius: 0 0 0.5rem 0.5rem;
     }
 
-    /* Hide original textarea when Quill is initialized */
-    .wysiwyg-textarea.ql-editor-initialized {
-      display: none;
-    }
-
     /* Responsive Design */
     @media (max-width: 768px) {
       .modal-content {
@@ -671,6 +666,8 @@ let wysiwygEditors = {};
 
 // Function to initialize Quill editors
 function initializeQuillEditors() {
+  console.log('Initializing Quill editors...');
+  
   const editorConfigs = [
     { id: 'skim-description-editor', textareaId: 'skim-description' },
     { id: 'skim-purpose-editor', textareaId: 'skim-purpose' },
@@ -684,7 +681,12 @@ function initializeQuillEditors() {
     const editorElement = document.getElementById(config.id);
     const textareaElement = document.getElementById(config.textareaId);
     
+    console.log(`Setting up editor for ${config.id}:`, editorElement);
+    
     if (editorElement && textareaElement) {
+      // Clear any existing content
+      editorElement.innerHTML = '';
+      
       // Initialize Quill editor
       const quill = new Quill(`#${config.id}`, {
         theme: 'snow',
@@ -711,12 +713,16 @@ function initializeQuillEditors() {
         const html = quill.root.innerHTML;
         textareaElement.value = html;
       });
+      
+      console.log(`Quill editor initialized for ${config.id}`);
     }
   });
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  // Initialize Quill editors immediately
+  console.log('DOM loaded, initializing editors...');
+  
+  // Initialize Quill editors
   initializeQuillEditors();
 
   // Skim Baru button handler
@@ -725,9 +731,12 @@ document.addEventListener("DOMContentLoaded", function() {
   
   if (newSkimBtn) {
     newSkimBtn.addEventListener("click", function() {
+      console.log('Opening modal...');
       skimModal.classList.add('show');
+      
       // Re-initialize editors when modal opens to ensure they're visible
       setTimeout(() => {
+        console.log('Re-initializing editors in modal...');
         initializeQuillEditors();
       }, 100);
     });
