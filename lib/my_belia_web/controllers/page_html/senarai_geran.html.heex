@@ -289,6 +289,7 @@
 
     .wysiwyg-textarea {
       min-height: 150px;
+      display: none; /* Hide the textarea, show only WYSIWYG */
     }
 
     .form-help {
@@ -485,7 +486,7 @@
               <div class="form-group">
                 <label for="skim-description">Diskripsi *</label>
                 <div id="skim-description-editor"></div>
-                <textarea id="skim-description" name="skim_description" class="form-textarea wysiwyg-textarea" placeholder="Masukkan diskripsi skim dengan format yang diingini..." required style="display: none;"></textarea>
+                <textarea id="skim-description" name="skim_description" class="form-textarea wysiwyg-textarea" placeholder="Masukkan diskripsi skim dengan format yang diingini..." required></textarea>
                 <div class="field-error" id="description-error" style="display: none;"></div>
                 <small class="form-help">
                   <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks. 
@@ -497,7 +498,7 @@
               <div class="form-group">
                 <label for="skim-purpose">Tujuan *</label>
                 <div id="skim-purpose-editor"></div>
-                <textarea id="skim-purpose" name="skim_purpose" class="form-textarea wysiwyg-textarea" placeholder="Masukkan tujuan skim..." required style="display: none;"></textarea>
+                <textarea id="skim-purpose" name="skim_purpose" class="form-textarea wysiwyg-textarea" placeholder="Masukkan tujuan skim..." required></textarea>
                 <div class="field-error" id="purpose-error" style="display: none;"></div>
                 <small class="form-help">
                   <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
@@ -512,7 +513,7 @@
               <div class="form-group">
                 <label for="skim-requirements">Syarat-Syarat *</label>
                 <div id="skim-requirements-editor"></div>
-                <textarea id="skim-requirements" name="skim_requirements" class="form-textarea wysiwyg-textarea" placeholder="Masukkan syarat-syarat skim..." required style="display: none;"></textarea>
+                <textarea id="skim-requirements" name="skim_requirements" class="form-textarea wysiwyg-textarea" placeholder="Masukkan syarat-syarat skim..." required></textarea>
                 <div class="field-error" id="requirements-error" style="display: none;"></div>
                 <small class="form-help">
                   <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
@@ -527,7 +528,7 @@
               <div class="form-group">
                 <label for="skim-scope">Skop Pembiayaan *</label>
                 <div id="skim-scope-editor"></div>
-                <textarea id="skim-scope" name="skim_scope" class="form-textarea wysiwyg-textarea" placeholder="Masukkan skop pembiayaan..." required style="display: none;"></textarea>
+                <textarea id="skim-scope" name="skim_scope" class="form-textarea wysiwyg-textarea" placeholder="Masukkan skop pembiayaan..." required></textarea>
                 <div class="field-error" id="scope-error" style="display: none;"></div>
                 <small class="form-help">
                   <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
@@ -537,7 +538,7 @@
               <div class="form-group">
                 <label for="skim-limit">Had Pembiayaan *</label>
                 <div id="skim-limit-editor"></div>
-                <textarea id="skim-limit" name="skim_limit" class="form-textarea wysiwyg-textarea" placeholder="Masukkan had pembiayaan..." required style="display: none;"></textarea>
+                <textarea id="skim-limit" name="skim_limit" class="form-textarea wysiwyg-textarea" placeholder="Masukkan had pembiayaan..." required></textarea>
                 <div class="field-error" id="limit-error" style="display: none;"></div>
                 <small class="form-help">
                   <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
@@ -547,7 +548,7 @@
               <div class="form-group">
                 <label for="skim-duration">Tempoh Pembiayaan *</label>
                 <div id="skim-duration-editor"></div>
-                <textarea id="skim-duration" name="skim_duration" class="form-textarea wysiwyg-textarea" placeholder="Masukkan tempoh pembiayaan..." required style="display: none;"></textarea>
+                <textarea id="skim-duration" name="skim_duration" class="form-textarea wysiwyg-textarea" placeholder="Masukkan tempoh pembiayaan..." required></textarea>
                 <div class="field-error" id="duration-error" style="display: none;"></div>
                 <small class="form-help">
                   <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
@@ -652,6 +653,15 @@
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
 <script>
+// Wait for Quill to be available
+function waitForQuill(callback) {
+  if (typeof Quill !== 'undefined') {
+    callback();
+  } else {
+    setTimeout(() => waitForQuill(callback), 100);
+  }
+}
+
 // Modal and form elements
 const skimModal = document.getElementById('skim-modal');
 const skimForm = document.querySelector('.skim-form');
@@ -663,6 +673,7 @@ const cancelBtn = document.getElementById('cancel-btn');
 
 // Initialize WYSIWYG editors
 let wysiwygEditors = {};
+let editorsInitialized = false;
 
 // Function to initialize Quill editors
 function initializeQuillEditors() {
@@ -684,46 +695,56 @@ function initializeQuillEditors() {
     console.log(`Setting up editor for ${config.id}:`, editorElement);
     
     if (editorElement && textareaElement) {
-      // Clear any existing content
-      editorElement.innerHTML = '';
+      // Check if editor already exists
+      if (editorElement.hasChildNodes()) {
+        console.log(`Editor ${config.id} already exists, skipping...`);
+        return;
+      }
       
-      // Initialize Quill editor
-      const quill = new Quill(`#${config.id}`, {
-        theme: 'snow',
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            [{ 'align': [] }],
-            [{ 'color': [] }, { 'background': [] }],
-            ['link'],
-            ['clean']
-          ]
-        },
-        placeholder: textareaElement.placeholder
-      });
-      
-      // Store the Quill instance
-      textareaElement.quillInstance = quill;
-      wysiwygEditors[config.textareaId] = quill;
-      
-      // Sync content between Quill and textarea
-      quill.on('text-change', function() {
-        const html = quill.root.innerHTML;
-        textareaElement.value = html;
-      });
-      
-      console.log(`Quill editor initialized for ${config.id}`);
+      try {
+        // Initialize Quill editor
+        const quill = new Quill(`#${config.id}`, {
+          theme: 'snow',
+          modules: {
+            toolbar: [
+              [{ 'header': [1, 2, 3, false] }],
+              ['bold', 'italic', 'underline'],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              [{ 'align': [] }],
+              [{ 'color': [] }, { 'background': [] }],
+              ['link'],
+              ['clean']
+            ]
+          },
+          placeholder: textareaElement.placeholder
+        });
+        
+        // Store the Quill instance
+        textareaElement.quillInstance = quill;
+        wysiwygEditors[config.textareaId] = quill;
+        
+        // Sync content between Quill and textarea
+        quill.on('text-change', function() {
+          const html = quill.root.innerHTML;
+          textareaElement.value = html;
+        });
+        
+        console.log(`Quill editor initialized for ${config.id}`);
+      } catch (error) {
+        console.error(`Error initializing editor ${config.id}:`, error);
+      }
     }
   });
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  console.log('DOM loaded, initializing editors...');
+  console.log('DOM loaded, waiting for Quill...');
   
-  // Initialize Quill editors
-  initializeQuillEditors();
+  // Wait for Quill to be available, then initialize editors
+  waitForQuill(function() {
+    console.log('Quill is available, initializing editors...');
+    initializeQuillEditors();
+  });
 
   // Skim Baru button handler
   const newSkimBtn = document.getElementById("new-skim-btn");
@@ -736,8 +757,9 @@ document.addEventListener("DOMContentLoaded", function() {
       
       // Re-initialize editors when modal opens to ensure they're visible
       setTimeout(() => {
-        console.log('Re-initializing editors in modal...');
-        initializeQuillEditors();
+        if (typeof Quill !== 'undefined') {
+          initializeQuillEditors();
+        }
       }, 100);
     });
   }
