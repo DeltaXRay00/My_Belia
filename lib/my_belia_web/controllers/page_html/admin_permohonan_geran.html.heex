@@ -1,5 +1,13 @@
 <.admin_layout current_page="permohonan_geran" page_title="Admin Permohonan Geran">
 
+  <style>
+    .applications-table, .applications-table-content, .applications-table-content td {
+      overflow: visible !important;
+      position: relative;
+    }
+    .action-buttons-small { position: relative; }
+  </style>
+
   <!-- Status Filter Tabs -->
   <div class="status-tabs">
     <button class={"status-tab #{if @current_filter == "all", do: "active"}"} phx-click="filter-applications" phx-value-filter="all">

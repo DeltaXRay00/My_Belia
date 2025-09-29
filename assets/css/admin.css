@@ -500,7 +500,7 @@ body {
 .program-card {
   background-color: var(--text-white);
   border-radius: 15px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
@@ -753,7 +753,7 @@ body {
 .course-card {
   background-color: var(--text-white);
   border-radius: 15px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
@@ -834,7 +834,7 @@ body {
 .grant-card {
   background-color: var(--text-white);
   border-radius: 15px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
@@ -1280,4 +1280,105 @@ body {
 .program-actions { position: absolute; top: 12px; right: 12px; display: flex; flex-direction: column; gap: 8px; z-index: 2; }
 .action-icon { background: #ffffff; border: 1px solid #e5e7eb; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
 .action-icon:hover { background: #f9fafb; border-color: #d1d5db; }
+
+/* Admin tables and ellipsis dropdown fixes */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+.data-table th,
+.data-table td {
+  font-family: var(--font-family-inter);
+  font-size: 14px;
+  color: #000000;
+  padding: 1rem;
+}
+
+.data-table td {
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  position: relative; /* required for absolute dropdown positioning */
+}
+
+.data-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Center the last actions column and allow dropdown space */
+.data-table td:last-child {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.75rem 1rem;
+  text-align: center !important;
+}
+
+/* Prevent clipping of dropdown menus in tables */
+.applications-table,
+.data-table,
+.data-table td {
+  overflow: visible !important;
+}
+
+/* Action icons base (kept minimal; complements existing .action-icon) */
+.action-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.action-icons.centered {
+  justify-content: center;
+}
+
+/* Ellipsis dropdown menu */
+.more-options-container {
+  display: inline-block;
+  position: relative;
+}
+
+.more-options-dropdown {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  display: none;
+  margin-top: 4px;
+  min-width: 140px;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 2000; /* stay above table and other content */
+}
+
+.more-options-dropdown.show {
+  display: block;
+}
+
+.option-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.15s ease;
+}
+
+.option-item:last-child {
+  border-bottom: none;
+}
+
+.option-item:hover {
+  background-color: #f9fafb;
+}
+
+/* Ensure ellipsis button appearance is consistent */
+.more-btn {
+  color: #6b7280;
+}
+
+.more-btn:hover {
+  background-color: #f9fafb;
+  color: #374151;
+}
 

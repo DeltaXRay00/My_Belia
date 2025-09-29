@@ -61,7 +61,7 @@ defmodule MyBeliaWeb.UserComponents do
             <div class="dropdown-content">
               <a href="/senarai_program">Program</a>
               <a href="/senarai_kursus">Kursus</a>
-              <a href="/permohonan_geran">Geran</a>
+              <a href="/senarai_geran">Geran</a>
             </div>
           </div>
           <a href="/dokumen_sokongan" class="nav-link">PROFIL &amp;<br>MAKLUMAT</a>

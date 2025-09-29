@@ -85,6 +85,12 @@ defmodule MyBeliaWeb.Router do
     live "/course-list", UserLive.SenaraiKursusLive
     live "/courses", UserLive.SenaraiKursusLive
 
+    # Grant List (Controller)
+    get "/senarai_geran", PageController, :senarai_geran
+
+    # Grant Detail (Controller)
+    get "/geran/:id", PageController, :geran_detail
+
     # Grant Application (LiveView)
     live "/permohonan_geran", UserLive.PermohonanGeranLive
     live "/permohonan-geran", UserLive.PermohonanGeranLive

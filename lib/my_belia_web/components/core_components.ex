@@ -97,7 +97,7 @@ defmodule MyBeliaWeb.CoreComponents do
         title="Lain-lain"
         phx-click={JS.toggle(to: "##{@id}")}
       >
-        ???
+        …
       </button>
 
       <div
@@ -169,7 +169,7 @@ defmodule MyBeliaWeb.CoreComponents do
                   <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
                     <%= get_status_label(@current_status) %>
                   </span>
-                  <span class="text-gray-400">???</span>
+                  <span class="text-gray-400">…</span>
                   <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">
                     <%= get_status_label(@new_status) %>
                   </span>
@@ -1159,4 +1159,3 @@ defmodule MyBeliaWeb.CoreComponents do
     """
   end
 end
-
