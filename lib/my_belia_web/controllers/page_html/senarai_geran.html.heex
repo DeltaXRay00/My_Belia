@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -153,10 +153,453 @@
       background: white;
       min-width: 120px;
     }
+
+    /* Enhanced Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #6b7280;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .skim-form {
+      padding: 2rem;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      background: white;
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .wysiwyg-textarea {
+      min-height: 150px;
+    }
+
+    .form-help {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 0.25rem;
+    }
+
+    .field-error {
+      font-size: 0.75rem;
+      color: #dc2626;
+      margin-top: 0.25rem;
+    }
+
+    .image-upload-section {
+      margin-bottom: 2rem;
+    }
+
+    .image-upload-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 0.75rem;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #f9fafb;
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-upload-area:hover {
+      border-color: #3b82f6;
+      background: #f0f9ff;
+    }
+
+    .upload-icon {
+      color: #9ca3af;
+      margin-bottom: 1rem;
+    }
+
+    .plus-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      color: #3b82f6;
+      font-weight: bold;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+    }
+
+    .upload-error {
+      color: #dc2626;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .form-actions {
+      padding-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    .create-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .create-btn:hover {
+      background: #2563eb;
+    }
+
+    .create-btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .cancel-btn {
+      background: #6b7280;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cancel-btn:hover {
+      background: #4b5563;
+    }
+
+    /* WYSIWYG Editor Styles */
+    .ql-editor {
+      min-height: 150px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .ql-toolbar {
+      border-top: 1px solid #d1d5db;
+      border-left: 1px solid #d1d5db;
+      border-right: 1px solid #d1d5db;
+      border-radius: 0.5rem 0.5rem 0 0;
+      background: #f8fafc;
+    }
+
+    .ql-container {
+      border-bottom: 1px solid #d1d5db;
+      border-left: 1px solid #d1d5db;
+      border-right: 1px solid #d1d5db;
+      border-radius: 0 0 0.5rem 0.5rem;
+    }
+
+    /* Hide original textarea when Quill is initialized */
+    .wysiwyg-textarea.ql-editor-initialized {
+      display: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .modal-content {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .skim-form {
+        padding: 1rem;
+      }
+    }
   </style>
+  <!-- Include Quill CSS for WYSIWYG -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 <body>
 <.admin_layout current_page="senarai_geran" page_title="Senarai Geran">
+
+      <!-- Modal Form for New Skim -->
+      <div class="modal-overlay" id="skim-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Cipta Skim Baru</h2>
+            <button class="modal-close" id="modal-close">&times;</button>
+          </div>
+          
+          <form class="skim-form">
+            <!-- Basic Information Section -->
+            <div class="form-section">
+              <div class="form-section-title">Maklumat Asas</div>
+              
+              <!-- Image Upload Section -->
+              <div class="image-upload-section">
+                <div class="image-upload-area" id="image-upload-area">
+                  <div class="upload-icon" id="upload-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21,15 16,10 5,21"></polyline>
+                    </svg>
+                    <div class="plus-icon">+</div>
+                  </div>
+                  <img id="preview-image" class="preview-image" style="display: none;">
+                  <input type="file" id="image-input" name="skim_image" accept="image/*" style="display: none;">
+                </div>
+                <div class="upload-error" id="image-error" style="display: none;"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="skim-name">Nama Skim *</label>
+                <input type="text" id="skim-name" name="skim_name" class="form-input" placeholder="Masukkan nama skim" required>
+                <div class="field-error" id="name-error" style="display: none;"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="skim-description">Diskripsi *</label>
+                <div id="skim-description-editor"></div>
+                <textarea id="skim-description" name="skim_description" class="form-textarea wysiwyg-textarea" placeholder="Masukkan diskripsi skim dengan format yang diingini..." required style="display: none;"></textarea>
+                <div class="field-error" id="description-error" style="display: none;"></div>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks. 
+                  Format yang disokong: <strong>Bold</strong>, <em>Italic</em>, <u>Underline</u>, 
+                  Senarai, Penjajaran, Warna, dan Pautan.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="skim-purpose">Tujuan *</label>
+                <div id="skim-purpose-editor"></div>
+                <textarea id="skim-purpose" name="skim_purpose" class="form-textarea wysiwyg-textarea" placeholder="Masukkan tujuan skim..." required style="display: none;"></textarea>
+                <div class="field-error" id="purpose-error" style="display: none;"></div>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
+                </small>
+              </div>
+            </div>
+
+            <!-- Requirements and Conditions Section -->
+            <div class="form-section">
+              <div class="form-section-title">Syarat dan Keperluan</div>
+              
+              <div class="form-group">
+                <label for="skim-requirements">Syarat-Syarat *</label>
+                <div id="skim-requirements-editor"></div>
+                <textarea id="skim-requirements" name="skim_requirements" class="form-textarea wysiwyg-textarea" placeholder="Masukkan syarat-syarat skim..." required style="display: none;"></textarea>
+                <div class="field-error" id="requirements-error" style="display: none;"></div>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
+                </small>
+              </div>
+            </div>
+
+            <!-- Financing Information Section -->
+            <div class="form-section">
+              <div class="form-section-title">Maklumat Pembiayaan</div>
+              
+              <div class="form-group">
+                <label for="skim-scope">Skop Pembiayaan *</label>
+                <div id="skim-scope-editor"></div>
+                <textarea id="skim-scope" name="skim_scope" class="form-textarea wysiwyg-textarea" placeholder="Masukkan skop pembiayaan..." required style="display: none;"></textarea>
+                <div class="field-error" id="scope-error" style="display: none;"></div>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="skim-limit">Had Pembiayaan *</label>
+                <div id="skim-limit-editor"></div>
+                <textarea id="skim-limit" name="skim_limit" class="form-textarea wysiwyg-textarea" placeholder="Masukkan had pembiayaan..." required style="display: none;"></textarea>
+                <div class="field-error" id="limit-error" style="display: none;"></div>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="skim-duration">Tempoh Pembiayaan *</label>
+                <div id="skim-duration-editor"></div>
+                <textarea id="skim-duration" name="skim_duration" class="form-textarea wysiwyg-textarea" placeholder="Masukkan tempoh pembiayaan..." required style="display: none;"></textarea>
+                <div class="field-error" id="duration-error" style="display: none;"></div>
+                <small class="form-help">
+                  <strong>Editor WYSIWYG:</strong> Gunakan alat format di atas untuk memformat teks.
+                </small>
+              </div>
+            </div>
+
+            <!-- Application Period Section -->
+            <div class="form-section">
+              <div class="form-section-title">Tempoh Permohonan</div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start-date">Tarikh Mula Permohonan *</label>
+                  <input type="date" id="start-date" name="start_date" class="form-input" required>
+                  <div class="field-error" id="start-date-error" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="end-date">Tarikh Tutup Permohonan *</label>
+                  <input type="date" id="end-date" name="end_date" class="form-input" required>
+                  <div class="field-error" id="end-date-error" style="display: none;"></div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start-time">Waktu Mula Permohonan *</label>
+                  <input type="time" id="start-time" name="start_time" class="form-input" required>
+                  <div class="field-error" id="start-time-error" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="end-time">Waktu Tutup Penerimaan *</label>
+                  <input type="time" id="end-time" name="end_time" class="form-input" required>
+                  <div class="field-error" id="end-time-error" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <div class="field-error" id="general-error" style="display: none;"></div>
+              <button type="button" class="cancel-btn" id="cancel-btn">Batal</button>
+              <button type="submit" class="create-btn">Cipta Skim</button>
+            </div>
+          </form>
+        </div>
+      </div>
 
     <!-- Geran Management Content -->
       <!-- Action Button -->
@@ -210,22 +653,352 @@
     </div>
 </.admin_layout>
 
+<!-- Include Quill JS for WYSIWYG -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
 <script>
-// Skim Baru button handler
+// Modal and form elements
+const skimModal = document.getElementById('skim-modal');
+const skimForm = document.querySelector('.skim-form');
+const imageInput = document.getElementById('image-input');
+const imageUploadArea = document.getElementById('image-upload-area');
+const previewImage = document.getElementById('preview-image');
+const uploadIcon = document.getElementById('upload-icon');
+const cancelBtn = document.getElementById('cancel-btn');
+
+// Initialize WYSIWYG editors
+let wysiwygEditors = {};
+
+// Function to initialize Quill editors
+function initializeQuillEditors() {
+  const editorConfigs = [
+    { id: 'skim-description-editor', textareaId: 'skim-description' },
+    { id: 'skim-purpose-editor', textareaId: 'skim-purpose' },
+    { id: 'skim-requirements-editor', textareaId: 'skim-requirements' },
+    { id: 'skim-scope-editor', textareaId: 'skim-scope' },
+    { id: 'skim-limit-editor', textareaId: 'skim-limit' },
+    { id: 'skim-duration-editor', textareaId: 'skim-duration' }
+  ];
+
+  editorConfigs.forEach(config => {
+    const editorElement = document.getElementById(config.id);
+    const textareaElement = document.getElementById(config.textareaId);
+    
+    if (editorElement && textareaElement) {
+      // Initialize Quill editor
+      const quill = new Quill(`#${config.id}`, {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'align': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            ['link'],
+            ['clean']
+          ]
+        },
+        placeholder: textareaElement.placeholder
+      });
+      
+      // Store the Quill instance
+      textareaElement.quillInstance = quill;
+      wysiwygEditors[config.textareaId] = quill;
+      
+      // Sync content between Quill and textarea
+      quill.on('text-change', function() {
+        const html = quill.root.innerHTML;
+        textareaElement.value = html;
+      });
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
+  // Initialize Quill editors immediately
+  initializeQuillEditors();
+
+  // Skim Baru button handler
   const newSkimBtn = document.getElementById("new-skim-btn");
+  const modalClose = document.getElementById("modal-close");
+  
   if (newSkimBtn) {
     newSkimBtn.addEventListener("click", function() {
-      // Handle Skim Baru button click
-      alert("Fungsi Skim Baru akan dibangunkan");
-      // You can add navigation or modal opening logic here
+      skimModal.classList.add('show');
+      // Re-initialize editors when modal opens to ensure they're visible
+      setTimeout(() => {
+        initializeQuillEditors();
+      }, 100);
     });
   }
+
+  // Modal close handlers
+  if (modalClose) {
+    modalClose.addEventListener('click', function() {
+      skimModal.classList.remove('show');
+      resetForm();
+    });
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', function() {
+      skimModal.classList.remove('show');
+      resetForm();
+    });
+  }
+
+  // Close modal when clicking outside
+  skimModal.addEventListener('click', function(e) {
+    if (e.target === skimModal) {
+      skimModal.classList.remove('show');
+      resetForm();
+    }
+  });
+
+  // Image upload handling
+  imageUploadArea.addEventListener('click', function() {
+    imageInput.click();
+  });
+
+  imageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        showImageError('Sila pilih fail imej yang sah.');
+        return;
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        showImageError('Saiz fail terlalu besar. Had maksimum adalah 5MB.');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        previewImage.style.display = 'block';
+        uploadIcon.style.display = 'none';
+        clearImageError();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Form validation and submission
+  skimForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Clear previous errors
+    clearAllErrors();
+    
+    // Ensure WYSIWYG content is captured before submission
+    Object.keys(wysiwygEditors).forEach(textareaId => {
+      const textarea = document.getElementById(textareaId);
+      if (textarea && textarea.quillInstance) {
+        // Get the HTML content from Quill editor
+        const htmlContent = textarea.quillInstance.root.innerHTML;
+        // Set it as the value of the textarea
+        textarea.value = htmlContent;
+      }
+    });
+    
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+    
+    // Get form data
+    const formData = new FormData(skimForm);
+    const skimData = Object.fromEntries(formData);
+    
+    // Send data to server
+    submitSkimToServer(skimData);
+  });
 });
+
+// Validation functions
+function validateForm() {
+  let isValid = true;
+  
+  // Check image
+  if (!imageInput.files[0]) {
+    showImageError('Sila muat naik imej skim.');
+    isValid = false;
+  }
+  
+  // Check required fields
+  const requiredFields = [
+    { id: 'skim-name', error: 'name-error', message: 'Nama skim diperlukan.' },
+    { id: 'skim-description', error: 'description-error', message: 'Diskripsi diperlukan.' },
+    { id: 'skim-purpose', error: 'purpose-error', message: 'Tujuan diperlukan.' },
+    { id: 'skim-requirements', error: 'requirements-error', message: 'Syarat-syarat diperlukan.' },
+    { id: 'skim-scope', error: 'scope-error', message: 'Skop pembiayaan diperlukan.' },
+    { id: 'skim-limit', error: 'limit-error', message: 'Had pembiayaan diperlukan.' },
+    { id: 'skim-duration', error: 'duration-error', message: 'Tempoh pembiayaan diperlukan.' },
+    { id: 'start-date', error: 'start-date-error', message: 'Tarikh mula diperlukan.' },
+    { id: 'end-date', error: 'end-date-error', message: 'Tarikh tutup diperlukan.' },
+    { id: 'start-time', error: 'start-time-error', message: 'Waktu mula diperlukan.' },
+    { id: 'end-time', error: 'end-time-error', message: 'Waktu tutup diperlukan.' }
+  ];
+  
+  requiredFields.forEach(field => {
+    const element = document.getElementById(field.id);
+    let value = element.value;
+    
+    // For WYSIWYG fields, check if content is empty
+    if (element.quillInstance) {
+      const text = element.quillInstance.getText().trim();
+      if (text.length === 0) {
+        value = '';
+      }
+    }
+    
+    if (!value || value.trim() === '') {
+      showFieldError(field.error, field.message);
+      isValid = false;
+    }
+  });
+  
+  // Validate dates
+  const startDate = document.getElementById('start-date').value;
+  const endDate = document.getElementById('end-date').value;
+  
+  if (startDate && endDate && new Date(startDate) >= new Date(endDate)) {
+    showFieldError('end-date-error', 'Tarikh tutup mesti selepas tarikh mula.');
+    isValid = false;
+  }
+  
+  return isValid;
+}
+
+async function submitSkimToServer(skimData) {
+  try {
+    // Show loading state
+    const submitBtn = document.querySelector('.create-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Mencipta...';
+    submitBtn.disabled = true;
+    
+    // Prepare data for server
+    const serverData = {
+      skim: {
+        name: skimData.skim_name,
+        description: skimData.skim_description,
+        purpose: skimData.skim_purpose,
+        requirements: skimData.skim_requirements,
+        scope: skimData.skim_scope,
+        limit: skimData.skim_limit,
+        duration: skimData.skim_duration,
+        image_data: previewImage.src,
+        start_date: skimData.start_date,
+        end_date: skimData.end_date,
+        start_time: skimData.start_time,
+        end_time: skimData.end_time
+      }
+    };
+    
+    // Send to server
+    const response = await fetch('/admin/skim', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+      },
+      body: JSON.stringify(serverData)
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      // Success - show message and close modal
+      alert('Skim berjaya dicipta!');
+      skimModal.classList.remove('show');
+      resetForm();
+      
+      // Reload page to show new skim
+      window.location.reload();
+    } else {
+      // Show server errors
+      showServerErrors(result.errors);
+    }
+  } catch (error) {
+    console.error('Error submitting skim:', error);
+    showFieldError('general-error', 'Ralat dalam menghantar data. Sila cuba lagi.');
+  } finally {
+    // Reset button state
+    const submitBtn = document.querySelector('.create-btn');
+    submitBtn.textContent = 'Cipta Skim';
+    submitBtn.disabled = false;
+  }
+}
+
+function showServerErrors(errors) {
+  if (typeof errors === 'object') {
+    Object.keys(errors).forEach(field => {
+      const errorId = field.replace('_', '-') + '-error';
+      showFieldError(errorId, errors[field][0]);
+    });
+  } else {
+    showFieldError('general-error', 'Ralat dalam mencipta skim.');
+  }
+}
+
+function showFieldError(errorId, message) {
+  const errorElement = document.getElementById(errorId);
+  if (errorElement) {
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+}
+
+function showImageError(message) {
+  const errorElement = document.getElementById('image-error');
+  if (errorElement) {
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+}
+
+function clearAllErrors() {
+  const errorElements = document.querySelectorAll('.field-error, .upload-error');
+  errorElements.forEach(element => {
+    element.style.display = 'none';
+    element.textContent = '';
+  });
+}
+
+function clearImageError() {
+  const errorElement = document.getElementById('image-error');
+  if (errorElement) {
+    errorElement.style.display = 'none';
+    errorElement.textContent = '';
+  }
+}
+
+function resetForm() {
+  // Reset form fields
+  skimForm.reset();
+  
+  // Reset image preview
+  previewImage.style.display = 'none';
+  uploadIcon.style.display = 'flex';
+  previewImage.src = '';
+  
+  // Reset WYSIWYG editors
+  Object.values(wysiwygEditors).forEach(editor => {
+    editor.setContents([]);
+  });
+  
+  // Clear all errors
+  clearAllErrors();
+}
 
 // Application action functions
 function viewApplication(id) {
-  window.location.href = /admin/geran/;
+  window.location.href = `/admin/geran/${id}`;
 }
 
 function approveApplication(id) {

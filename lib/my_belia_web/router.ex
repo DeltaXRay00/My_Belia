@@ -174,6 +174,8 @@ defmodule MyBeliaWeb.Router do
     # Admin Grant Listing (LiveView)
     live "/admin/senarai_geran", AdminLive.AdminSenaraiGeranLive
 
+    post "/admin/skim", AdminController, :create_skim
+    post "/admin/skim", AdminController, :create_skim
     # Admin Grant Status Pages (LiveView)
     live "/admin/permohonan_geran/lulus", AdminLive.AdminPermohonanGeranLulusLive
     live "/admin/permohonan_geran/tolak", AdminLive.AdminPermohonanGeranTolakLive

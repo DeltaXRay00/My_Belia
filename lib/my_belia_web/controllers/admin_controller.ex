@@ -2,6 +2,7 @@ defmodule MyBeliaWeb.AdminController do
   use MyBeliaWeb, :controller
   alias MyBelia.Courses
   alias MyBelia.Programs
+  alias MyBelia.Grants
 
   # Course CRUD operations
   def get_course(conn, %{"id" => id}) do
@@ -185,6 +186,33 @@ defmodule MyBeliaWeb.AdminController do
     end
   end
 
+
+  # Skim (Grant) CRUD operations
+  def create_skim(conn, %{"skim" => skim_params}) do
+    # Map frontend field names to database field names
+    mapped_params = %{
+      "nama_skim" => skim_params["name"],
+      "diskripsi" => skim_params["description"] || "",
+      "tujuan" => skim_params["purpose"] || "",
+      "syarat_syarat" => skim_params["requirements"] || "",
+      "skop_pembiayaan" => skim_params["scope"] || "",
+      "had_pembiayaan" => skim_params["limit"] || "",
+      "tempoh_pembiayaan" => skim_params["duration"] || "",
+      "image_data" => skim_params["image_data"]
+    }
+
+    case Grants.create_grant(mapped_params) do
+      {:ok, grant} ->
+        conn
+        |> put_status(:created)
+        |> json(%{success: true, grant: grant})
+
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{success: false, errors: format_changeset_errors(changeset)})
+    end
+  end
   # Helper function to format changeset errors
   defp format_changeset_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
