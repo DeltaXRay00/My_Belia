@@ -230,4 +230,29 @@ defmodule MyBeliaWeb.UserComponents do
     </div>
     """
   end
+
+  ## Quick Access Tile Component
+  attr :title, :string, required: true
+  attr :image, :string, default: nil
+  attr :href, :string, required: true
+  attr :subtitle, :string, default: nil
+  def quick_tile(assigns) do
+    ~H"""
+    <a href={@href} class="tile" style="display:block; text-decoration:none; color:inherit;">
+      <div style="width:100%; aspect-ratio: 4 / 3; background:#e5e5e5; border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        <%= if @image do %>
+          <img src={@image} alt={@title} style="width:100%; height:100%; object-fit:cover;" />
+        <% else %>
+          <span style="color:#9ca3af; font-weight:600;">{@title}</span>
+        <% end %>
+      </div>
+      <div style="margin-top:8px;">
+        <div style="font-weight:700; font-size:16px; line-height:1.2;">{@title}</div>
+        <%= if @subtitle do %>
+          <div style="font-size:13px; color:#6b7280; margin-top:2px;">{@subtitle}</div>
+        <% end %>
+      </div>
+    </a>
+    """
+  end
 end
