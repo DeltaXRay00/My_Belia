@@ -2769,3 +2769,52 @@ body { margin: 0; padding-top: 80px; font-family: 'Inter', sans-serif; color: va
 }
 
 \n/* Show camera button only on hover to avoid blocking photo */\n.user-avatar-container .avatar-overlay { opacity: 0; pointer-events: none; }\n.user-avatar-container:hover .avatar-overlay { opacity: 1; pointer-events: auto; }
+/* Tile Link Styles */
+.tile-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.tile-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Tile Content Styles */
+.tile-content {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.tile-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.tile-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.tile-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.tile-description {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
