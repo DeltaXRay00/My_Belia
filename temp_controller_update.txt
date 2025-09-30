@@ -1,0 +1,41 @@
+﻿  # Skim (Grant) CRUD operations
+  def create_skim(conn, %{"skim" => skim_params}) do
+    # Map frontend field names to database field names
+    mapped_params = %{
+      "nama_skim" => skim_params["name"],
+      "diskripsi" => skim_params["description"] || "",
+      "tujuan" => skim_params["purpose"] || "",
+      "syarat_syarat" => skim_params["requirements"] || "",
+      "skop_pembiayaan" => skim_params["scope"] || "",
+      "had_pembiayaan" => skim_params["limit"] || "",
+      "tempoh_pembiayaan" => skim_params["duration"] || "",
+      "image_data" => skim_params["image_data"],
+      "start_date" => skim_params["start_date"],
+      "end_date" => skim_params["end_date"],
+      "start_time" => skim_params["start_time"],
+      "end_time" => skim_params["end_time"],
+      "created_by_id" => get_current_user_id(conn)
+    }
+
+    case Grants.create_grant(mapped_params) do
+      {:ok, grant} ->
+        conn
+        |> put_status(:created)
+        |> json(%{success: true, grant: grant})
+
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{success: false, errors: format_changeset_errors(changeset)})
+    end
+  end
+
+  # Helper function to get current user ID (you may need to implement this based on your auth system)
+  defp get_current_user_id(conn) do
+    # This is a placeholder - you'll need to implement this based on your authentication system
+    # For now, we'll use a default admin user ID or nil
+    case conn.assigns[:current_user] do
+      %{id: user_id} -> user_id
+      _ -> 1  # Default admin user ID - you should replace this with proper auth
+    end
+  end

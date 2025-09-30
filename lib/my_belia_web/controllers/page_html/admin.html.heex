@@ -15,30 +15,46 @@
       <div class="stats-row">
         <div class="stat-card">
           <h3 class="stat-title">Belia Berdaftar</h3>
-          <div class="stat-content"></div>
+          <div class="stat-content"><div style="height:100%; display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:800;">{@stat_belia}</div></div>
         </div>
         <div class="stat-card">
           <h3 class="stat-title">Program Dilaksanakan</h3>
-          <div class="stat-content"></div>
+          <div class="stat-content"><div style="height:100%; display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:800;">{@stat_program}</div></div>
         </div>
         <div class="stat-card">
           <h3 class="stat-title">Kursus Dilaksanakan</h3>
-          <div class="stat-content"></div>
+          <div class="stat-content"><div style="height:100%; display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:800;">{@stat_kursus}</div></div>
         </div>
         <div class="stat-card">
           <h3 class="stat-title">Permohonan Aktif</h3>
-          <div class="stat-content"></div>
+          <div class="stat-content"><div style="height:100%; display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:800;">{@stat_permohonan}</div></div>
         </div>
       </div>
 
       <!-- Bottom Row - Activity and Quick Access -->
       <div class="bottom-row">
         <div class="activity-section">
-          <h3 class="section-title">Aktiviti Terkini</h3>
-          <div class="section-content"></div>
+          <h3 class="section-title" style="color:#000;">Aktiviti Terkini</h3>
+          <div class="section-content">
+            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+              <%= if @activities && length(@activities) > 0 do %>
+                <%= for a <- @activities do %>
+                  <li style="display:flex; align-items:center; gap:10px; background:#f9fafb; border:1px solid #eef2f7; border-radius:8px; padding:10px 12px;">
+                    <span style="font-size:18px;"> <%= if a.type == :program, do: "📋", else: "🎓" %> </span>
+                    <div style="flex:1;">
+                      <div style="font-weight:700; color:#111827;">{a.title}</div>
+                      <div style="font-size:12px; color:#6b7280;">Tarikh mula: <%= a.date || "-" %></div>
+                    </div>
+                  </li>
+                <% end %>
+              <% else %>
+                <li style="color:#6b7280; font-style:italic;">Tiada aktiviti untuk dipaparkan.</li>
+              <% end %>
+            </ul>
+          </div>
         </div>
         <div class="quick-access-section">
-          <h3 class="section-title">Akses Pantas</h3>
+          <h3 class="section-title" style="color:#000;">Akses Pantas</h3>
           <div class="section-content">
             <div class="quick-access-links">
               <.link href="/senarai_admin" class="quick-link">
