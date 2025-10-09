@@ -20,20 +20,9 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
     MyBeliaWeb.PageHTML.user_profile(assigns)
   end
 
-      def handle_event("save-profile", %{"user" => user_params, "additional_education" => additional_education_params, "avatar_uploaded" => avatar_uploaded, "trigger_avatar_upload" => trigger_avatar_upload, "avatar_file_data" => avatar_file_data}, socket) do
-    IO.inspect("Save profile with education triggered", label: "SAVE PROFILE DEBUG")
-    IO.inspect("User params: #{inspect(user_params)}", label: "SAVE PROFILE DEBUG")
-    IO.inspect("Avatar uploaded flag: #{avatar_uploaded}", label: "SAVE PROFILE DEBUG")
-    IO.inspect("Trigger avatar upload: #{trigger_avatar_upload}", label: "SAVE PROFILE DEBUG")
-    IO.inspect("Avatar file data present: #{avatar_file_data != ""}", label: "SAVE PROFILE DEBUG")
-
-    # Process avatar upload if flag is set or trigger is set or file data is present
-    user_params_with_avatar = if avatar_uploaded == "true" or trigger_avatar_upload == "true" or avatar_file_data != "" do
-      IO.inspect("Processing avatar upload due to flag, trigger, or file data", label: "SAVE PROFILE DEBUG")
-      process_avatar_from_data(socket, user_params, avatar_file_data)
-    else
-      user_params
-    end
+      def handle_event("save-profile", %{"user" => user_params, "additional_education" => additional_education_params} = params, socket) do
+    # Process avatar upload if any
+    user_params_with_avatar = process_avatar_params(socket, user_params, params)
 
     # Start a transaction to handle both user update and education records
     Repo.transaction(fn ->
@@ -60,8 +49,8 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
       {:ok, updated_user} ->
         {:noreply,
          socket
-         |> assign(current_user: updated_user)
-         |> put_flash(:info, "Profil dan avatar berjaya dikemaskini!")}
+        |> assign(current_user: updated_user)
+        |> put_flash(:info, "Profil dan avatar berjaya dikemaskini!")}
 
       {:error, _changeset} ->
         {:noreply,
@@ -70,67 +59,9 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
     end
   end
 
-      def handle_event("save-profile", %{"user" => user_params, "avatar_uploaded" => avatar_uploaded, "trigger_avatar_upload" => trigger_avatar_upload, "avatar_file_data" => avatar_file_data}, socket) do
-    IO.inspect("Save profile triggered", label: "SAVE PROFILE DEBUG")
-    IO.inspect("User params: #{inspect(user_params)}", label: "SAVE PROFILE DEBUG")
-    IO.inspect("Avatar uploaded flag: #{avatar_uploaded}", label: "SAVE PROFILE DEBUG")
-    IO.inspect("Trigger avatar upload: #{trigger_avatar_upload}", label: "SAVE PROFILE DEBUG")
-    IO.inspect("Avatar file data present: #{avatar_file_data != ""}", label: "SAVE PROFILE DEBUG")
-
-    # Process avatar upload if flag is set or trigger is set or file data is present
-    user_params_with_avatar = if avatar_uploaded == "true" or trigger_avatar_upload == "true" or avatar_file_data != "" do
-      IO.inspect("Processing avatar upload due to flag, trigger, or file data", label: "SAVE PROFILE DEBUG")
-      process_avatar_from_data(socket, user_params, avatar_file_data)
-    else
-      user_params
-    end
-
-    case Accounts.update_user_profile(socket.assigns.current_user, user_params_with_avatar) do
-      {:ok, updated_user} ->
-        {:noreply,
-         socket
-         |> assign(current_user: updated_user)
-         |> put_flash(:info, "Profil dan avatar berjaya dikemaskini!")}
-
-      {:error, _changeset} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "Ralat semasa mengemaskini profil.")}
-        end
-  end
-
-  def handle_event("save-profile", %{"user" => user_params, "avatar_uploaded" => avatar_uploaded}, socket) do
-    IO.inspect("Save profile triggered (no trigger field)", label: "SAVE PROFILE DEBUG")
-    IO.inspect("User params: #{inspect(user_params)}", label: "SAVE PROFILE DEBUG")
-    IO.inspect("Avatar uploaded flag: #{avatar_uploaded}", label: "SAVE PROFILE DEBUG")
-
-    # Process avatar upload if flag is set
-    user_params_with_avatar = if avatar_uploaded == "true" do
-      IO.inspect("Processing avatar upload due to flag", label: "SAVE PROFILE DEBUG")
-      process_avatar_upload(socket, user_params)
-    else
-      user_params
-    end
-
-    case Accounts.update_user_profile(socket.assigns.current_user, user_params_with_avatar) do
-      {:ok, updated_user} ->
-        {:noreply,
-         socket
-         |> assign(current_user: updated_user)
-         |> put_flash(:info, "Profil dan avatar berjaya dikemaskini!")}
-
-      {:error, _changeset} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "Ralat semasa mengemaskini profil.")}
-    end
-  end
-
-  def handle_event("save-profile", %{"user" => user_params}, socket) do
-    IO.inspect("Save profile triggered (no avatar fields)", label: "SAVE PROFILE DEBUG")
-    IO.inspect("User params: #{inspect(user_params)}", label: "SAVE PROFILE DEBUG")
+  def handle_event("save-profile", %{"user" => user_params} = params, socket) do
     # Process avatar upload if any
-    user_params_with_avatar = process_avatar_upload(socket, user_params)
+    user_params_with_avatar = process_avatar_params(socket, user_params, params)
 
     case Accounts.update_user_profile(socket.assigns.current_user, user_params_with_avatar) do
       {:ok, updated_user} ->
@@ -146,22 +77,17 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
     end
   end
 
-  def handle_event("validate-profile", params, socket) do
+  def handle_event("validate-profile", _params, socket) do
     # This will be called when the form changes, including avatar uploads
-    IO.inspect("Validate profile triggered", label: "VALIDATE PROFILE DEBUG")
-    IO.inspect("Validate params: #{inspect(params)}", label: "VALIDATE PROFILE DEBUG")
 
     # Check for avatar uploads
-    {entries, errors} = uploaded_entries(socket, :avatar)
-    IO.inspect("Validate - avatar entries: #{length(entries)}, errors: #{length(errors)}", label: "VALIDATE PROFILE DEBUG")
+    {_entries, _errors} = uploaded_entries(socket, :avatar)
 
     {:noreply, socket}
   end
 
   def handle_event("avatar-upload", _params, socket) do
-    IO.inspect("Avatar upload event triggered", label: "AVATAR UPLOAD DEBUG")
-    {entries, errors} = uploaded_entries(socket, :avatar)
-    IO.inspect("Avatar upload - entries: #{length(entries)}, errors: #{length(errors)}", label: "AVATAR UPLOAD DEBUG")
+    {entries, _errors} = uploaded_entries(socket, :avatar)
 
     case entries do
       [] ->
@@ -170,7 +96,6 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
       _ ->
         case consume_and_store_avatar(socket) do
           {:ok, avatar_url} ->
-            IO.inspect("Avatar stored successfully: #{avatar_url}", label: "AVATAR UPLOAD DEBUG")
             case Accounts.update_user_profile(socket.assigns.current_user, %{avatar_url: avatar_url}) do
               {:ok, updated_user} ->
                 user_with_educations = Accounts.get_user_with_educations!(updated_user.id)
@@ -179,14 +104,12 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
                  |> assign(current_user: user_with_educations)
                  |> put_flash(:info, "Avatar berjaya dimuat naik!")}
 
-              {:error, changeset} ->
-                IO.inspect("Error updating user: #{inspect(changeset.errors)}", label: "AVATAR UPLOAD DEBUG")
+              {:error, _changeset} ->
                 {:noreply, put_flash(socket, :error, "Ralat semasa menyimpan avatar.")}
             end
 
-          {:error, reason} ->
-            IO.inspect("Error storing avatar: #{reason}", label: "AVATAR UPLOAD DEBUG")
-            {:noreply, put_flash(socket, :error, "Ralat semasa memproses fail: #{reason}")}
+          {:error, _reason} ->
+            {:noreply, put_flash(socket, :error, "Ralat semasa memproses fail.")}
         end
     end
   end
@@ -220,19 +143,33 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
 
     case File.cp(tmp_path, dest) do
       :ok -> {:ok, "/uploads/avatars/#{filename}"}
-      {:error, reason} -> {:error, reason}
+      {:error, _reason} -> {:error, "Invalid base64 data"}
     end
   end
 
-    defp process_avatar_upload(socket, user_params) do
+    defp process_avatar_params(socket, user_params, params) do
+    # Check for different avatar upload scenarios
+    cond do
+      # Base64 data upload
+      Map.get(params, "avatar_file_data") && Map.get(params, "avatar_file_data") != "" ->
+        process_avatar_from_data(socket, user_params, Map.get(params, "avatar_file_data"))
+
+      # File upload with flags
+      Map.get(params, "avatar_uploaded") == "true" or Map.get(params, "trigger_avatar_upload") == "true" ->
+        process_avatar_upload(socket, user_params)
+
+      # Default: no avatar processing
+      true ->
+        user_params
+    end
+  end
+
+  defp process_avatar_upload(socket, user_params) do
     # Check if there are any uploaded avatar files
-    {entries, errors} = uploaded_entries(socket, :avatar)
-    IO.inspect("Avatar upload check - entries: #{length(entries)}, errors: #{length(errors)}", label: "AVATAR DEBUG")
-    IO.inspect("Current user avatar_url: #{socket.assigns.current_user.avatar_url}", label: "AVATAR DEBUG")
+    {entries, _errors} = uploaded_entries(socket, :avatar)
 
     case entries do
       [] ->
-        IO.inspect("No avatar entries found, preserving existing avatar", label: "AVATAR DEBUG")
         # No avatar uploaded, preserve existing avatar_url
         if Map.has_key?(user_params, "avatar_url") do
           user_params
@@ -241,14 +178,11 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
         end
 
       _entries ->
-        IO.inspect("Found avatar entries, processing upload", label: "AVATAR DEBUG")
         # Process the uploaded avatar
         case consume_and_store_avatar(socket) do
           {:ok, avatar_url} ->
-            IO.inspect("Avatar processed successfully: #{avatar_url}", label: "AVATAR DEBUG")
             Map.put(user_params, "avatar_url", avatar_url)
-          {:error, reason} ->
-            IO.inspect("Avatar processing failed: #{reason}", label: "AVATAR DEBUG")
+          {:error, _reason} ->
             # If avatar processing fails, preserve existing avatar_url
             if Map.has_key?(user_params, "avatar_url") do
               user_params
@@ -260,10 +194,8 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
   end
 
   defp process_avatar_from_data(socket, user_params, avatar_file_data) do
-    IO.inspect("Processing avatar from file data", label: "AVATAR DEBUG")
 
     if avatar_file_data == "" do
-      IO.inspect("No avatar file data provided", label: "AVATAR DEBUG")
       # No avatar data, preserve existing avatar_url
       if Map.has_key?(user_params, "avatar_url") do
         user_params
@@ -271,14 +203,11 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
         Map.put(user_params, "avatar_url", socket.assigns.current_user.avatar_url)
       end
     else
-      IO.inspect("Avatar file data provided, processing", label: "AVATAR DEBUG")
       # Process the avatar from base64 data
       case process_avatar_base64(socket.assigns.current_user.id, avatar_file_data) do
         {:ok, avatar_url} ->
-          IO.inspect("Avatar processed successfully from base64: #{avatar_url}", label: "AVATAR DEBUG")
           Map.put(user_params, "avatar_url", avatar_url)
-        {:error, reason} ->
-          IO.inspect("Avatar processing failed from base64: #{reason}", label: "AVATAR DEBUG")
+        {:error, _reason} ->
           # If avatar processing fails, preserve existing avatar_url
           if Map.has_key?(user_params, "avatar_url") do
             user_params
@@ -315,7 +244,7 @@ defmodule MyBeliaWeb.UserLive.UserProfileLive do
 
         case File.write(dest, file_content) do
           :ok -> {:ok, "/uploads/avatars/#{filename}"}
-          {:error, reason} -> {:error, reason}
+          {:error, _reason} -> {:error, "Invalid base64 data"}
         end
 
       :error -> {:error, "Invalid base64 data"}

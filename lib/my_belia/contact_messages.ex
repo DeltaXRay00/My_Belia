@@ -44,20 +44,20 @@ defmodule MyBelia.ContactMessages do
     |> Repo.insert()
   end
 
-  @spec change_contact_message(ContactMessage.t(), map) :: Ecto.Changeset.t()
+  @spec change_contact_message(__MODULE__.ContactMessage.t(), map) :: Ecto.Changeset.t()
   def change_contact_message(%ContactMessage{} = contact_message, attrs \\ %{}) do
     ContactMessage.changeset(contact_message, attrs)
   end
 
-  @spec get_contact_message!(integer) :: ContactMessage.t()
+  @spec get_contact_message!(integer) :: __MODULE__.ContactMessage.t()
   def get_contact_message!(id), do: Repo.get!(ContactMessage, id)
 
-  @spec list_contact_messages() :: [ContactMessage.t()]
+  @spec list_contact_messages() :: [__MODULE__.ContactMessage.t()]
   def list_contact_messages do
     Repo.all(ContactMessage)
   end
 
-  @spec list_contact_messages(keyword) :: [ContactMessage.t()]
+  @spec list_contact_messages(keyword) :: [__MODULE__.ContactMessage.t()]
   def list_contact_messages(opts) do
     status = Keyword.get(opts, :status, "semua")
     search = Keyword.get(opts, :search, "")
@@ -81,7 +81,7 @@ defmodule MyBelia.ContactMessages do
     Repo.all(query)
   end
 
-  @spec list_contact_messages_by_status(String.t()) :: [ContactMessage.t()]
+  @spec list_contact_messages_by_status(String.t()) :: [__MODULE__.ContactMessage.t()]
   def list_contact_messages_by_status(status) do
     ContactMessage
     |> where([c], c.status == ^status)
@@ -89,14 +89,14 @@ defmodule MyBelia.ContactMessages do
     |> Repo.all()
   end
 
-  @spec update_contact_message(ContactMessage.t(), map) :: {:ok, ContactMessage.t()} | {:error, Ecto.Changeset.t()}
+  @spec update_contact_message(__MODULE__.ContactMessage.t(), map) :: {:ok, __MODULE__.ContactMessage.t()} | {:error, Ecto.Changeset.t()}
   def update_contact_message(%ContactMessage{} = contact_message, attrs) do
     contact_message
     |> ContactMessage.changeset(attrs)
     |> Repo.update()
   end
 
-  @spec delete_contact_message(ContactMessage.t()) :: {:ok, ContactMessage.t()}
+  @spec delete_contact_message(__MODULE__.ContactMessage.t()) :: {:ok, __MODULE__.ContactMessage.t()}
   def delete_contact_message(%ContactMessage{} = contact_message) do
     Repo.delete(contact_message)
   end

@@ -38,14 +38,10 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
     MyBeliaWeb.PageHTML.dokumen_sokongan(assigns)
   end
 
-    def handle_event("upload-file", %{"file_key" => file_key, "filename" => filename, "content_type" => content_type, "file_data" => file_data}, socket) do
+  def handle_event("upload-file", %{"file_key" => file_key, "filename" => filename, "content_type" => content_type, "file_data" => file_data}, socket) do
     # Handle file upload from JavaScript
     user = socket.assigns.current_user
     selected_files = socket.assigns.selected_files
-
-    IO.inspect("Upload file event received for #{file_key}: #{filename}", label: "UPLOAD FILE EVENT")
-    IO.inspect("File data length: #{String.length(file_data)}", label: "FILE DATA LENGTH")
-    IO.inspect("Content type: #{content_type}", label: "CONTENT TYPE")
 
     # Extract doc_type from file_key
     doc_type = case file_key do
@@ -86,7 +82,6 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
             uploaded_count = length(user_documents)
             upload_progress = round((uploaded_count / 9) * 100)
 
-            IO.inspect("File uploaded successfully: #{filename}", label: "UPLOAD SUCCESS")
             {:noreply, assign(socket,
               selected_files: selected_files,
               user_documents: user_documents,
@@ -101,31 +96,26 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
               status: :error
             })
 
-            IO.inspect("File upload failed: #{filename}", label: "UPLOAD ERROR")
             {:noreply, put_flash(assign(socket, selected_files: selected_files), :error, "Gagal memuat naik #{filename}")}
         end
 
-      {:error, reason} ->
-        IO.inspect("Failed to create temp file: #{inspect(reason)}", label: "TEMP FILE ERROR")
+      {:error, _reason} ->
         {:noreply, put_flash(socket, :error, "Gagal memproses fail #{filename}")}
     end
   end
 
-  def handle_event("validate-documents", %{"_target" => [file_key]} = _params, socket) do
+  def handle_event("validate-documents", %{"_target" => [_file_key]} = _params, socket) do
     # Handle file selection feedback only (no processing here)
-    IO.inspect("File input changed for #{file_key}", label: "FILE INPUT CHANGE")
     {:noreply, socket}
   end
 
-  def handle_event("validate-documents", params, socket) do
+  def handle_event("validate-documents", _params, socket) do
     # Handle general validation (fallback)
-    IO.inspect("General validate-documents called with params: #{inspect(params)}", label: "GENERAL VALIDATE")
     {:noreply, socket}
   end
 
-  def handle_event("upload-file", params, socket) do
+  def handle_event("upload-file", _params, socket) do
     # Catch-all for upload-file events with different parameter structures
-    IO.inspect("Upload-file event received with params: #{inspect(params)}", label: "UPLOAD FILE CATCH ALL")
     {:noreply, socket}
   end
 
@@ -134,8 +124,6 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
         def handle_event("save-all-documents", params, socket) do
     user = socket.assigns.current_user
 
-    IO.inspect("Save all documents triggered", label: "SAVE TRIGGERED")
-    IO.inspect("Save params: #{inspect(params)}", label: "SAVE PARAMS")
 
     # Check if there's file data in the params
     case Map.get(params, "upload_file_data") do
@@ -162,7 +150,6 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
         # Process the file data
         case Jason.decode(file_data_json) do
           {:ok, file_data} ->
-            IO.inspect("Processing file data: #{inspect(file_data)}", label: "PROCESSING FILE DATA")
 
             # Extract file information
             file_key = file_data["file_key"]
@@ -203,7 +190,6 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
                     uploaded_count = length(user_documents)
                     upload_progress = round((uploaded_count / 9) * 100)
 
-                    IO.inspect("File uploaded successfully: #{filename}", label: "UPLOAD SUCCESS")
                     {:noreply, put_flash(assign(socket,
                       user_documents: user_documents,
                       uploaded_count: uploaded_count,
@@ -212,17 +198,14 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
                     ), :info, "Berjaya memuat naik #{filename}")}
 
                   :error ->
-                    IO.inspect("File upload failed: #{filename}", label: "UPLOAD ERROR")
                     {:noreply, put_flash(socket, :error, "Gagal memuat naik #{filename}")}
                 end
 
-              {:error, reason} ->
-                IO.inspect("Failed to create temp file: #{inspect(reason)}", label: "TEMP FILE ERROR")
+              {:error, _reason} ->
                 {:noreply, put_flash(socket, :error, "Gagal memproses fail #{filename}")}
             end
 
-          {:error, reason} ->
-            IO.inspect("Failed to decode file data JSON: #{inspect(reason)}", label: "JSON DECODE ERROR")
+          {:error, _reason} ->
             {:noreply, put_flash(socket, :error, "Gagal memproses data fail")}
         end
     end
@@ -249,7 +232,7 @@ defmodule MyBeliaWeb.UserLive.DokumenSokonganLive do
 
         case File.write(temp_path, file_content) do
           :ok -> {:ok, temp_path}
-          {:error, reason} -> {:error, reason}
+          {:error, _reason} -> {:error, "Invalid base64 data"}
         end
 
       :error ->

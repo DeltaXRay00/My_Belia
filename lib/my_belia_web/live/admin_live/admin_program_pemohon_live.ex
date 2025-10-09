@@ -124,8 +124,7 @@ defmodule MyBeliaWeb.AdminLive.AdminProgramPemohonLive do
        |> assign(:education_entries, education_entries)
        |> assign(:show_view_modal, true)}
     rescue
-      e ->
-        IO.inspect(e, label: "Error in view-application")
+      _e ->
         {:noreply, put_flash(socket, :error, "Ralat semasa memuat maklumat pemohon.")}
     end
   end

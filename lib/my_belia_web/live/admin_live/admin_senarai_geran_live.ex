@@ -3,7 +3,7 @@ defmodule MyBeliaWeb.AdminLive.AdminSenaraiGeranLive do
 
   alias MyBelia.Grants
 
-  def mount(params, session, socket) do
+  def mount(_params, session, socket) do
     user_id = session["user_id"]
     current_user = if user_id, do: MyBelia.Accounts.get_user!(user_id)
 

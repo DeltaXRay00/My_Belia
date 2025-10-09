@@ -31,6 +31,25 @@ defmodule MyBeliaWeb.AdminLive.AdminContactMessagesLive do
   end
 
   @impl true
+  def handle_event("save_reply", %{"_id" => id} = params, socket) do
+    message = ContactMessages.get_contact_message!(id)
+    attrs = %{admin_response: Map.get(params, "admin_response"), status: "dibalas", responded_by_id: socket.assigns.current_user.id, responded_at: DateTime.utc_now()}
+
+    case ContactMessages.update_contact_message(message, attrs) do
+      {:ok, updated_message} ->
+        # Send email notification to user
+        send_admin_response_email(updated_message)
+
+        # Create bell notification for logged-in users
+        create_bell_notification_if_user_exists(updated_message)
+
+        {:noreply, push_patch(socket, to: ~p"/admin/khidmat_pengguna?status=#{socket.assigns.status}&q=#{socket.assigns.search}")}
+      {:error, _changeset} ->
+        {:noreply, socket}
+    end
+  end
+
+  @impl true
   def render(assigns) do
     ~H"""
     <.admin_layout page_title={@page_title} current_page="khidmat">
@@ -104,22 +123,22 @@ defmodule MyBeliaWeb.AdminLive.AdminContactMessagesLive do
   attr :search, :string, required: true
   attr :reply_form, :any, required: true
   def message_detail(assigns) do
-    message = ContactMessages.get_contact_message!(assigns.id)
+    assigns = assign(assigns, :message, ContactMessages.get_contact_message!(assigns.id))
 
     ~H"""
     <div class="drawer" style="position:fixed;right:0;top:0;bottom:0;width:520px;background:#fff;border-left:1px solid #e5e7eb;box-shadow:-4px 0 16px rgba(0,0,0,.06);padding:20px;overflow:auto;">
       <h2 class="section-title" style="font-size:22px;margin:0 0 12px 0;">Butiran Mesej</h2>
-      <p><b>Nama:</b> <%= message.name %></p>
-      <p><b>E‑mel:</b> <%= message.email %></p>
-      <p><b>Tajuk:</b> <%= message.subject %></p>
-      <p><b>Dihantar:</b> <%= convert_to_malaysia_time(message.inserted_at) %></p>
-      <div style="margin:12px 0 20px 0;white-space:pre-wrap;border:1px solid #e5e7eb;border-radius:8px;padding:12px;"> <%= message.message %> </div>
+      <p><b>Nama:</b> <%= @message.name %></p>
+      <p><b>E‑mel:</b> <%= @message.email %></p>
+      <p><b>Tajuk:</b> <%= @message.subject %></p>
+      <p><b>Dihantar:</b> <%= convert_to_malaysia_time(@message.inserted_at) %></p>
+      <div style="margin:12px 0 20px 0;white-space:pre-wrap;border:1px solid #e5e7eb;border-radius:8px;padding:12px;"> <%= @message.message %> </div>
 
       <.form for={@reply_form} phx-submit="save_reply" phx-change="typing_reply">
-        <input type="hidden" name="_id" value={message.id} />
+        <input type="hidden" name="_id" value={@message.id} />
         <div class="form-group">
           <label class="form-label">Balasan (opsyenal)</label>
-          <textarea name="admin_response" class="form-input" rows="6"><%= message.admin_response %></textarea>
+          <textarea name="admin_response" class="form-input" rows="6"><%= @message.admin_response %></textarea>
         </div>
         <div style="display:flex;gap:8px;">
           <button type="submit" class="submit-btn">Hantar Balasan</button>
@@ -138,25 +157,6 @@ defmodule MyBeliaWeb.AdminLive.AdminContactMessagesLive do
     messages = ContactMessages.list_contact_messages(status: status, search: search)
 
     {:noreply, assign(socket, params: params, status: status, search: search, messages: messages)}
-  end
-
-  @impl true
-  def handle_event("save_reply", %{"_id" => id} = params, socket) do
-    message = ContactMessages.get_contact_message!(id)
-    attrs = %{admin_response: Map.get(params, "admin_response"), status: "dibalas", responded_by_id: socket.assigns.current_user.id, responded_at: DateTime.utc_now()}
-
-    case ContactMessages.update_contact_message(message, attrs) do
-      {:ok, updated_message} ->
-        # Send email notification to user
-        send_admin_response_email(updated_message)
-
-        # Create bell notification for logged-in users
-        create_bell_notification_if_user_exists(updated_message)
-
-        {:noreply, push_patch(socket, to: ~p"/admin/khidmat_pengguna?status=#{socket.assigns.status}&q=#{socket.assigns.search}")}
-      {:error, _changeset} ->
-        {:noreply, socket}
-    end
   end
 
   defp send_admin_response_email(contact_message) do
@@ -272,7 +272,7 @@ defmodule MyBeliaWeb.AdminLive.AdminContactMessagesLive do
     Calendar.strftime(DateTime.to_naive(malaysia_datetime), "%d/%m/%Y %I:%M %p")
   end
 
-  defp create_bell_notification_if_user_exists(contact_message) do
+  defp create_bell_notification_if_user_exists(_contact_message) do
     # Check if the user who sent the message is logged in
     # This would require linking contact messages to users
     # For now, we'll implement this when we have user identification
