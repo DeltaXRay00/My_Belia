@@ -864,11 +864,11 @@ body { margin: 0; padding-top: 80px; font-family: 'Inter', sans-serif; color: va
 
 .login-form-container {
   background: var(--white);
-  padding: 30px;
+  padding: 40px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
@@ -891,7 +891,7 @@ body { margin: 0; padding-top: 80px; font-family: 'Inter', sans-serif; color: va
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .form-group {
@@ -907,10 +907,10 @@ body { margin: 0; padding-top: 80px; font-family: 'Inter', sans-serif; color: va
 }
 
 .form-input {
-  padding: 10px 14px;
+  padding: 12px 16px;
   border: 2px solid #e5e5e5;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 16px;
   font-family: 'Inter', sans-serif;
   transition: border-color 0.2s;
   background: #f8f9fa;
@@ -1003,9 +1003,9 @@ body { margin: 0; padding-top: 80px; font-family: 'Inter', sans-serif; color: va
   background: var(--black);
   color: var(--white);
   border: none;
-  padding: 12px 20px;
+  padding: 14px 24px;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -1022,8 +1022,8 @@ body { margin: 0; padding-top: 80px; font-family: 'Inter', sans-serif; color: va
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 16px;
-  padding: 10px;
+  margin-top: 20px;
+  padding: 12px;
   border: 1px solid #e5e5e5;
   border-radius: 8px;
   background: white;
