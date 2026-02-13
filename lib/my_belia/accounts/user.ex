@@ -54,6 +54,18 @@ defmodule MyBelia.Accounts.User do
   end
 
   @doc """
+  Changeset for updating user profile without password validation.
+  """
+  def profile_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:email, :full_name, :daerah, :role, :status, :jawatan, :unit_bahagian, :ic_number, :birth_date, :birth_place, :gender, :phone_number, :religion, :race, :residential_address, :mailing_address, :education_level, :institution, :field_of_study, :course, :graduation_date, :avatar_url])
+    |> validate_required([:email, :full_name])
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
+    |> validate_length(:email, max: 160)
+    |> unique_constraint(:email)
+  end
+
+  @doc """
   Verifies a password against the stored hash.
   """
   def verify_password(password, hash) do

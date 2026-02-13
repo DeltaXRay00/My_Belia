@@ -36,20 +36,15 @@ defmodule MyBeliaWeb.AuthController do
     # Set default role to "user" for new registrations
     user_params = Map.put(user_params, "role", "user")
 
-    # Debug: Log the received parameters
-    IO.inspect(user_params, label: "Registration parameters")
-
     case Accounts.create_user(user_params) do
-      {:ok, user} ->
-        IO.inspect(user, label: "User created successfully")
+      {:ok, _user} ->
 
         conn
         |> put_flash(:info, "Akaun berjaya dicipta! Sila log masuk.")
         |> redirect(to: "/log-masuk")
 
       {:error, changeset} ->
-        # Debug: Log the changeset errors
-        IO.inspect(changeset.errors, label: "Changeset errors")
+
 
         # Extract error messages from changeset
         error_message =

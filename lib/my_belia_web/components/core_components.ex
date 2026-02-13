@@ -97,7 +97,7 @@ defmodule MyBeliaWeb.CoreComponents do
         title="Lain-lain"
         phx-click={JS.toggle(to: "##{@id}")}
       >
-        ⋯
+        …
       </button>
 
       <div
@@ -169,7 +169,7 @@ defmodule MyBeliaWeb.CoreComponents do
                   <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
                     <%= get_status_label(@current_status) %>
                   </span>
-                  <span class="text-gray-400">→</span>
+                  <span class="text-gray-400">…</span>
                   <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">
                     <%= get_status_label(@new_status) %>
                   </span>
@@ -757,7 +757,7 @@ defmodule MyBeliaWeb.CoreComponents do
   @doc """
   Renders a [Heroicon](https://heroicons.com).
 
-  Heroicons come in three styles – outline, solid, and mini.
+  Heroicons come in three styles ??? outline, solid, and mini.
   By default, the outline style is used, but solid and mini may
   be applied by using the `-solid` and `-mini` suffix.
 
@@ -1065,7 +1065,7 @@ defmodule MyBeliaWeb.CoreComponents do
             <ul class="dropdown-menu" id="permohonan-utama">
               <li><a href="/admin/permohonan_program" class={"nav-link #{if @current_page == "permohonan_program", do: "active"}"}>Program</a></li>
                               <li><a href="/admin/permohonan_kursus" class={"nav-link #{if @current_page == "permohonan_kursus", do: "active"}"}>Kursus</a></li>
-                              <li><a href="/admin/permohonan_geran" class={"nav-link #{if @current_page == "permohonan_geran", do: "active"}"}>Geran</a></li>
+                              <li><a href="/admin/senarai_geran" class={"nav-link #{if @current_page == "senarai_geran", do: "active"}"}>Geran</a></li>
             </ul>
           </li>
           <li><a href="/admin" class={"nav-link #{if @current_page == "galeri", do: "active"}"}>Galeri</a></li>

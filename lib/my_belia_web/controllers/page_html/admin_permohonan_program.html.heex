@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -231,8 +231,8 @@
     <!-- Program Management Content -->
     <div class="program-management-content">
       <!-- Action Button -->
-      <div class="action-section">
-        <button class="new-program-btn" id="new-program-btn">Program Baru</button>
+      <div class="action-section" style="display:flex; justify-content:flex-end; margin: 0 0 1rem 0;">
+        <button class="btn btn-primary new-program-btn" id="new-program-btn">Program Baru</button>
       </div>
 
       <!-- Modal Form for New Program -->
@@ -318,7 +318,7 @@
 
 
       <!-- Filter Section -->
-      <div class="filter-section">
+      <div class="filter-section" style="margin-top:0;">
         <div class="filter-header">
           <h3 class="filter-title">Tapisan</h3>
         </div>
@@ -372,20 +372,20 @@
             </div>
             <!-- Action Icons -->
             <div class="program-actions">
-              <button class="action-icon edit-btn" title="Edit Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Edit button clicked for program:', this.dataset.programId); editProgram(this.dataset.programId)">
+              <button type="button" class="action-icon edit-btn" title="Edit Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Edit button clicked for program:', this.dataset.programId); editProgram(this.dataset.programId)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
               </button>
-              <button class="action-icon status-btn" title="Status Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Status button clicked for program:', this.dataset.programId); changeProgramStatus(this.dataset.programId)">
+              <button type="button" class="action-icon status-btn" title="Status Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Status button clicked for program:', this.dataset.programId); changeProgramStatus(this.dataset.programId)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="3"></circle>
                   <path d="M12 1v6m0 6v6"></path>
                   <path d="M19.78 4.22l-4.24 4.24m-8.48 8.48l-4.24 4.24"></path>
                 </svg>
               </button>
-              <button class="action-icon delete-btn" title="Delete Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Delete button clicked for program:', this.dataset.programId); deleteProgram(this.dataset.programId)">
+              <button type="button" class="action-icon delete-btn" title="Delete Program" data-program-id={program.id} onclick="event.stopPropagation(); console.log('Delete button clicked for program:', this.dataset.programId); deleteProgram(this.dataset.programId)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="3,6 5,6 21,6"></polyline>
                   <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
@@ -1480,3 +1480,5 @@ function closeReviewModal() {
 </script>
 </body>
 </html> 
+
+

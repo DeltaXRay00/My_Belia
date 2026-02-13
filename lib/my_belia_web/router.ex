@@ -85,6 +85,12 @@ defmodule MyBeliaWeb.Router do
     live "/course-list", UserLive.SenaraiKursusLive
     live "/courses", UserLive.SenaraiKursusLive
 
+    # Grant List (Controller)
+    get "/senarai_geran", PageController, :senarai_geran
+
+    # Grant Detail (Controller)
+    get "/geran/:id", PageController, :geran_detail
+
     # Grant Application (LiveView)
     live "/permohonan_geran", UserLive.PermohonanGeranLive
     live "/permohonan-geran", UserLive.PermohonanGeranLive
@@ -136,7 +142,6 @@ defmodule MyBeliaWeb.Router do
     # Admin Program Management (LiveView)
     live "/admin/permohonan_program", AdminLive.AdminPermohonanProgramLive
     live "/admin/program", AdminLive.AdminPermohonanProgramLive
-    live "/admin/programs", AdminLive.AdminPermohonanProgramLive
     live "/admin/permohonan-program", AdminLive.AdminPermohonanProgramLive
     live "/admin/program/:id/pemohon", AdminLive.AdminProgramPemohonLive
     live "/admin/course/:id/pemohon", AdminLive.AdminCoursePemohonLive
@@ -144,7 +149,6 @@ defmodule MyBeliaWeb.Router do
     # Admin Course Management (LiveView)
     live "/admin/permohonan_kursus", AdminLive.AdminPermohonanKursusLive
     live "/admin/kursus", AdminLive.AdminPermohonanKursusLive
-    live "/admin/courses", AdminLive.AdminPermohonanKursusLive
     live "/admin/permohonan-kursus", AdminLive.AdminPermohonanKursusLive
 
     # Admin Grant Management (LiveView)
@@ -171,6 +175,10 @@ defmodule MyBeliaWeb.Router do
     get "/senarai_admin/:id/edit", PageController, :edit_admin
     put "/senarai_admin/:id", PageController, :update_admin
 
+    # Admin Grant Listing (LiveView)
+    live "/admin/senarai_geran", AdminLive.AdminSenaraiGeranLive
+
+    post "/admin/skim", AdminController, :create_skim
     # Admin Grant Status Pages (LiveView)
     live "/admin/permohonan_geran/lulus", AdminLive.AdminPermohonanGeranLulusLive
     live "/admin/permohonan_geran/tolak", AdminLive.AdminPermohonanGeranTolakLive

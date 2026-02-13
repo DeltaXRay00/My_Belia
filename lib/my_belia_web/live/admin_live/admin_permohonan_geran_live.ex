@@ -84,8 +84,7 @@ defmodule MyBeliaWeb.AdminLive.AdminPermohonanGeranLive do
        |> assign(:selected_grant_documents, grant_docs)
        |> assign(:show_view_modal, true)}
     rescue
-      e ->
-        IO.inspect(e, label: "Error in view-application")
+      _e ->
         {:noreply, put_flash(socket, :error, "Ralat semasa memuat maklumat pemohon.")}
     end
   end
@@ -190,23 +189,4 @@ defmodule MyBeliaWeb.AdminLive.AdminPermohonanGeranLive do
     do: GrantApplications.list_grant_applications_by_status(status)
   defp refresh_by_filter(_), do: GrantApplications.list_grant_applications_with_details()
 
-  # Kept from prior logic; currently unused but harmless
-  defp rank_level(nil), do: 99
-  defp rank_level(level) when is_binary(level) do
-    case String.downcase(String.trim(level)) do
-      "phd" -> 0
-      "doktor falsafah" -> 0
-      "sarjana" -> 1
-      "master" -> 1
-      "sarjana muda" -> 2
-      "ijazah sarjana muda" -> 2
-      "ijazah" -> 2
-      "bachelor" -> 2
-      "diploma" -> 3
-      "stpm" -> 4
-      "matrikulasi" -> 4
-      "spm" -> 5
-      _ -> 50
-    end
-  end
 end

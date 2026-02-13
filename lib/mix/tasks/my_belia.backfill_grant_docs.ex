@@ -100,6 +100,9 @@ defmodule Mix.Tasks.MyBelia.BackfillGrantDocs do
   end
 
   defp guess_mime(filename) do
-    MIME.from_path("/" <> filename) || "application/pdf"
+    case MIME.from_path("/" <> filename) do
+      "" -> "application/pdf"
+      mime -> mime
+    end
   end
 end

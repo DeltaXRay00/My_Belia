@@ -364,6 +364,11 @@ defmodule MyBeliaWeb.PageController do
     render(conn, :senarai_kursus, layout: false, courses: courses)
   end
 
+  def senarai_geran(conn, _params) do
+    grants = MyBelia.Grants.list_grants()
+    render(conn, :senarai_geran_user, layout: false, grants: grants)
+  end
+
   def permohonan_geran(conn, _params) do
     # The permohonan geran page is often custom made,
     # so skip the default app layout.
@@ -410,6 +415,18 @@ defmodule MyBeliaWeb.PageController do
       conn
       |> put_flash(:error, "Kursus tidak dijumpai")
       |> redirect(to: "/senarai_kursus")
+  end
+
+  def geran_detail(conn, %{"id" => id}) do
+    case MyBelia.Grants.get_grant!(id) do
+      grant ->
+        render(conn, :geran_detail, layout: false, grant: grant)
+    end
+  rescue
+    Ecto.QueryError ->
+      conn
+      |> put_flash(:error, "Geran tidak dijumpai")
+      |> redirect(to: "/senarai_geran")
   end
 
   def senarai_admin(conn, _params) do
@@ -564,4 +581,3 @@ defmodule MyBeliaWeb.PageController do
     end
   end
 end
-

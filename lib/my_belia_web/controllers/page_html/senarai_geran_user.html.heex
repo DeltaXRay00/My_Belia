@@ -1,0 +1,57 @@
+<%= user_topbar(assigns) %>
+
+<section class="senarai-program-hero">
+	<div class="container">
+		<h2 class="section-title">SENARAI GERAN</h2>
+		<form class="search-container" action="/search" method="GET">
+			<input type="text" name="q" placeholder="Carian geran..." class="search-input" />
+			<button type="submit" class="search-button" aria-label="Cari Geran">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="11" cy="11" r="8"></circle>
+					<path d="m21 21-4.35-4.35"></path>
+				</svg>
+			</button>
+		</form>
+	</div>
+</section>
+
+<section class="senarai-program-section">
+	<div class="container">
+		<div class="program-grid">
+			<% grants_list = @grants || [] %>
+			<%= for grant <- grants_list do %>
+				<div class="program-card">
+					<a href={"/geran/" <> to_string(grant.id)} class="program-card-link">
+						<div class="program-card-content">
+							<div class="program-image" style="height:auto; background:#fff;">
+								<%= if grant.image_data do %>
+									<img src={grant.image_data} alt={grant.name} style="display:block; width: 100%; height: auto; max-height: 320px; object-fit: contain; border-radius: 12px 12px 0 0; background:#fff;">
+								<% else %>
+									<img src="/images/placeholder.png" alt="Geran" style="display:block; width: 100%; height: auto; max-height: 320px; object-fit: contain; border-radius: 12px 12px 0 0; background:#fff;">
+								<% end %>
+							</div>
+							<div class="program-info">
+								<h3 class="program-title"><%= grant.name %></h3>
+								<div class="program-actions">
+									<button class="apply-btn" onclick="event.stopPropagation(); event.preventDefault(); window.location.href='/permohonan_geran'">Mohon Sekarang</button>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+			<% end %>
+
+			<%= if length(grants_list) == 0 do %>
+				<%= for _i <- 1..3 do %>
+					<div class="program-card placeholder"></div>
+				<% end %>
+			<% else %>
+				<%= for _i <- 1..(9 - length(grants_list)) do %>
+					<div class="program-card placeholder"></div>
+				<% end %>
+			<% end %>
+		</div>
+	</div>
+</section>
+
+<%= user_footer(assigns) %> 

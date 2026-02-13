@@ -119,7 +119,7 @@ defmodule MyBeliaWeb.DocumentController do
         case match do
           {dir, name} ->
             path = Path.join(dir, name)
-            content_type = MIME.from_path("/#{name}") || "application/pdf"
+            content_type = MIME.from_path("/#{name}") |> Kernel.||("application/pdf")
             conn
             |> put_resp_header("content-type", content_type)
             |> put_resp_header("content-disposition", ~s(inline; filename="#{name}") )
@@ -162,7 +162,7 @@ defmodule MyBeliaWeb.DocumentController do
         doc = %MyBelia.Documents.UserDocument{
           file_url: "/uploads/documents/#{found}",
           file_name: fname,
-          content_type: MIME.from_path("/#{fname}") || "application/pdf"
+          content_type: MIME.from_path("/#{fname}") |> Kernel.||("application/pdf")
         }
         # Serve directly from disk to avoid route issues
         if File.exists?(path) do
